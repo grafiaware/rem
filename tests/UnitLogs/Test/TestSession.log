@@ -1,0 +1,31 @@
+[info] [2021-01-22 12:01:22] Logger start. Log file: D:\ApacheRoot\TesterVScviceni\tests\UnitLogs/Test/TestSession.log. Mode 'w+'.
+[debug] Pes\Database\Handler\DsnProvider\DsnProviderMysql Vytvořeno dsn: mysql:host=localhost;dbname=tester_3_test
+[debug] Pes\Database\Handler\OptionsProvider\OptionsProviderMysql: Vytvořeny options - Array
+    (
+        [1005] => 1
+        [1002] => SET NAMES utf8 COLLATE utf8_general_ci
+    )
+    
+[debug] Vytvořen database handler Handler tester_3_test (1), name tester_3_test, host localhost.
+[info] Pes\Database\Handler\AttributesProvider\AttributesProviderAbstract Nastaveny hodnoty atributů handleru (PDO): Array
+    (
+        [3] => 2
+        [13] => Array
+            (
+                [0] => Pes\Database\Statement\Statement
+                [1] => Array
+                    (
+                        [0] => 
+                    )
+    
+            )
+    
+        [20] => 
+    )
+    
+[debug] Handler tester_3_test (1) prepare(SHOW COLUMNS FROM testovaci_table_row, ). Vytvořen Statement (1).
+[debug] Statement (1) execute().
+[debug] Statement (1) execute()
+[debug] Statement (1) setFetchMode(8, Pes\Database\Metadata\ColumnMetadata)
+[debug] Statement (1) fetchAll()
+[debug] Result má 9 prvků.

@@ -1,0 +1,22 @@
+{
+    "name": "grafiaware/rem",
+    "description": "REM",
+    "license": "MIT",
+    "keywords": ["relational mapper"],
+    "version": "0.0.0",
+    "authors": [
+        {
+            "name": "Vlaďka Selnerová",
+            "email": "selnerova@grafia.cz"
+        }
+    ],
+    "require": {
+        "pes/pes": "@dev"       
+    },
+    "autoload": {
+        "psr-4": {
+            "Test\\": "Test",
+            "Model\\": "Model"
+        }
+    }
+}
