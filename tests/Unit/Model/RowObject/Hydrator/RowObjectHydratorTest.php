@@ -14,7 +14,7 @@ use Model\RowData\RowData;
 use Model\RowData\RowDataInterface;
 use Model\RowData\RowDataTrait;
 
-use Test\TestDaoContainerConfigurator;
+use  Test\DaoContainerConfigurator;
 use Pes\Container\Container;
 // database
 use Pes\Database\Handler\Handler;

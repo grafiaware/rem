@@ -2,7 +2,7 @@
 use PHPUnit\Framework\TestCase;
 
 // kontejner
-use Test\TestDaoContainerConfigurator;
+use  Test\DaoContainerConfigurator;
 use Pes\Container\Container;
 // database
 use Pes\Database\Handler\Handler;

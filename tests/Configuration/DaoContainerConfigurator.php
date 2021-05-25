@@ -24,12 +24,18 @@ use Pes\Database\Metadata\MetadataProviderMysql;
  *
  * @author pes2704
  */
-class TestDaoContainerConfigurator extends ContainerConfiguratorAbstract {
+class DaoContainerConfigurator extends ContainerConfiguratorAbstract {
 
     public function getAliases() {
         return [];
     }
-
+    public function getParams() {
+        return [];
+    }
+    public function getServicesOverrideDefinitions() {
+        return [];
+    }
+    
     // Service vraci stale stejny objekt (vyrobi ho 1x)
     public function getServicesDefinitions() {
         return [
