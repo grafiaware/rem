@@ -6,7 +6,7 @@ namespace Model\Entity;
  *
  * @author vlse2610
  */
-interface SvobodovaEntitaInterface extends EntityInterface {
+interface SvobodovaEntitaInterface extends AccesorInterface {
     public function getKuk();
 
     public function getBuk();

@@ -2,13 +2,13 @@
 
 namespace Model\Entity;
 
-use Model\Entity\EntityInterface;
+use Model\Entity\AccesorInterface;
 
 /**
  *
  * @author vlse2610
  */
-interface TestovaciEntityInterface_Vzorova extends EntityInterface {
+interface TestovaciEntityInterface_Vzorova extends AccesorInterface {
     
        // public function getUidPrimarniKlicZnaky();
 

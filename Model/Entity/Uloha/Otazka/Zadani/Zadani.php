@@ -11,7 +11,7 @@ use Model\Entity\Uloha\Otazka\Zadani\Odpoved\Odpoved;
  *
  * @author vlse2610
  */
-class Zadani implements EntityInterface{
+class Zadani implements AccesorInterface{
     /**
      * @var string 
      */

@@ -6,7 +6,7 @@ namespace Model\Entity\TextyTesteru;
  *
  * @author vlse2610
  */
-class TextyTesteru implements Entity\EntityInterface {
+class TextyTesteru implements Entity\AccesorInterface {
     
     
     

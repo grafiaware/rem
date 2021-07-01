@@ -1,5 +1,5 @@
 <?php
-namespace Test;
+namespace Test\Configuration;
 
 // kontejner
 use Pes\Container\ContainerConfiguratorAbstract;
@@ -24,7 +24,7 @@ use Pes\Database\Metadata\MetadataProviderMysql;
  *
  * @author pes2704
  */
-class DaoContainerConfigurator extends ContainerConfiguratorAbstract {
+class  DaoContainerConfigurator extends ContainerConfiguratorAbstract {
 
     public function getAliases() {
         return [];

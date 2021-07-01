@@ -3,8 +3,8 @@ namespace Model\Repository;
 
 use Model\Dao\DaoInterface;
 
-use Model\Entity\Hydrator\EntityHydratorInterface;
-use Model\Entity\EntityInterface;
+use Model\Entity\Hydrator\AccessorHydratorInterface;
+use Model\Entity\AccesorInterface;
 use Model\Entity\Identity\IdentityInterface;
 
 //use Model\RowObject\RowObject;
@@ -72,7 +72,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
     }
 
     //---------------------------------------
-    protected function registerEntityHydrator( EntityHydratorInterface $hydrator ) {
+    protected function registerEntityHydrator( AccessorHydratorInterface $hydrator ) {
         $this->entityHydrators[] = $hydrator;
     }
     protected function registerRowObjectHydrator( RowObjectHydratorInterface $hydrator ) {
@@ -82,8 +82,8 @@ abstract class RepositoryAbstract implements RepositoryInterface {
     
     
     
-    protected function hydrateEntity(EntityInterface $entity, RowObjectInterface $rowObject) {                
-        /** @var EntityHydratorInterface $hydrator */
+    protected function hydrateEntity(AccesorInterface $entity, RowObjectInterface $rowObject) {                
+        /** @var AccessorHydratorInterface $hydrator */
         foreach ($this->entityHydrators as $hydrator) {
             $hydrator->hydrate( $entity, $rowObject);
         }
@@ -96,12 +96,12 @@ abstract class RepositoryAbstract implements RepositoryInterface {
         }
     }
 
-    protected function extract( EntityInterface $entity, RowDataInterface $rowData) {
+    protected function extract( AccesorInterface $entity, RowDataInterface $rowData) {
         // rozdělit na extractEntity a extractRoeObject
         
 //        $rowObject = $this->createRowObject();
         
-        /** @var EntityHydratorInterface $hydrator */
+        /** @var AccessorHydratorInterface $hydrator */
         foreach ($this->entityHydrators as $hydrator) {
             $hydrator->extract($entity, $rowObject );
         }
@@ -130,7 +130,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             $rowObject = $this->createRowObj();            
 //    plneni        $this->hydrateRowObject($rowObject, $rowData);
             
-            /** @var EntityInterface $entity */
+            /** @var AccesorInterface $entity */
             $entity = $this->createEntity( $identity );  // definována v konkrétní třídě - adept na entity managera
 //    plneni        $this->hydrateEntity($entity, $rowObject);
 //                                    
@@ -141,7 +141,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
     
     
 
-    protected function addEntity(EntityInterface $entity, $index=null): void {
+    protected function addEntity(AccesorInterface $entity, $index=null): void {
         if ($index) {
             $this->collection[$index] = $entity;
         } else {
@@ -149,7 +149,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
         }
     }
 
-    protected function removeEntity(EntityInterface $entity, $index=null): void {
+    protected function removeEntity(AccesorInterface $entity, $index=null): void {
         if ($index) {
             $this->removed[] = $entity;
             unset($this->collection[$index]);

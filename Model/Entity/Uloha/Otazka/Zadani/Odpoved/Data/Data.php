@@ -8,7 +8,7 @@ use Model\Entity\Uloha\EntityInterface;
  *
  * @author vlse2610
  */
-class Data implements EntityInterface {
+class Data implements AccesorInterface {
     /**
      *
      * @var string 

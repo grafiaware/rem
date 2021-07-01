@@ -9,7 +9,7 @@ use Model\Entity\Uloha\Otazka\Zadani\Odpoved\Data\Data;
  *
  * @author vlse2610
  */
-class Odpoved implements EntityInterface {
+class Odpoved implements AccesorInterface {
     /**
      * @var string 
      */

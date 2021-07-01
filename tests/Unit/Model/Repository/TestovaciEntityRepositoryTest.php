@@ -4,21 +4,21 @@ namespace Test\TestovaciEntityRepositoryTest;
 use PHPUnit\Framework\TestCase;
 
 use Model\Entity\Identity\Identity;
-use Model\Entity\Identity\IdentityInterface;
-use Model\Entity\Identity\Exception\MismatchedIndexesToKeyAttributeFieldsException;
-use Model\Entity\Identity\Hydrator\IdentityHydrator;
-use Model\Entity\Identity\Hydrator\IdentityHydratorInterface;
 
-use Model\Entity\EntityInterface;
+use Model\Entity\Identity\Exception\MismatchedIndexesToKeyAttributeFieldsException;
+//use Model\Hydrator\CeleJmenoAccessorHydrator;
+use Model\Hydrator\AccessorHydratorInterface;
+
+use Model\Entity\AccessorInterface;
 use Model\Entity\EntityAbstract;
-use Model\Entity\Hydrator\EntityHydratorInterface;
-use Model\Entity\Hydrator\OneToOneEntityHydrator;
-use Model\Entity\Hydrator\CeleJmenoEntityHydrator;
+//use Model\Hydrator\AttributeHydratorInterface;
+use Model\Hydrator\OneToOneAccessorHydrator;
+use Model\Hydrator\CeleJmenoAccessorHydrator;
 
 use Model\RowObject\RowObjectAbstract;
-use Model\RowObject\RowObjectInterface;
+use Model\RowObject\AttributeInterface;
 //use Model\RowObject\Hydrator\RowObjectHydrator;
-use Model\RowObject\Hydrator\RowObjectHydratorInterface;
+use Model\RowObject\Hydrator\RowHydratorInterface;
 
 use Model\RowData\RowDataInterface;
 use Model\RowData\RowData;
@@ -26,8 +26,8 @@ use Model\RowData\RowData;
 
 use Model\Repository\RepositoryAbstract;
 
-use Model\Entity\Hydrator\NameHydrator\MethodNameHydratorInterface;
-use Model\Entity\Hydrator\Filter\OneToOneFilterInterface;
+use Model\Hydrator\NameHydrator\AccessorMethodNameHydratorInterface;
+use Model\Hydrator\Filter\OneToOneFilterInterface;
 
 
 
@@ -60,7 +60,7 @@ class TestovaciDaoMock /*extends DaoAbstract*/ implements TestovaciDaoInterfaceM
 
 
 
-interface TestovaciEntityInterfaceMock extends EntityInterface {    
+interface TestovaciEntityInterfaceMock extends AccessorInterface {    
         public function getCeleJmeno();
         public function getPrvekVarchar();
         public function getPrvekChar();
@@ -126,7 +126,7 @@ class TestovaciEntityMock extends EntityAbstract implements TestovaciEntityInter
 }
 
 
-class RowObjectMock extends RowObjectAbstract implements RowObjectInterface {
+class RowObjectMock extends RowObjectAbstract implements AttributeInterface {
     public $celeJmeno;    
     public $prvekChar;
     public $prvekVarchar;    
@@ -136,7 +136,7 @@ class RowObjectMock extends RowObjectAbstract implements RowObjectInterface {
 }
 
 
-class MethodNameHydratorMock implements MethodNameHydratorInterface {    
+class MethodNameHydratorMock implements AccessorMethodNameHydratorInterface {    
     public function hydrate(string $name): string {
         return 'set' . ucfirst($name);
     }        
@@ -162,11 +162,11 @@ class OneToOneFilterMock implements OneToOneFilterInterface {
 
 
 
-class CeleJmenoEntityHydratorMock implements EntityHydratorInterface {
-    public function hydrate( EntityInterface $entity, RowObjectInterface $rowObject): void {
+class CeleJmenoEntityHydratorMock implements AccessorHydratorInterface {
+    public function hydrate( AccessorInterface $entity, AttributeInterface $rowObject): void {
         
     }
-    public function extract( EntityInterface $entity, RowObjectInterface $rowObject ): void {
+    public function extract( AccessorInterface $entity, AttributeInterface $rowObject ): void {
         
     }
 }
@@ -203,8 +203,8 @@ class TestovaciEntityRepositoryMock extends RepositoryAbstract implements Testov
     public function __construct(            
                                 TestovaciDaoInterfaceMock $testovaciDao,  RowDataInterface $rowData /*docasne*/,
 //                                
-                               // RowObjectHydratorInterface $rowObjectHydrator,                                  
-                                EntityHydratorInterface $oneToOneEHydrator
+                               // RowHydratorInterface $rowObjectHydrator,                                  
+                                AccessorHydratorInterface $oneToOneEHydrator
                                 //EntityHydratorInterface $celeJmenoEHydrator
                                 
                                  //IdentityHydratorInterface $identityHydrator  
@@ -251,7 +251,7 @@ class TestovaciEntityRepositoryMock extends RepositoryAbstract implements Testov
     
     
     //------------------------------------------------
-    protected function createRowObj() : RowObjectInterface{
+    protected function createRowObj() : AttributeInterface{
         return new RowObjectMock();  
     }
     
@@ -363,7 +363,7 @@ class TestovaciEntityRepositoryTest  extends TestCase{
         
         
         $this->poleJmen =  [  "prvekVarchar" ,  "prvekChar" , 'jmenoClovek', 'prijmeniClovek'  ] ;   
-        $this->oneToOneEHydrator = new OneToOneEntityHydrator( new MethodNameHydratorMock(),
+        $this->oneToOneEHydrator = new OneToOneAccessorHydrator( new MethodNameHydratorMock(),
                                                                new OneToOneFilterMock( $this->poleJmen) );       
         $this->celeJmenoEHydrator = new CeleJmenoEntityHydratorMock();
         //$this->identityHydrator = new IdentityHydrator();                                   

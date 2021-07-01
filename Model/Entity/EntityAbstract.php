@@ -1,15 +1,14 @@
 <?php
 namespace Model\Entity;
 
-use Model\Entity\EntityInterface;
-use Model\Entity\Identity\IdentityInterface;
+use Model\Entity\AccessorInterface;
 
 /**
  * Description of TableEntityAbstract
  *
  * @author vlse2610
  */
-abstract class EntityAbstract implements EntityInterface {
+abstract class EntityAbstract implements AccessorInterface {
     /**
      *
      * @var IdentityInterface 
@@ -18,11 +17,11 @@ abstract class EntityAbstract implements EntityInterface {
     
     private $persisted=false;
 
-    public function __construct( IdentityInterface $identity ) {
+    public function __construct( AccessorInterface $identity ) {
         $this->identity = $identity;        
     }    
     
-    public function getIdentity(): IdentityInterface {
+    public function getIdentity(): AccessorInterface {
         return $this->identity;
     }
     

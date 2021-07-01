@@ -9,7 +9,7 @@ use Model\Entity\Uloha\Otazka\Zadani\Zadani;
  *
  * @author vlse2610
  */
-class Otazka implements EntityInterface {
+class Otazka implements AccesorInterface {
     /**
      * @var string 
      */

@@ -15,8 +15,14 @@
     },
     "autoload": {
         "psr-4": {
-            "Test\\": "Test",
+            "Test\\": "Tests",
             "Model\\": "Model"
+        },
+        "psr-0": {
+            "HTML_": "c:\\xampp\\php\\pear"            
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^9"
         }
     }
 }

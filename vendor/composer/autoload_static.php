@@ -17,6 +17,7 @@ class ComposerStaticInitbe893c430287b970fae2734d4d7b8349
             'Psr\\Http\\Server\\' => 16,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
+            'Pes\\' => 4,
         ),
         'M' => 
         array (
@@ -27,7 +28,7 @@ class ComposerStaticInitbe893c430287b970fae2734d4d7b8349
     public static $prefixDirsPsr4 = array (
         'Test\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/Test',
+            0 => __DIR__ . '/../..' . '/Tests',
         ),
         'Psr\\Log\\' => 
         array (
@@ -47,9 +48,23 @@ class ComposerStaticInitbe893c430287b970fae2734d4d7b8349
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
+        'Pes\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pes/pes/src',
+        ),
         'Model\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Model',
+        ),
+    );
+
+    public static $prefixesPsr0 = array (
+        'H' => 
+        array (
+            'HTML_' => 
+            array (
+                0 => __DIR__ . '/../..' . '/../../xampp/php/pear',
+            ),
         ),
     );
 
@@ -58,6 +73,7 @@ class ComposerStaticInitbe893c430287b970fae2734d4d7b8349
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitbe893c430287b970fae2734d4d7b8349::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitbe893c430287b970fae2734d4d7b8349::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitbe893c430287b970fae2734d4d7b8349::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

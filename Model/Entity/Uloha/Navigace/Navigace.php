@@ -7,7 +7,7 @@ use Model\Entity\Uloha\EntityInterface;
  *
  * @author vlse2610
  */
-class Navigace implements EntityInterface{
+class Navigace implements AccesorInterface{
     /**
      * @var string 
      */

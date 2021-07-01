@@ -5,7 +5,7 @@ use Model\Entity\Uloha\EntityInterface;
 use Model\Entity\Uloha\Navigace\Navigace;
 use Model\Entity\Uloha\Otazka\Otazka;
 
-class Uloha implements EntityInterface {
+class Uloha implements AccesorInterface {
         
     /**
      *
