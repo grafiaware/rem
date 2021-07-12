@@ -153,13 +153,13 @@ class IntegrateRowObjectHydratorTest extends TestCase {
         $poleJmenDoFiltruHydratoruRO =  [ 
             "prvekChar" , "prvekVarchar", "prvekInteger" ,"prvekText", "prvekBoolean",  
             "prvekDate", "prvekDatetime", "prvekTimestamp"           ] ;   
-        $poleJmenKey = [ "uidPrimarniKlicZnaky" ] ;
+        $poleJmenKlice = [ "uidPrimarniKlicZnaky" ] ;
         
         /* @var $metaDataProvider MetadataProviderMysql */
         $metaDataProvider = self::$container->get(MetadataProviderMysql::class); 
         $keyRowObjectHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),  
                                                  $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
-                                                 new KeyColumnFilterMock( $poleJmenKey )
+                                                 new KeyColumnFilterMock( $poleJmenKlice )
                                                );          
         // $this->assertIsObject($keyRowObjectHydrator, "***CHYBA***" );                                        
         $rowObjectHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),  

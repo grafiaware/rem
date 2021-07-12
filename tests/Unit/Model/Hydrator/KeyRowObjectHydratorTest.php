@@ -146,7 +146,7 @@ class KeyRowObjectHydratorTest extends TestCase {
                                                );          
         $this->assertIsObject($keyRowObjectHydrator, "***CHYBA***" );
                          
-        $rowObjectM =  new RowObjectMock(new KeyMock(  [ "uidPrimarniKlicZnaky"=>false ] ));      
+        $rowObjectM =  new RowObjectMock( new KeyMock( [ "uidPrimarniKlicZnaky"=>false ] ) );      
         $keyRowObjectHydrator->hydrate( $rowObjectM->key , new RowData( [                                                           
                                         "uid_primarni_klic_znaky" => "KEYklic"  ] ) );               
         

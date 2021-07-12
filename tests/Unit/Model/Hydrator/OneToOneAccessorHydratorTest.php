@@ -10,10 +10,12 @@ use Model\Hydrator\Filter\OneToOneFilterInterface;
 use Model\Hydrator\NameHydrator\AccessorMethodNameHydratorInterface;
 
 use Model\Entity\EntityAbstract;
+use Model\Entity\Identity\IdentityAbstract;
 use Model\Entity\AccessorInterface;
 
 use Model\RowObject\AttributeInterface;
 use Model\RowObject\RowObjectAbstract;
+use Model\RowObject\Key\KeyAbstract;
 
 
 class OneToOneFilterMock implements OneToOneFilterInterface {    
@@ -41,16 +43,16 @@ class MethodNameHydrator_Mock implements AccessorMethodNameHydratorInterface {
 
 
     
-class IdentityMock implements AccessorInterface {
-    public function hasGeneratedKey() : bool {
-        return false;
-    }
-    public function getKey(): AccessorInterface{ 
-        return $this->key;
-    }    
-    public function setKey( AccessorInterface $key): void {
-        $this->key = $key;
-    }
+class IdentityMock extends IdentityAbstract implements AccessorInterface {
+//    public function hasGeneratedKey() : bool {
+//        return false;
+//    }
+//    public function getKey(): AccessorInterface{ 
+//        return $this->key;
+//    }    
+//    public function setKey( AccessorInterface $key): void {
+//        $this->key = $key;
+//    }
  
 }
 
@@ -164,15 +166,17 @@ class TestovaciEntityMock  extends EntityAbstract implements EntityInterfaceMock
         return $this;
     }
 }
+ 
+
+
+class KeyMock extends KeyAbstract implements AttributeInterface {
+    public $uidPrimarniKlicZnaky;
     
-class KeyMock implements AttributeInterface {
-    
+     //v Abstract  public $generated?
 }
 
-
-
 class RowObjectMock extends RowObjectAbstract implements AttributeInterface {              
-    public $uidPrimarniKlicZnaky ;         
+//    public $uidPrimarniKlicZnaky ;         
 
     public $titulPred;
     public $jmeno;
@@ -212,7 +216,7 @@ class OneToOneEntityHydratorTest extends TestCase {
     private $testDateTimeString;
     private $testDateTime;
  
-    private $poleJmen  ;
+//    private $poleJmen  ;
        
     /**
      * Před každým testem.
@@ -223,18 +227,19 @@ class OneToOneEntityHydratorTest extends TestCase {
         $this->testDateString = "2010-09-08";
         $this->testDate = \DateTime::createFromFormat("Y-m-d", $this->testDateString)->setTime(0,0,0,0); 
         $this->testDateTimeString = "2005-06-07 22:23:24";
-        $this->testDateTime = \DateTime::createFromFormat("Y-m-d H:i:s", $this->testDateTimeString);           
-        
-        $this->poleJmen =  [ 
-                        "prvekVarchar" ,  "prvekChar" ,  "prvekText" , "prvekInteger" ,  "prvekBoolean" , 
-                        "prvekDate", "prvekDatetime", "prvekTimestamp" 
-                              ] ;   
+        $this->testDateTime = \DateTime::createFromFormat("Y-m-d H:i:s", $this->testDateTimeString);                          
     }
     
     /**
      * Hydratuji  objekt TestovaciEntity hodnotami z row objektu.
      */     
     public function testOneToOneEntityHydrate() : void {      
+        $poleJmenDoFiltruAccessoru =  [ 
+            "prvekChar" , "prvekVarchar", "prvekInteger" ,"prvekText", "prvekBoolean",  
+            "prvekDate", "prvekDatetime", "prvekTimestamp"           ] ;   
+        $poleJmenKlice = [ "uidPrimarniKlicZnaky" ] ;
+   
+        
         // 2 - zdrojovy datovy objekt testovaci
         $testovaciZdrojovyRowObjectNaplneny = new RowObjectMock( new KeyMock( []  ) );                    
         $testovaciZdrojovyRowObjectNaplneny->jmeno          = "BARNABÁŠ";
@@ -252,20 +257,26 @@ class OneToOneEntityHydratorTest extends TestCase {
                      
         // 3 - filtr, name hydrator, -> vytvoření hydratoru       
         $oneToOneEntityHydrator = new OneToOneAccessorHydrator( new MethodNameHydrator_Mock(),
-                                                              new OneToOneFilterMock( $this->poleJmen) );      
+                                                                new OneToOneFilterMock( $poleJmenDoFiltruAccessoru) );      
+        $oneToOneIdentityHydrator = new OneToOneAccessorHydrator( new MethodNameHydrator_Mock(),
+                                                                  new OneToOneFilterMock( $poleJmenKlice) ); 
                 
         // 4 -  hydratovani
         $identity = new IdentityMock(  );
-        $novaPlnenaTestovaciEntity  =  new TestovaciEntityMock( $identity  );           
-        $oneToOneEntityHydrator->hydrate( $novaPlnenaTestovaciEntity, $testovaciZdrojovyRowObjectNaplneny );                
+        $novaPlnenaTestovaciEntity  =  new TestovaciEntityMock( $identity );           
+        $oneToOneEntityHydrator->hydrate( $novaPlnenaTestovaciEntity, $testovaciZdrojovyRowObjectNaplneny );   
+        
+        $oneToOneIdentityHydrator->hydrate( $novaPlnenaTestovaciEntity->getIdentity(), $testovaciZdrojovyRowObjectNaplneny ); 
+        
+        
                 
         // 5 - kontrola hydratace          
         $oneToOneFilter = new OneToOneFilterMock( $this->poleJmen);
-        foreach (  $oneToOneFilter->getIterator() as  $value )  /* $value  je vlastnost rowobjectu!!!!!*/    {             
+        foreach ( $oneToOneFilter->getIterator() as  $value )  /* $value  je vlastnost rowobjectu!!!!!*/    {             
             $methodNameHydrator = new MethodNameHydrator_Mock();
             $methodNameGet = $methodNameHydrator->extract( $value );
             //$getMethodName = "get" .  ucfirst( $value );
-            //
+            
             // assertEquals (ocekavana, aktualni hodnota v entite) 
             $this->assertEquals($testovaciZdrojovyRowObjectNaplneny->$value, 
                                 $novaPlnenaTestovaciEntity->$methodNameGet(), 
