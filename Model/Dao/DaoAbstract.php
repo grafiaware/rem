@@ -1,310 +1,234 @@
 <?php
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 namespace Model\Dao;
 
-use Model\RowObject\RowObjectInterface;
-use Model\RowObject\Hydrator\RowObjectHydratorInterface;
-
 use Pes\Database\Handler\HandlerInterface;
-use Pes\Database\Metadata\MetadataProviderInterface;
-use Pes\Database\Metadata\TableMetadataInterface;
-//use Pes\Database\Metadata\ColumnMetadataInterface;
+use Pes\Database\Statement\StatementInterface;
 
 /**
- * Description of RepositoryAnstract
+ * Description of DaoAbstract
  *
- * @author vlse2610
+ * @author pes2704
  */
-abstract class DaoAbstract implements DaoInterface{
+abstract class DaoAbstract {
 
     /**
+     *
      * @var HandlerInterface
      */
-    private $dbh;
+    protected $dbHandler;
 
-    private $tableName;
+    private $lastInsertRowCount;
 
-
-    /**
-     * @var TableMetadataInterface
-     */
-    protected $tableMetadata;   //$tableMetadata -> columns[jm_sl]-objekty
-    /**
-     * @var HydratorInterface
-     */
-    private $hydrator;
+    private $rowCount;
 
     /**
-     * Dao - data access object - objekt pro přístup k datům uloženým v databázi.
+     * Prepared statements cache
      *
-     * Ukládá data z row objektů a načítá data do row objektů. Pro přavod dat načtenýh z datáze veformě pole do row objektu, který vrací
-     * a pro převod dat z row objektu, který ukládá do formy pole ukládaného do databáze používá hydrátor. Hydrátor provádí automatický překlad jmen sloupců
-     * databázové tabulky na jména vlastností row objektu a automatický převod některých typů databázových sloupců na vhodné PHP typy. Pro tyto převody
-     * objekt dao potřebuje meta informace o databázové tabulce. Pro získání meta informací o tabulce používá MetadataProvider objekt.
-     *
-     * @param HandlerInterface $dbh Databázový handler
-     * @param string $tableName Jméno tabulky
-     * @param MetadataProviderInterface $metadataProvider Poskytovatel metadata informací o tabulce
-     * @param RowObjectHydratorInterface $hydrator Objekt hydrator pro row object vracený metodami dao
+     * @var array
      */
-    public function __construct(HandlerInterface $dbh,
-                                $tableName,
-                                MetadataProviderInterface $metadataProvider,
-                                RowObjectHydratorInterface $hydrator) {
-        $this->dbh = $dbh;
-        $this->tableName = $tableName;
-        $this->tableMetadata = $metadataProvider->getTableMetadata($tableName); //$tableMetadata - columns[jm_sl]-objekty
-        $this->hydrator = $hydrator;
+    private $preparedStatements = [];
+
+    public function __construct(HandlerInterface $dbHandler) {
+        $this->dbHandler = $dbHandler;
     }
 
+    protected function where($condition = "") {
+        return $condition ? " WHERE ".$condition." " : "";
+    }
 
     /**
      *
-     * @param string $sqlQuery SQL příkaz s placeholdery ve tvaru :placeholder
-     * @param array $params Parametry pro bindValue - náhrady placeholderů
-     * @param string $rowObjectClassName Jméno třídy RowObject, která bude vytvořena.
-     * @return RowObjectInterface
-     * @throws DbDaoException
+     * @param array $conditions Jedno nebo více asociativních polí.
+     * @return string
      */
-    protected function selectRowObject($sqlQuery, $params, $rowObjectClassName) {
-        $statement = $this->dbh->prepare($sqlQuery);
-        $this->bindStatementValues($statement, $params);
-        if ($statement->execute()) {
-            $poc = $statement->rowCount();
-            if ($poc===1 ) {
-                $rowObject = $this->createRowObject($statement->fetch(\PDO::FETCH_ASSOC), $rowObjectClassName);
-            } elseif($statement->rowCount()>0) {
-                throw new DbDaoException( '(selectRowObject) - Vybráno víc řádek podle id. - pro ' . $rowObjectClassName ,0,$e);
+    protected function and(...$conditions) {
+        $merged = [];
+        if ($conditions) {
+            foreach ($conditions as $condition) {
+                $merged = array_merge_recursive($merged, $condition);
             }
+        }
+        return $merged ? implode(" AND ", $merged) : "";
+    }
+
+    /**
+     *
+     * @param array $conditions Jedno nebo více asociativních polí.
+     * @return string
+     */
+    protected function or(...$conditions) {
+        $merged = [];
+        if ($conditions) {
+            foreach ($conditions as $condition) {
+                $merged = array_merge_recursive($merged, $condition);
+            }
+        }
+        return $merged ? "(".implode(" OR ", $merged).")" : "";  // závorky pro prioritu OR před případnými AND spojujícími jednotlivé OR výrazy
+    }
+
+    /**
+     * Očekává SQL string s příkazem SELECT a případnými placeholdery. Provede ho s použitím parametrů a vrací jednu řádku tabulky ve formě asociativního pole.
+     *
+     * Podrobně:
+     * - Vyzvedne vytvořený prepared statement pro zadaný SQL řetězec z cache, pokud není vytvoří nový prepared statement a uloží do cache.
+     * - Nahradí placeholdery zadanými parametry pomocí bindParams().
+     * - Provede příkaz a vrací jednu řádku tabulky ve formě asociativního pole. Pokud provedení příkazu vede k vyhledání více než jedné
+     * řádky, vrací jen první nalezenou a pokud je nastaven parametr $checkDuplicities na TRUE, pak v takovém případě vznikne user error typu E_USER_WARNING
+     * s hlášením o duplicitním záznamu. I v případě duplicitního záznamu vrací první vyhledaný řádek, nevyhazuje výjimku.
+     *
+     * @param string $sql SQL příkaz s případnými placeholdery.
+     * @param array $touplesToBind Pole parametrů pro bind, nepovinný parametr, default prázdné pole.
+     * @param bool $checkDuplicities Nepovinný parametr, default FALSE.
+     * @return array
+     */
+    protected function selectOne($sql, $touplesToBind=[], $checkDuplicities=FALSE) {
+        $statement = $this->getPreparedStatement($sql);
+        if ($touplesToBind) {
+            $this->bindParams($statement, $touplesToBind);
+        }
+        $statement->execute();
+        if ($checkDuplicities) {
+            $num_rows = $statement->rowCount();
+            if ($num_rows > 1) {
+                user_error("V databázi existuje duplicitní záznam.". "Dao: ".get_called_class().", ". print_r($touplesToBind, true), E_USER_WARNING);
+            }
+        }
+        return $statement->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Očekává SQL string s příkazem SELECT a případnými placeholdery. Provede ho s použitím parametrů a vrací vyhledané řádky ve formě asociativního pole.
+     *
+     * Podrobně:
+     * - Vyzvedne vytvořený prepared statement pro zadaný SQL řetězec z cache, pokud není vytvoří nový prepared statement a uloží do cache.
+     * - Nahradí placeholdery zadanými parametry pomocí bindParams().
+     * - Provede příkaz a vrací vyhledané řádky ve formě asociativního pole.
+     *
+     * @param string $sql SQL příkaz s případnými placeholdery.
+     * @param array $touplesToBind Pole parametrů pro bind, nepovinný parametr, default prázdné pole.
+     * @return array
+     */
+    protected function selectMany($sql, $touplesToBind=[]) {
+        $statement = $this->getPreparedStatement($sql);
+        if ($touplesToBind) {
+            $this->bindParams($statement, $touplesToBind);
+        }
+        $statement->execute();
+        return $statement->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Očekává SQL string s příkazem INSERT. Provede ho s použitím parametrů a vrací výsledek metody PDOStatement->execute().
+     *
+     * Podrobně:
+     * - Vyzvedne vytvořený prepared statement pro zadaný SQL řetězec z cache, pokud není vytvoří nový prepared statement a uloží do cache.
+     * - Nahradí placeholdery zadanými parametry pomocí bindParams().
+     * - Provede příkaz a vrací výsledek metody PDOStatement->execute().
+     *
+     * @param string $sql SQL příkaz s případnými placeholdery.
+     * @param array $touplesToBind Pole parametrů pro bind, nepovinný parametr, default prázdné pole.
+     * @return aray
+     */
+    protected function execInsert($sql, $touplesToBind=[]) {
+        $statement = $this->getPreparedStatement($sql);
+        if ($touplesToBind) {
+            $this->bindParams($statement, $touplesToBind);
+        }
+        $success = $statement->execute();
+        $this->lastInsertRowCount = $statement->rowCount();
+        $this->rowCount = $this->lastInsertRowCount;
+        return $success;
+    }
+
+    protected function getLastInsertedIdForOneRowInsert() {
+        if ($this->lastInsertRowCount == 1) {
+            return $this->dbHandler->lastInsertId();
         } else {
-            throw new DbDaoException('(selectRowObject) - Selhal SQL příkaz select.',0,$e);
+            user_error("Metoda getLastInsertedIdForOneRowInsert vrací platnou hodnotu jen při vložení právě jedho řádku. Poslední insert vložil řádky: $this->lastInsertRowCount.");
         }
-        return $rowObject ?? NULL;
     }
 
     /**
+     * Očekává SQL string s příkazem UPDATE. Provede ho s použitím parametrů a vrací výsledek metody PDOStatement->execute().
      *
-     * @param string $sqlQuery SQL příkaz s placeholdery ve tvaru :placeholder
-     * @param array $params Parametry pro bindValue - náhrady placeholderů
-     * @param string $rowObjectClassName Jméno třídy RowObject, která bude vytvořena.
-     * @return RowObjectInterface array of
-     * @throws DbDaoException
+     * Podrobně:
+     * - Vyzvedne vytvořený prepared statement pro zadaný SQL řetězec z cache, pokud není vytvoří nový prepared statement a uloží do cache.
+     * - Nahradí placeholdery zadanými parametry pomocí bindParams().
+     * - Provede příkaz a vrací výsledek metody PDOStatement->execute().
+     *
+     * @param string $sql SQL příkaz s případnými placeholdery.
+     * @param array $touplesToBind Pole parametrů pro bind, nepovinný parametr, default prázdné pole.
+     * @return aray
      */
-    protected function selectCollection($sqlQuery, $params, $rowObjectClassName) {
-        $statement = $this->dbh->prepare($sqlQuery);
-        $this->bindStatementValues($statement, $params);
-        if ($statement->execute()) {
-            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
-            foreach ($result as $resultRow) {
-                $rowObjects[] = $this->createRowObject($resultRow, $rowObjectClassName);
-            }
-        } else {
-            throw new DbDaoException('(selectCollection) -  Selhal SQL příkaz select.',0, $e);
+    protected function execUpdate($sql, $touplesToBind=[]) {
+        $statement = $this->getPreparedStatement($sql);
+        if ($touplesToBind) {
+            $this->bindParams($statement, $touplesToBind);
         }
-        return $rowObjects ?? NULL;
+        $success = $statement->execute();
+        $this->rowCount = $statement->rowCount();
+        return $success;
     }
 
     /**
-     * Vyrobí nový RowObject, naplní ho daty z řádku dat $row a nastaví jako persistovaný.
+     * Očekává SQL string s příkazem DELETE. Provede ho s použitím parametrů a vrací výsledek metody PDOStatement->execute().
      *
-     * @param array $row
-     * @param string $rowObjectClassName jméno třídy vytvářeného RowObjectu
-     * @return RowObjectInterface $rowObject
+     * Podrobně:
+     * - Vyzvedne vytvořený prepared statement pro zadaný SQL řetězec z cache, pokud není vytvoří nový prepared statement a uloží do cache.
+     * - Nahradí placeholdery zadanými parametry pomocí bindParams().
+     * - Provede příkaz a vrací výsledek metody PDOStatement->execute().
+     *
+     * @param string $sql SQL příkaz s případnými placeholdery.
+     * @param array $touplesToBind Pole parametrů pro bind, nepovinný parametr, default prázdné pole.
+     * @return aray
      */
-    private function createRowObject($row,  $rowObjectClassName) {
-        /* @var $rowObject RowObjectInterface */
-        $rowObject = new $rowObjectClassName();
-        $this->hydrator->hydrate($rowObject, $row);
-        $rowObject->setPersisted(TRUE);
-        return $rowObject;
+    protected function execDelete($sql, $touplesToBind=[]) {
+        $statement = $this->getPreparedStatement($sql);
+        if ($touplesToBind) {
+            $this->bindParams($statement, $touplesToBind);
+        }
+        $success = $statement->execute();
+        $this->rowCount = $statement->rowCount();
+        return $success;
     }
 
     /**
-     * Insert pro tabulku s primarnim klicem generovanym skriptem (nikoli databazi jako autoincrement).
-     * Metoda se používá u tabulek, kde je treba zachovani konzistence dat (napr. mezi databazemi...).
+     * Vrací počet řádek dotčených posledním příkazem delete, insert nebo update
      *
-     * @param string $sqlQuery SQL příkaz s placeholdery ve tvaru :placeholder
-     * @param RowObjectInterface $rowObject
-     * @param string $uidColumnName Jméno sloupce, do kterého se zapisuje uid
-     * @throws DbDaoException
+     * Správná funkce předpokládá nastavení atributu handleru PDO::MYSQL_ATTR_FOUND_ROWS = true
+     * @param type $param
      */
-    protected function execInsertWithUid($sqlQuery, RowObjectInterface $rowObject, $uidColumnName) {
-        $row=[];
-        $this->hydrator->extract($rowObject, $row);
-        try {
-            $this->dbh->beginTransaction();
-            $uid = $this->getNewUidWithinTransaction($uidColumnName);
-            $row[$uidColumnName] = $uid;
-            $statement = $this->dbh->prepare($sqlQuery);
-            $this->bindStatementValues($statement, $row);
-            $statement->execute();
-            $this->dbh->commit();
-        } catch(\PDOException $e) {
-            $this->dbh->rollBack();
-            throw new DbDaoException('(execInsertWithUid) - Selhala transakce insert.',0,$e);
+    protected function getRowCount($param) {
+        return $this->lastInsertRowCount;
+    }
+    
+    protected function getPreparedStatement($sql): StatementInterface {
+        if (!isset($this->preparedStatements[$sql])) {
+            $statement =$this->dbHandler->prepare($sql);
+            $this->preparedStatements[$sql] = $statement;
         }
-        $row = [$uidColumnName=>$uid];
-        $this->hydrator->hydrate($rowObject, $row);
-        $rowObject->setPersisted(TRUE);
+        return $this->preparedStatements[$sql];
     }
 
-    /**
-     * Pro tabulky s autoinkrementalnim primarnim klicem.
-     *
-     * @param string $sqlQuery SQL příkaz s placeholdery ve tvaru :placeholder
-     * @param RowObjectInterface $rowObject
-     * @throws DbDaoException
-     */
-    protected function execInsert($sqlQuery, RowObjectInterface $rowObject) {
-        $row=[];
-        $this->hydrator->extract($rowObject, $row);
-        try {
-            $this->dbh->beginTransaction();
-
-            $statement = $this->dbh->prepare($sqlQuery);
-            $this->bindStatementValues($statement, $row);
-            $statement->execute();
-            $this->dbh->commit();
-        } catch(\PDOException $e) {
-            $this->dbh->rollBack();
-            throw new DbDaoException('(execInsert) - Selhal SQL příkaz insert.',0,$e);
-        }
-        $row = $this->getRowWithId();
-        $this->hydrator->hydrate($rowObject, $row);
-        $rowObject->setPersisted(TRUE);
-    }
-
-    /**
-     *
-     * @param string $sqlQuery SQL příkaz s placeholdery ve tvaru :placeholder
-     * @param RowObjectInterface $rowObject
-     * @return boolean
-     * @throws DbDaoException
-     * @throws \Exception
-     */
-    protected function execUpdate($sqlQuery, RowObjectInterface $rowObject) {
-        $row=[];
-        $this->hydrator->extract($rowObject, $row);
-        try {
-            $this->dbh->beginTransaction();
-            $statement = $this->dbh->prepare( $sqlQuery);
-            $this->bindStatementValues($statement, $row);
-            $statement->execute();
-            $countR = $statement->rowCount();
-            if ($countR > 1) {
-                $this->dbh->rollBack();
-                throw new DbDaoException('(execUpdate) - Pokus o update více než 1 řádku v '.get_called_class().'. Transakce zrušena.',0,$e);
-            } else {
-                $this->dbh->commit();
-            }
-        } catch(\PDOException $e) {  //vs.exception a jeji potomci
-            $this->dbh->rollBack();
-            throw new DbDaoException('(execUpdate) - Selhala transakce update v '.get_called_class() ,0,$e);
-        }
-        if ($countR === 0) {
-            throw new DbDaoException('(execUpdate) - Nepodařil se update. Update 0 řádek.',0,$e);
-        }
-    }
-
-
-
-    /**
-     * Vykona DELETE v databazi a nastavi objekt jako neperzistovany tim, ze mu sebere id (tj. nastavi vlastnost id na NULL).
-     *
-     * @param string $sqlQuery SQL příkaz s placeholdery ve tvaru :placeholder
-     * @param RowObjectInterface $rowObject
-     * @throws DbDaoException
-     */
-    protected function execDelete($sqlQuery,  RowObjectInterface $rowObject) {
-        $row=[];
-        $this->hydrator->extract($rowObject, $row);
-        try {
-            $this->dbh->beginTransaction();
-            $statement = $this->dbh->prepare($sqlQuery);
-            $this->bindStatementValues($statement, $row);
-            $statement->execute();   //!DULEZITE SDELENI! -timto prikazem vymazu ulozene vlastnosti  objektu (ty persistovane) z databaze.
-            if ($statement->rowCount()>1) {
-                throw new DbDaoException('(execDelete) - Pokus o delete více než 1 řádku v '.get_called_class().'. Transakce zrušena.',0,$e);
-            }
-            $this->dbh->commit();
-        } catch(\Exception $e) {
-            throw new DbDaoException('(execDelete) - Selhal SQL přikaz -nepodařil se v '.get_called_class() . '.', 0, $e);
-        }
-        if ($statement->rowCount()==0) {
-            user_error('(execDelete) - Pokus o mazání neexistují řádky!', E_USER_NOTICE);
-        }
-        $this->hydrator->hydrate($rowObject, $this->getRowWithNullPrimaryKeyAttributes());
-        $rowObject->setPersisted(false);
-    }
-
-
-    private function bindStatementValues(\PDOStatement $statement, array $row): void {
-        $queryString = $statement->queryString;
-        foreach ($row as $name=>$value) {
-            $placeholder = ':'.$name;
-            if (strpos($queryString, $placeholder) !== FALSE) {
-                $statement->bindValue($placeholder, $value);
+    private function bindParams(\PDOStatement $statement, $touplesToBind=[]) {
+        foreach ($touplesToBind as $key => $value) {
+            $placeholder = $key;
+            if (strpos($statement->queryString, $placeholder) !== FALSE) {
+                if (isset($value)) {
+                    $statement->bindValue($placeholder, $value);
+                } else {
+                    $statement->bindValue($placeholder, null, \PDO::PARAM_INT);
+                }
             }
         }
+        return $statement;
     }
 
-    /**
-     * Generuje uid unikátní v rámci tabulky.
-     *
-     * Generuje uid pomocí PHP funkce uniqid() a ověří, že vygenerované uid skutečně není v tabulce dosud použito. Pokud je použito, generuje nové uid.
-     * Aby byla zaručena unikátnost uid v rámci jedné tabulky, je nutné, aby čtení tabulky při zjišťování existence uid a následný zápis nového
-     * záznamu proběhly se zamčenou tabulkou.
-     * Tato metoda používá příkaz "SELECT uid FROM table WHERE uid = :uid LOCK IN SHARE MODE", který zamkne přečtené záznamy až
-     * do okamžiku ukončení transakce. Proto lze tuto metodu použít jen uprostřed již spuštěné transakce.
-     *  Volání této metody mimo spuštěnou transakci vyvolá výjimky.
-     */
-    private function getNewUidWithinTransaction($uidColumnName) {
-        if ($this->dbh->inTransaction()) {
-            $placeholder = ':'.$uidColumnName;
-            if ($this->tableMetadata->getColumnMetadata($uidColumnName)) {
-                do {
-                    $uid = uniqid();
-                    $stmt = $this->dbh->prepare(
-                        "SELECT $uidColumnName
-                        FROM $this->tableName
-                        WHERE $uidColumnName = $placeholder LOCK IN SHARE MODE");   //nelze použít LOCK TABLES - to commitne aktuální transakci!
-                    $stmt->bindParam($placeholder, $uid);
-                    $stmt->execute();
-                } while ($stmt->rowCount());
-                return $uid;
-            } else {
-                throw new \UnexpectedValueException("(getNewUidWithinTransaction) - Zadané jméno vlastnosti $uidColumnName vede na neexistující sloupec $uidColumnName.");
-            }
-        } else {
-            throw new \LogicException('(getNewUidWithinTransaction) - Tuto metodu lze volat pouze uprostřed spuštěné databázové transakce.');
         }
-    }
-
-
-    /**
-     * Nastaví last insert id tomu atributu primárního klíče, který je automaticky generovaný.
-     *
-     * @param array $row
-     */
-    private function getRowWithId() {
-        $row=[];
-        foreach ($this->tableMetadata->getPrimaryKeyAttribute() as $name) {
-            if($this->tableMetadata->getColumnMetadata($name)->isGenerated()) {
-                $row[$name] = $this->dbh->lastInsertId();
-            }
-        }
-        return $row;
-    }
-
-    private function getRowWithNullPrimaryKeyAttributes() {
-        $row=[];
-        foreach ($this->tableMetadata->getPrimaryKeyAttribute() as $name) {
-            $row[$name] = NULL;
-        }
-        return $row;
-    }
-
-
-
-}
-
-

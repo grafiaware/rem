@@ -6,15 +6,14 @@
  * and open the template in the editor.
  */
 
-namespace Model\Dao;
+namespace Model\Repository\Association;
 
 /**
  *
  * @author pes2704
  */
-interface DaoInterface {
-    public function get($id);
-    public function insert($row);
-    public function update($row);
-    public function delete($row);
+interface AssociationInterface {
+
+    public function flushChildRepo(): void;
+
 }

@@ -6,15 +6,13 @@
  * and open the template in the editor.
  */
 
-namespace Model\Dao;
+namespace Model\Repository;
 
 /**
  *
  * @author pes2704
  */
-interface DaoInterface {
-    public function get($id);
-    public function insert($row);
-    public function update($row);
-    public function delete($row);
+interface RepoInterface {
+
+    public function flush(): void;
 }
