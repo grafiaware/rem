@@ -53,6 +53,17 @@ class IdentityMock extends IdentityAbstract implements AccessorInterface {
 //    public function setKey( AccessorInterface $key): void {
 //        $this->key = $key;
 //    }
+    private  $uidPrimarniKlicZnaky;
+    
+    public function setUidPrimarniKlicZnaky( string $uidPrimarniKlicZnaky) {
+        $this->uidPrimarniKlicZnaky = $uidPrimarniKlicZnaky;
+        return $this;
+    }
+    public function getUidPrimarniKlicZnaky() :string {
+        return $this->uidPrimarniKlicZnaky;
+    }        
+
+
  
 }
 
@@ -170,14 +181,10 @@ class TestovaciEntityMock  extends EntityAbstract implements EntityInterfaceMock
 
 
 class KeyMock extends KeyAbstract implements AttributeInterface {
-    public $uidPrimarniKlicZnaky;
-    
+    public $uidPrimarniKlicZnaky;    
      //v Abstract  public $generated?
 }
-
-class RowObjectMock extends RowObjectAbstract implements AttributeInterface {              
-//    public $uidPrimarniKlicZnaky ;         
-
+class RowObjectMock extends RowObjectAbstract implements AttributeInterface {                  
     public $titulPred;
     public $jmeno;
     public $prijmeni;
@@ -240,8 +247,10 @@ class OneToOneEntityHydratorTest extends TestCase {
         $poleJmenKlice = [ "uidPrimarniKlicZnaky" ] ;
    
         
-        // 2 - zdrojovy datovy objekt testovaci
-        $testovaciZdrojovyRowObjectNaplneny = new RowObjectMock( new KeyMock( []  ) );                    
+        // 2 - zdrojovy datovy objekt testovaci        
+        $testovaciZdrojovyRowObjectNaplneny = new RowObjectMock ( new KeyMock( [ 'uidPrimarniKlicZnaky' => false ] ) );   // pole je do -generated
+        $testovaciZdrojovyRowObjectNaplneny->key->uidPrimarniKlicZnaky = 'klicekk';
+        
         $testovaciZdrojovyRowObjectNaplneny->jmeno          = "BARNABÁŠ";
         $testovaciZdrojovyRowObjectNaplneny->prijmeni       = "KOSTKA"; 
         $testovaciZdrojovyRowObjectNaplneny->titulPred      = "MUDrC.";
@@ -254,6 +263,8 @@ class OneToOneEntityHydratorTest extends TestCase {
         $testovaciZdrojovyRowObjectNaplneny->prvekDate      = $this->testDate ; //$this->DateTime::createFromFormat("Y-m-d", $testDateString)->setTime(0,0,0,0);         // objekt    
         $testovaciZdrojovyRowObjectNaplneny->prvekDatetime  = $this->testDateTime ; //$this->DateTime::createFromFormat("Y-m-d H:i:s", $testDateTimeString);      // objekt         
         $testovaciZdrojovyRowObjectNaplneny->prvekTimestamp = $this->testDateTime ;  //$this->DateTime::createFromFormat("Y-m-d H:i:s", $testDateTimeString);      // objekt             
+
+       
                      
         // 3 - filtr, name hydrator, -> vytvoření hydratoru       
         $oneToOneEntityHydrator = new OneToOneAccessorHydrator( new MethodNameHydrator_Mock(),
@@ -263,30 +274,22 @@ class OneToOneEntityHydratorTest extends TestCase {
                 
         // 4 -  hydratovani
         $identity = new IdentityMock(  );
-        $novaPlnenaTestovaciEntity  =  new TestovaciEntityMock( $identity );           
-        $oneToOneEntityHydrator->hydrate( $novaPlnenaTestovaciEntity, $testovaciZdrojovyRowObjectNaplneny );   
+        $novaPlnenaTestovaciEntity  =  new TestovaciEntityMock( $identity );   
         
-        $oneToOneIdentityHydrator->hydrate( $novaPlnenaTestovaciEntity->getIdentity(), $testovaciZdrojovyRowObjectNaplneny ); 
+        $oneToOneEntityHydrator->hydrate( $novaPlnenaTestovaciEntity, $testovaciZdrojovyRowObjectNaplneny );          
+        $oneToOneIdentityHydrator->hydrate( $novaPlnenaTestovaciEntity->getIdentity(), $testovaciZdrojovyRowObjectNaplneny->key ); 
+       
         
-        
-                
-        // 5 - kontrola hydratace          
-        $oneToOneFilter = new OneToOneFilterMock( $this->poleJmen);
+        // 5 - kontrola hydratace  - entita        
+        $oneToOneFilter = new OneToOneFilterMock( $poleJmenDoFiltruAccessoru);
         foreach ( $oneToOneFilter->getIterator() as  $value )  /* $value  je vlastnost rowobjectu!!!!!*/    {             
             $methodNameHydrator = new MethodNameHydrator_Mock();
             $methodNameGet = $methodNameHydrator->extract( $value );
-            //$getMethodName = "get" .  ucfirst( $value );
             
             // assertEquals (ocekavana, aktualni hodnota v entite) 
             $this->assertEquals($testovaciZdrojovyRowObjectNaplneny->$value, 
-                                $novaPlnenaTestovaciEntity->$methodNameGet(), 
-                                " *CHYBA*při hydrataci");         
-        }           
-        
-        
-//         "prvekVarchar" ,  "prvekChar" ,  "prvekText" , "prvekInteger" ,  "prvekBoolean" , 
-//         "prvekDate", "prvekDatetime", "prvekTimestamp" 
-
+                                $novaPlnenaTestovaciEntity->$methodNameGet(),  " *CHYBA*při hydrataci");         
+        }                   
         $this->assertEquals( $testovaciZdrojovyRowObjectNaplneny->prvekVarchar, $novaPlnenaTestovaciEntity->getPrvekVarchar(), " *CHYBA*při hydrataci");
         $this->assertEquals( $testovaciZdrojovyRowObjectNaplneny->prvekChar, $novaPlnenaTestovaciEntity->getPrvekChar(), " *CHYBA*při hydrataci");
         $this->assertEquals( $testovaciZdrojovyRowObjectNaplneny->prvekText, $novaPlnenaTestovaciEntity->getPrvekText(), " *CHYBA*při hydrataci");
@@ -296,7 +299,17 @@ class OneToOneEntityHydratorTest extends TestCase {
         $this->assertEquals( $testovaciZdrojovyRowObjectNaplneny->prvekDatetime, $novaPlnenaTestovaciEntity->getPrvekDatetime(), " *CHYBA*při hydrataci");
         $this->assertEquals( $testovaciZdrojovyRowObjectNaplneny->prvekTimestamp, $novaPlnenaTestovaciEntity->getPrvekTimestamp(), " *CHYBA*při hydrataci");
         
-        
+        // 5 - kontrola hydratace  - identita        
+        $oneToOneFilter1 = new OneToOneFilterMock( $poleJmenKlice);
+        foreach ( $oneToOneFilter1->getIterator() as  $value )  /* $value  je vlastnost identity!!!!!*/    {             
+                    //$methodNameHydrator = new MethodNameHydrator_Mock();
+            $methodNameGet = $methodNameHydrator->extract( $value );          
+            
+            // assertEquals (ocekavana, aktualni hodnota v entite) 
+            $this->assertEquals($testovaciZdrojovyRowObjectNaplneny->key->$value, 
+                                $novaPlnenaTestovaciEntity->getIdentity()->$methodNameGet(),  " *CHYBA*při hydrataci");         
+        }                   
+        $this->assertEquals( $testovaciZdrojovyRowObjectNaplneny->key->uidPrimarniKlicZnaky, $novaPlnenaTestovaciEntity->getIdentity()->$methodNameGet(), " *CHYBA*při hydrataci");        
     }          
     
     
@@ -304,8 +317,13 @@ class OneToOneEntityHydratorTest extends TestCase {
     /**
      * Extrahuji z objektu TestovaciEntity do row objektu.
      */     
-    public function testOneToOneEntityExtract(): void {             
-        // 2 - zdrojovy datovy objekt testovaci
+    public function testOneToOneEntityExtract(): void {     
+        $poleJmenDoFiltruAccessoru =  [ 
+            "prvekChar" , "prvekVarchar", "prvekInteger" ,"prvekText", "prvekBoolean",  
+            "prvekDate", "prvekDatetime", "prvekTimestamp"           ] ;   
+        $poleJmenKlice = [ "uidPrimarniKlicZnaky" ] ;
+        
+        // 2 - zdrojovy datovy objekt testovaci - entita
         $testovaciZdrojovaEntityNaplnena = new TestovaciEntityMock ( new IdentityMock(  ) );              
         $testovaciZdrojovaEntityNaplnena->setCeleJmeno(      "BARNABÁŠ " . "KOSTKA" );        
         $testovaciZdrojovaEntityNaplnena->setPrvekChar(      "CHARY *testovaci*" );
@@ -316,31 +334,31 @@ class OneToOneEntityHydratorTest extends TestCase {
         $testovaciZdrojovaEntityNaplnena->setPrvekDate(      $this->testDate); //  DateTime::createFromFormat("Y-m-d", $testDateString)->setTime(0,0,0,0) );  
         $testovaciZdrojovaEntityNaplnena->setPrvekDatetime(  $this->testDateTime ); //DateTime::createFromFormat("Y-m-d H:i:s", $testDateTimeString)  );                       
         $testovaciZdrojovaEntityNaplnena->setPrvekTimestamp( $this->testDateTime ); //DateTime::createFromFormat("Y-m-d H:i:s", $testDateTimeString)  );                        
-                  
+                          
+        $testovaciZdrojovaEntityNaplnena->getIdentity()->setUidPrimarniKlicZnaky ('klicekk');
+       
         // 3 - filtr, nastaveni filtru, hydrator (filtr do hydratoru)                                               
         $oneToOneEntityHydrator = new OneToOneAccessorHydrator( new MethodNameHydrator_Mock(),
-                                                                new OneToOneFilterMock( $this->poleJmen ) );       //vlastnosti rowobjectu!!!!! 
+                                                                new OneToOneFilterMock( $poleJmenDoFiltruAccessoru ) );       //vlastnosti rowobjectu!!!!! 
+        $oneToOneIdentityHydrator = new OneToOneAccessorHydrator( new MethodNameHydrator_Mock(),
+                                                                  new OneToOneFilterMock( $poleJmenKlice ) );       //vlastnosti rowobjectu->key!!!!! 
         
-        // 4 -  extrakce
-        $novyPlnenyRowObject  =  new RowObjectMock ( new KeyMock( [] ) );           
-        $oneToOneEntityHydrator->extract( $testovaciZdrojovaEntityNaplnena, $novyPlnenyRowObject );        
+        // 4 -  extrakce                           
+        $novyPlnenyRowObject  =  new RowObjectMock ( new KeyMock( ['uidPrimarniKlicZnaky' => false ] ) );           
+        $oneToOneEntityHydrator->extract( $testovaciZdrojovaEntityNaplnena, $novyPlnenyRowObject );    
+        $oneToOneIdentityHydrator->extract( $testovaciZdrojovaEntityNaplnena->getIdentity(), $novyPlnenyRowObject->key) ;    
                 
-        // 5 - kontrola extrakce     
-        $oneToOneFilter = new OneToOneFilterMock( $this->poleJmen);
+        // 5 - kontrola extrakce   - rowObject  
+        $oneToOneFilter = new OneToOneFilterMock( $poleJmenDoFiltruAccessoru );
         foreach (   $oneToOneFilter->getIterator()  as  $value )  /* $value je vlastnost rowobjectu!!!!!*/ {         
             $methodNameHydrator = new MethodNameHydrator_Mock();
             $methodNameGet = $methodNameHydrator->extract( $value );
             //$getMethodName = "get" .  ucfirst( $value );     
-            //
+            
             // assertEquals (ocekavana, aktualni hodnota v row objektu)   
             $this->assertEquals($testovaciZdrojovaEntityNaplnena->$methodNameGet(),  
-                                $novyPlnenyRowObject->$value ,                  
-                                "*CHYBA*při extrahování");     
-        }    
-        
-                
-//         "prvekVarchar" ,  "prvekChar" ,  "prvekText" , "prvekInteger" ,  "prvekBoolean" , 
-//         "prvekDate", "prvekDatetime", "prvekTimestamp" 
+                                $novyPlnenyRowObject->$value ,     "*CHYBA*při extrahování");     
+        }                            
         $this->assertEquals( $testovaciZdrojovaEntityNaplnena->getPrvekVarchar(), $novyPlnenyRowObject->prvekVarchar, "*CHYBA*při extrahovani"); 
         $this->assertEquals( $testovaciZdrojovaEntityNaplnena->getPrvekChar(), $novyPlnenyRowObject->prvekChar, "*CHYBA*při extrahovani"); 
         $this->assertEquals( $testovaciZdrojovaEntityNaplnena->getPrvekText(), $novyPlnenyRowObject->prvekText, "*CHYBA*při extrahovani"); 
@@ -349,7 +367,19 @@ class OneToOneEntityHydratorTest extends TestCase {
         $this->assertEquals( $testovaciZdrojovaEntityNaplnena->getPrvekDate(), $novyPlnenyRowObject->prvekDate, "*CHYBA*při extrahovani"); 
         $this->assertEquals( $testovaciZdrojovaEntityNaplnena->getPrvekDatetime(), $novyPlnenyRowObject->prvekDatetime, "*CHYBA*při extrahovani"); 
         $this->assertEquals( $testovaciZdrojovaEntityNaplnena->getPrvekTimestamp(), $novyPlnenyRowObject->prvekTimestamp, "*CHYBA*při extrahovani"); 
-
+                        
+        // 5 - kontrola extrakce   - rowObject-key 
+        $oneToOneFilter = new OneToOneFilterMock( $poleJmenKlice );
+        foreach ( $oneToOneFilter->getIterator()  as  $value )  /* $value je vlastnost rowobjectu-key!!!!!*/ {         
+                    //$methodNameHydrator = new MethodNameHydrator_Mock();
+            $methodNameGet = $methodNameHydrator->extract( $value );
+                       
+            // assertEquals (ocekavana, aktualni hodnota v row objektu)   
+            $this->assertEquals($testovaciZdrojovaEntityNaplnena->getIdentity()->$methodNameGet(),  
+                                $novyPlnenyRowObject->key->$value ,     "*CHYBA*při extrahování");     
+        }                            
+   
+        $this->assertEquals( $testovaciZdrojovaEntityNaplnena->getIdentity()->getUidPrimarniKlicZnaky(), $novyPlnenyRowObject->key->uidPrimarniKlicZnaky, "*CHYBA*při extrahovani");                     
         }
 }
 
