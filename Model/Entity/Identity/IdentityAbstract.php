@@ -3,8 +3,6 @@ namespace Model\Entity\Identity;
 
 use Model\Entity\AccessorInterface;
 
-//use Model\Entity\Identity\Exception\AttemptToSetGeneratedKeyException;
-//use Model\Entity\Identity\Key\KeyInterface;
 
 /**
  * 

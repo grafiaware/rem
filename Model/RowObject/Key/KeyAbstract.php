@@ -24,6 +24,8 @@ abstract class KeyAbstract  implements AttributeInterface {
     
     public function __construct ( /*array $attribute  , */ array $generated ) {
         //$this->attribute = $attribute;        
+
+
         
 //        // zda jména polí v $generated odpovídají $hash    
 //        if (count( array_diff_key ($generated, $attribute)) != 0 ) {      

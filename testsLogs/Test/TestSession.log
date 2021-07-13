@@ -1,13 +1,13 @@
-debug | 2021-07-12 14:13:29 | [2021-07-12 14:13:29] Logger start. Log file: C:\APACHEROOT\Rem\testsLogs/Test/TestSession.log. Mode 'w+'.
-debug | 2021-07-12 14:13:29 | Pes\Database\Handler\DsnProvider\DsnProviderMysql Vytvořeno dsn: mysql:host=localhost;dbname=tester_3_test
-debug | 2021-07-12 14:13:29 | Pes\Database\Handler\OptionsProvider\OptionsProviderMysql: Vytvořeny options - Array
+debug | 2021-07-13 14:10:21 | [2021-07-13 14:10:21] Logger start. Log file: C:\APACHEROOT\Rem\testsLogs/Test/TestSession.log. Mode 'w+'.
+debug | 2021-07-13 14:10:21 | Pes\Database\Handler\DsnProvider\DsnProviderMysql Vytvořeno dsn: mysql:host=localhost;dbname=tester_3_test
+debug | 2021-07-13 14:10:21 | Pes\Database\Handler\OptionsProvider\OptionsProviderMysql: Vytvořeny options - Array
     (
         [1005] => 1
         [1002] => SET NAMES utf8 COLLATE utf8_general_ci
     )
     
-debug | 2021-07-12 14:13:29 | Vytvořen database handler Handler tester_3_test (1), name tester_3_test, host localhost.
-info | 2021-07-12 14:13:29 | Pes\Database\Handler\AttributesProvider\AttributesProviderAbstract Nastaveny hodnoty atributů handleru (PDO): Array
+debug | 2021-07-13 14:10:21 | Vytvořen database handler Handler tester_3_test (1), name tester_3_test, host localhost.
+info | 2021-07-13 14:10:21 | Pes\Database\Handler\AttributesProvider\AttributesProviderAbstract Nastaveny hodnoty atributů handleru (PDO): Array
     (
         [3] => 2
         [13] => Array
@@ -23,9 +23,69 @@ info | 2021-07-12 14:13:29 | Pes\Database\Handler\AttributesProvider\AttributesP
         [20] => 
     )
     
-debug | 2021-07-12 14:13:29 | Handler tester_3_test (1) prepare(SHOW COLUMNS FROM testovaci_table_row, ). Vytvořen Statement (1).
-debug | 2021-07-12 14:13:29 | Statement (1) execute().
-debug | 2021-07-12 14:13:29 | Statement (1) execute()
-debug | 2021-07-12 14:13:29 | Statement (1) setFetchMode(8, Pes\Database\Metadata\ColumnMetadata)
-debug | 2021-07-12 14:13:29 | Statement (1) fetchAll()
-debug | 2021-07-12 14:13:29 | Result má 10 prvků.
+debug | 2021-07-13 14:10:21 | Handler tester_3_test (1) prepare(SHOW COLUMNS FROM testovaci_table_row, ). Vytvořen Statement (1).
+debug | 2021-07-13 14:10:21 | Statement (1) execute().
+debug | 2021-07-13 14:10:21 | Statement (1) execute()
+debug | 2021-07-13 14:10:21 | Statement (1) setFetchMode(8, Pes\Database\Metadata\ColumnMetadata)
+debug | 2021-07-13 14:10:21 | Statement (1) fetchAll()
+debug | 2021-07-13 14:10:21 | Result má 10 prvků.
+debug | 2021-07-13 14:10:21 | Pes\Database\Handler\DsnProvider\DsnProviderMysql Vytvořeno dsn: mysql:host=localhost;dbname=tester_3_test
+debug | 2021-07-13 14:10:21 | Pes\Database\Handler\OptionsProvider\OptionsProviderMysql: Vytvořeny options - Array
+    (
+        [1005] => 1
+        [1002] => SET NAMES utf8 COLLATE utf8_general_ci
+    )
+    
+debug | 2021-07-13 14:10:21 | Vytvořen database handler Handler tester_3_test (2), name tester_3_test, host localhost.
+info | 2021-07-13 14:10:21 | Pes\Database\Handler\AttributesProvider\AttributesProviderAbstract Nastaveny hodnoty atributů handleru (PDO): Array
+    (
+        [3] => 2
+        [13] => Array
+            (
+                [0] => Pes\Database\Statement\Statement
+                [1] => Array
+                    (
+                        [0] => 
+                    )
+    
+            )
+    
+        [20] => 
+    )
+    
+debug | 2021-07-13 14:10:21 | Handler tester_3_test (2) prepare(SHOW COLUMNS FROM testovaci_table_row, ). Vytvořen Statement (2).
+debug | 2021-07-13 14:10:21 | Statement (2) execute().
+debug | 2021-07-13 14:10:21 | Statement (2) execute()
+debug | 2021-07-13 14:10:21 | Statement (2) setFetchMode(8, Pes\Database\Metadata\ColumnMetadata)
+debug | 2021-07-13 14:10:21 | Statement (2) fetchAll()
+debug | 2021-07-13 14:10:21 | Result má 10 prvků.
+debug | 2021-07-13 14:10:21 | Pes\Database\Handler\DsnProvider\DsnProviderMysql Vytvořeno dsn: mysql:host=localhost;dbname=tester_3_test
+debug | 2021-07-13 14:10:21 | Pes\Database\Handler\OptionsProvider\OptionsProviderMysql: Vytvořeny options - Array
+    (
+        [1005] => 1
+        [1002] => SET NAMES utf8 COLLATE utf8_general_ci
+    )
+    
+debug | 2021-07-13 14:10:21 | Vytvořen database handler Handler tester_3_test (3), name tester_3_test, host localhost.
+info | 2021-07-13 14:10:21 | Pes\Database\Handler\AttributesProvider\AttributesProviderAbstract Nastaveny hodnoty atributů handleru (PDO): Array
+    (
+        [3] => 2
+        [13] => Array
+            (
+                [0] => Pes\Database\Statement\Statement
+                [1] => Array
+                    (
+                        [0] => 
+                    )
+    
+            )
+    
+        [20] => 
+    )
+    
+debug | 2021-07-13 14:10:21 | Handler tester_3_test (3) prepare(SHOW COLUMNS FROM testovaci_table_row, ). Vytvořen Statement (3).
+debug | 2021-07-13 14:10:21 | Statement (3) execute().
+debug | 2021-07-13 14:10:21 | Statement (3) execute()
+debug | 2021-07-13 14:10:21 | Statement (3) setFetchMode(8, Pes\Database\Metadata\ColumnMetadata)
+debug | 2021-07-13 14:10:21 | Statement (3) fetchAll()
+debug | 2021-07-13 14:10:21 | Result má 10 prvků.

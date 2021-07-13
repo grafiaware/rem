@@ -11,7 +11,7 @@ use Model\Entity\AccessorInterface;
 abstract class EntityAbstract implements AccessorInterface {
     /**
      *
-     * @var IdentityInterface 
+     * @var AccessorInterface 
      */
     private $identity;
     
@@ -24,6 +24,9 @@ abstract class EntityAbstract implements AccessorInterface {
     public function getIdentity(): AccessorInterface {
         return $this->identity;
     }
+//    public function setIdentity( AccessorInterface $identity): void {
+//        $this->identity = $identity;
+//    }
     
     public function setPersisted(): void {
         $this->persisted = true;

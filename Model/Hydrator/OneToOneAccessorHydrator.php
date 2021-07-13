@@ -18,15 +18,13 @@ class OneToOneAccessorHydrator implements AccessorHydratorInterface {
      *
      * @var AccessorMethodNameHydratorInterface
      */
-    private $methodNameHydrator;
-    
+    private $methodNameHydrator;    
     /**
      * Filtr obsahuje seznam jmen (pole jmen)  vlastností row objektu k hydrataci/extrakci.
      * 
      * @var  OneToOneFilterInterface    -  extends \IteratorAggregate
      */
-    private $filter;
-        
+    private $filter;        
     
     public function __construct ( AccessorMethodNameHydratorInterface $methodNameHydrator,  OneToOneFilterInterface $filter  ) { 
         $this->methodNameHydrator = $methodNameHydrator;
@@ -38,7 +36,7 @@ class OneToOneAccessorHydrator implements AccessorHydratorInterface {
      * Hydratuje objekt entity hodnotami z row objectu.
      * 
      * @param AccesorInterface $entity
-     * @param RowObjectInterface $rowObject
+     * @param AttributeInterface $rowObject
      * @return void
      */
     public function hydrate( AccessorInterface $entity, AttributeInterface $rowObject ): void {        
@@ -53,7 +51,7 @@ class OneToOneAccessorHydrator implements AccessorHydratorInterface {
      * Extrahuje hodnoty z objektu entity do row objectu.
      * 
      * @param AccesorInterface $entity
-     * @param RowObjectInterface $rowObject
+     * @param AttributeInterface $rowObject
      * @return void
      */
     public function extract ( AccessorInterface $entity, AttributeInterface $rowObject ): void {       
@@ -79,8 +77,7 @@ class OneToOneAccessorHydrator implements AccessorHydratorInterface {
 //         //entity    ma private vlastnosti a set-get-ry  
         
 //    (pozn. $data[NULL] -> offsetSet(index, NULL) ....
-              
-    
+
  
 //-------------------------------------------------------------------
 // public function hydrate( IdentityInterface $identity, KeyInterface $key ): void {        
