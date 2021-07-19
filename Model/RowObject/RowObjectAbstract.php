@@ -3,13 +3,14 @@ namespace Model\RowObject;
 
 //use Model\RowObject\Key\KeyInterface;
 use Model\RowObject\AttributeInterface;
+use Model\RowObject\RowObjectInterface;
 
 /**
  * Description of RowObjectAbstract
  *
  * @author vlse2610
  */
-abstract class RowObjectAbstract implements AttributeInterface {    
+abstract class RowObjectAbstract implements RowObjectInterface  {    
     /**
      *
      * @var KeyInterface
@@ -28,12 +29,12 @@ abstract class RowObjectAbstract implements AttributeInterface {
     
     
     
-//private $keyHash;    
-//    public function getKeyHash(): array {
+//private $key;    
+//    public function getKey(): array {
 //        $this->keyHash;
 //    }
 //    
-//    public function setKeyHash(array $keyHash) {
+//    public function setKey(array $keyHash) {
 //        $this->keyHash = $keyHash;
 //    }
 }

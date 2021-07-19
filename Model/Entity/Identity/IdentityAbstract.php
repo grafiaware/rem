@@ -1,13 +1,13 @@
 <?php
 namespace Model\Entity\Identity;
 
-use Model\Entity\AccessorInterface;
+use Model\Entity\Identity\IdentityInterface;
 
 
 /**
  * 
  */
-abstract class IdentityAbstract implements AccessorInterface {
+abstract class IdentityAbstract implements IdentityInterface {
    
     
     public function getIndexFromIdentity() {

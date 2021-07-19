@@ -13,12 +13,8 @@ interface AttributeInterface {
     
     
    // public function getIndexFromKeyRowObject() : array ;
-   // kde to bude??? 
+   // kde to bude???  
+   // TADY NE
     
-    
-    
-    
-    
-//    public function getKeyHash(): array;
-//    public function setKeyHash(array $keyHash);
+ 
 }

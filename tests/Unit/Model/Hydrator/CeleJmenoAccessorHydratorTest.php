@@ -16,6 +16,7 @@ use Model\Hydrator\CeleJmenoGluerInterface;
 //use Model\Entity\AccesorInterface;
 use Model\Entity\EntityAbstract;
 use Model\Entity\AccessorInterface;
+use Model\Entity\EntityInterface;
 
 use Model\RowObject\AttributeInterface;
 use Model\RowObject\RowObjectAbstract;
@@ -59,8 +60,13 @@ class AccessorNameHydratorMock implements AccessorNameHydratorInterface {
 }
 
 
-    
-class IdentityMock implements AccessorInterface {
+
+interface IdentityInterfaceMock {
+//    public function setUidPrimarniKlicZnaky( string $uidPrimarniKlicZnaky): IdentityMock ; 
+//    public function getUidPrimarniKlicZnaky() :string ;
+}    
+
+class IdentityMock implements AccessorInterface, IdentityInterfaceMock {
 //    public function hasGeneratedKey() : bool {
 //        return false;
 //    }
@@ -73,12 +79,12 @@ class IdentityMock implements AccessorInterface {
  
 }
 
-interface EntityInterfaceMock extends AccessorInterface {
+interface EntityInterfaceMock extends  EntityInterface{
         public function getCeleJmeno();       
         public function setCeleJmeno( string $celeJmeno) :TestovaciEntityMock;               
 } 
 
-class TestovaciEntityMock  extends EntityAbstract implements EntityInterfaceMock   {       
+class TestovaciEntityMock  extends EntityAbstract implements   EntityInterfaceMock   {       
     private $celeJmeno;  
     private $celeJmenoDruhe;  
    
@@ -102,7 +108,7 @@ class TestovaciEntityMock  extends EntityAbstract implements EntityInterfaceMock
     }  
 }
  
-class KeyMock extends KeyAbstract {
+class KeyMock extends KeyAbstract implements AttributeInterface {
     
 }
 

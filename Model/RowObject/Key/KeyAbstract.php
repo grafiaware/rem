@@ -2,13 +2,14 @@
 namespace Model\RowObject\Key;
 
 use Model\RowObject\AttributeInterface;
+use Model\RowObject\Key\KeyInterface;
 
 /**
  * Description of KeyAbstract
  *
  * @author vlse2610
  */
-abstract class KeyAbstract  implements AttributeInterface {
+abstract class KeyAbstract  implements KeyInterface {
     /**
     * 
     * @param array $attribute

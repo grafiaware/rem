@@ -2,13 +2,14 @@
 namespace Model\Entity;
 
 use Model\Entity\AccessorInterface;
+use Model\Entity\EntityInterface;
 
 /**
  * Description of TableEntityAbstract
  *
  * @author vlse2610
  */
-abstract class EntityAbstract implements AccessorInterface {
+abstract class EntityAbstract implements EntityInterface {
     /**
      *
      * @var AccessorInterface 
@@ -16,6 +17,10 @@ abstract class EntityAbstract implements AccessorInterface {
     private $identity;
     
     private $persisted=false;
+    
+    private $locked=false;   
+    
+    
 
     public function __construct( AccessorInterface $identity ) {
         $this->identity = $identity;        
@@ -27,6 +32,8 @@ abstract class EntityAbstract implements AccessorInterface {
 //    public function setIdentity( AccessorInterface $identity): void {
 //        $this->identity = $identity;
 //    }
+      
+    
     
     public function setPersisted(): void {
         $this->persisted = true;
@@ -36,6 +43,17 @@ abstract class EntityAbstract implements AccessorInterface {
         $this->persisted = false;
     }
     public function isPersisted(): bool {
-        return $this->persisted;
+        return $this->persisted;                
+    }
+        
+    
+    public function lock(): void {
+        $this->locked = true;
+    }    
+    public function unLock(): void {
+        $this->locked = false;
+    }
+    public function isLocked(): bool {
+        return $this->locked;                
     }
  }

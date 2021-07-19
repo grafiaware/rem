@@ -41,21 +41,16 @@ class MethodNameHydrator_Mock implements AccessorMethodNameHydratorInterface {
     }    
 }
 
+interface IdentityInterfaceMock {
+    public function setUidPrimarniKlicZnaky( string $uidPrimarniKlicZnaky): IdentityMock ; 
+    public function getUidPrimarniKlicZnaky() :string ;
+}
 
-    
-class IdentityMock extends IdentityAbstract implements AccessorInterface {
-//    public function hasGeneratedKey() : bool {
-//        return false;
-//    }
-//    public function getKey(): AccessorInterface{ 
-//        return $this->key;
-//    }    
-//    public function setKey( AccessorInterface $key): void {
-//        $this->key = $key;
-//    }
+class IdentityMock extends IdentityAbstract implements AccessorInterface, IdentityInterfaceMock {
+
     private  $uidPrimarniKlicZnaky;
     
-    public function setUidPrimarniKlicZnaky( string $uidPrimarniKlicZnaky) {
+    public function setUidPrimarniKlicZnaky( string $uidPrimarniKlicZnaky): IdentityMock {
         $this->uidPrimarniKlicZnaky = $uidPrimarniKlicZnaky;
         return $this;
     }
@@ -67,8 +62,8 @@ class IdentityMock extends IdentityAbstract implements AccessorInterface {
  
 }
 
-interface EntityInterfaceMock extends AccessorInterface {
-        public function getCeleJmeno();
+interface EntityInterfaceMock  {
+        public function getCeleJmeno();        
         public function getPrvekVarchar();
         public function getPrvekChar();
         public function getPrvekText();
@@ -77,6 +72,7 @@ interface EntityInterfaceMock extends AccessorInterface {
         public function getPrvekDatetime(): \DateTime;
         public function getPrvekTimestamp(): \DateTime;
         public function getPrvekBoolean();        
+        
         public function setCeleJmeno( string $celeJmeno) :TestovaciEntityMock;
         public function setPrvekVarchar($prvekVarchar) :TestovaciEntityMock;
         public function setPrvekChar($prvekChar) :TestovaciEntityMock;
@@ -87,7 +83,7 @@ interface EntityInterfaceMock extends AccessorInterface {
         public function setPrvekTimestamp(\DateTime $prvekTimestamp) :TestovaciEntityMock;
         public function setPrvekBoolean($prvekBoolean) :TestovaciEntityMock; 
 } 
-class TestovaciEntityMock  extends EntityAbstract implements EntityInterfaceMock   {       
+class TestovaciEntityMock  extends EntityAbstract implements  AccessorInterface, EntityInterfaceMock   {       
     private $celeJmeno;    
     private $prvekChar;
     private $prvekVarchar;    

@@ -4,6 +4,7 @@ namespace Test\TestovaciEntityRepositoryTest;
 use PHPUnit\Framework\TestCase;
 
 use Model\Entity\Identity\Identity;
+use Model\Entity\Identity\IdentityAbstract;
 
 use Model\Entity\Identity\Exception\MismatchedIndexesToKeyAttributeFieldsException;
 //use Model\Hydrator\CeleJmenoAccessorHydrator;
@@ -17,14 +18,17 @@ use Model\Hydrator\CeleJmenoAccessorHydrator;
 
 use Model\RowObject\RowObjectAbstract;
 use Model\RowObject\AttributeInterface;
+use Model\RowObject\Key\KeyAbstract;
+
 //use Model\RowObject\Hydrator\RowObjectHydrator;
-use Model\RowObject\Hydrator\RowHydratorInterface;
+use Model\Hydrator\AttributeHydratorInterface;
+//RowHydratorInterface;
 
 use Model\RowData\RowDataInterface;
 use Model\RowData\RowData;
 //use Model\Dao\DaoAbstract;
 
-use Model\Repository\RepositoryAbstract;
+use Model\Repository\RepoAbstract_vs;
 
 use Model\Hydrator\NameHydrator\AccessorMethodNameHydratorInterface;
 use Model\Hydrator\Filter\OneToOneFilterInterface;
@@ -55,66 +59,137 @@ class TestovaciDaoMock /*extends DaoAbstract*/ implements TestovaciDaoInterfaceM
     public function update( RowDataInterface $rowData): void {}
     public function delete( RowDataInterface $rowData ): void {}    
 }
+//---------------------------------------------------------------------------------------
+
+
+
+interface IdentityMockInterface {
+    public function setUidPrimarniKlicZnaky( string $uidPrimarniKlicZnaky): IdentityMock ;
+    public function getUidPrimarniKlicZnaky() :string ;
+}
 
 
 
 
 
-interface TestovaciEntityInterfaceMock extends AccessorInterface {    
-        public function getCeleJmeno();
-        public function getPrvekVarchar();
-        public function getPrvekChar();
+class IdentityMock extends IdentityAbstract implements AccessorInterface, IdentityMockInterface {
+    private  $uidPrimarniKlicZnaky;
+    
+    public function setUidPrimarniKlicZnaky( string $uidPrimarniKlicZnaky) : IdentityMock{
+        $this->uidPrimarniKlicZnaky = $uidPrimarniKlicZnaky;
+        return $this;
+    }
+    public function getUidPrimarniKlicZnaky() :string {
+        return $this->uidPrimarniKlicZnaky;
+    }        
+}
+
+
+
+
+
+
+
+interface TestovaciEntityInterfaceMock /*extends AccessorInterface*/ {    
+        public function getCeleJmeno();        
         public function getJmenoClovek();
         public function getPrijmeniClovek();
-// public function getPrvekText();//        public function getPrvekInteger();//        public function getPrvekDate(): \DateTime;//        public function getPrvekDatetime(): \DateTime;//        public function getPrvekTimestamp(): \DateTime;//        public function getPrvekBoolean();        
-        public function setCeleJmeno( string $celeJmeno) :TestovaciEntityInterfaceMock;
-        public function setPrvekVarchar($prvekVarchar) :TestovaciEntityInterfaceMock;
-        public function setPrvekChar($prvekChar) :TestovaciEntityInterfaceMock;
+        
+        public function getPrvekVarchar();
+        public function getPrvekChar();
+        public function getPrvekText();
+        public function getPrvekInteger();
+        public function getPrvekDate(): \DateTime;
+        public function getPrvekDatetime(): \DateTime;
+        public function getPrvekTimestamp(): \DateTime;
+        public function getPrvekBoolean();     
+
+        public function setCeleJmeno( string $celeJmeno) :TestovaciEntityInterfaceMock;               
         public function setJmenoClovek($jmenoClovek) :TestovaciEntityInterfaceMock;
-        public function setPrijmeniClovek($prijmeniClovek) :TestovaciEntityInterfaceMock;
-// public function setPrvekText($prvekText) :TestovaciEntityInterfaceMock;//    public function setPrvekInteger($prvekInteger) :TestovaciEntityInterfaceMock;//        public function setPrvekDate(\DateTime $prvekDate) :TestovaciEntityInterfaceMock;//        public function setPrvekDatetime(\DateTime $prvekDatetime) :TestovaciEntityInterfaceMock;//        public function setPrvekTimestamp(\DateTime $prvekTimestamp) :TestovaciEntityInterfaceMock;//        public function setPrvekBoolean($prvekBoolean) :TestovaciEntityInterfaceMock;        
+        public function setPrijmeniClovek($prijmeniClovek) :TestovaciEntityInterfaceMock;        
+        
+        public function setPrvekVarchar($prvekVarchar) :TestovaciEntityMock;
+        public function setPrvekChar($prvekChar) :TestovaciEntityMock;
+        public function setPrvekText($prvekText) :TestovaciEntityMock;
+        public function setPrvekInteger($prvekInteger) :TestovaciEntityMock;
+        public function setPrvekDate(\DateTime $prvekDate) :TestovaciEntityMock;
+        public function setPrvekDatetime(\DateTime $prvekDatetime) :TestovaciEntityMock;
+        public function setPrvekTimestamp(\DateTime $prvekTimestamp) :TestovaciEntityMock;
+        public function setPrvekBoolean($prvekBoolean) :TestovaciEntityMock;        
 }
-class TestovaciEntityMock extends EntityAbstract implements TestovaciEntityInterfaceMock {      
+
+class TestovaciEntityMock extends EntityAbstract implements AccessorInterface, TestovaciEntityInterfaceMock {      
     //V EntityAbstract JE Identity
         /**
          *
          * @var string
          */   
-        private $celeJmeno;    
-        private $prvekChar;
-        private $prvekVarchar;    
+        private $celeJmeno;           
         private $jmenoClovek;
         private $prijmeniClovek;
-        //private $prvekText;        private $prvekInteger;            private $prvekBoolean;   private $prvekDate;        private $prvekDatetime;           private $prvekTimestamp;
+        
+        private $prvekChar;
+        private $prvekVarchar;    
+        private $prvekText;
+        private $prvekInteger;    
+        private $prvekBoolean;
+        /**
+         *
+         * @var \DateTime 
+         */
+        private $prvekDate;
+        /**
+         *
+         * @var \DateTime 
+         */
+        private $prvekDatetime;
+        /**
+         *
+         * @var \DateTime 
+         */
+        private $prvekTimestamp;
+        
     //----------------------------------------------------- 
         public function getCeleJmeno() : string {
             return $this->celeJmeno;
         }
-        public function getPrvekVarchar() : string {
-            return $this->prvekVarchar;
-        }
-        public function getPrvekChar(): string {
-            return $this->prvekChar;
-        }        
+    
         public function getJmenoClovek(): string {
             return $this->jmenoClovek;
         }        
         public function getPrijmeniClovek(): string {
             return $this->prijmeniClovek;
         }        
+         public function getPrvekVarchar() : string {
+             return $this->prvekVarchar;
+        }
+        public function getPrvekChar(): string {
+            return $this->prvekChar;
+        }
+        public function getPrvekText()  : string{
+            return $this->prvekText;
+        }
+        public function getPrvekInteger() : int {
+            return $this->prvekInteger;
+        }
+        public function getPrvekDate(): \DateTime {
+            return $this->prvekDate;
+        }
+        public function getPrvekDatetime(): \DateTime {
+            return $this->prvekDatetime;
+        }
+        public function getPrvekTimestamp(): \DateTime {
+            return $this->prvekTimestamp;
+        }
+        public function getPrvekBoolean() {
+            return $this->prvekBoolean;
+        }        
         //-----------------------------------
         public function setCeleJmeno( string $celeJmeno) : TestovaciEntityInterfaceMock {
            $this->celeJmeno = $celeJmeno;
            return $this;
         }
-        public function setPrvekVarchar($prvekVarchar) :TestovaciEntityInterfaceMock {
-            $this->prvekVarchar = $prvekVarchar;       
-            return $this;        
-        }
-        public function setPrvekChar($prvekChar) :TestovaciEntityInterfaceMock {
-            $this->prvekChar = $prvekChar;
-            return $this;
-        }                       
+      
         public function setJmenoClovek($jmenoClovek) :TestovaciEntityInterfaceMock{
             $this->jmenoClovek = $jmenoClovek;
             return $this;
@@ -123,15 +198,74 @@ class TestovaciEntityMock extends EntityAbstract implements TestovaciEntityInter
             $this->prijmeniClovek = $prijmeniClovek;
             return $this;
         }
+        public function setPrvekVarchar($prvekVarchar) :TestovaciEntityMock {
+            $this->prvekVarchar = $prvekVarchar;       
+            return $this;        
+        }
+        public function setPrvekChar($prvekChar) :TestovaciEntityMock {
+            $this->prvekChar = $prvekChar;
+            return $this;        
+        }
+        public function setPrvekText($prvekText) :TestovaciEntityMock {
+            $this->prvekText = $prvekText;
+            return $this;        
+        }
+        public function setPrvekInteger($prvekInteger) :TestovaciEntityMock{
+            $this->prvekInteger = $prvekInteger;
+            return $this;       
+        }
+        public function setPrvekDate(\DateTime $prvekDate) :TestovaciEntityMock{
+            $this->prvekDate = $prvekDate;
+            return $this;        
+        }
+        public function setPrvekDatetime(\DateTime $prvekDatetime) :TestovaciEntityMock {
+            $this->prvekDatetime = $prvekDatetime;
+            return $this;        
+        }
+        public function setPrvekTimestamp(\DateTime $prvekTimestamp) :TestovaciEntityMock {
+            $this->prvekTimestamp = $prvekTimestamp;
+            return $this;      
+        }
+        public function setPrvekBoolean($prvekBoolean) :TestovaciEntityMock {
+            $this->prvekBoolean = $prvekBoolean;
+            return $this;
+        }
 }
 
 
+
+class KeyMock extends KeyAbstract implements AttributeInterface {
+    public $uidPrimarniKlicZnaky;    
+     //v Abstract  public $generated?
+}
+
 class RowObjectMock extends RowObjectAbstract implements AttributeInterface {
-    public $celeJmeno;    
-    public $prvekChar;
-    public $prvekVarchar;    
+    public $celeJmeno;        
     public $jmenoClovek;
     public $prijmeniClovek;
+    
+    public $titulPred;
+    public $jmeno;
+    public $prijmeni;
+    public $titulZa;
+    
+    public $prvekChar;
+    public $prvekVarchar;  
+    public $prvekText;
+    public $prvekInteger;   
+    public $prvekBoolean;  
+    /**
+     * @var \DateTime 
+     */
+    public $prvekDate;
+    /**     
+     * @var \DateTime 
+     */
+    public $prvekDatetime;
+    /**
+     * @var \DateTime 
+     */
+    public $prvekTimestamp; 
     
 }
 
@@ -158,10 +292,6 @@ class OneToOneFilterMock implements OneToOneFilterInterface {
     }        
 }
 
-
-
-
-
 class CeleJmenoEntityHydratorMock implements AccessorHydratorInterface {
     public function hydrate( AccessorInterface $entity, AttributeInterface $rowObject): void {
         
@@ -173,31 +303,34 @@ class CeleJmenoEntityHydratorMock implements AccessorHydratorInterface {
 
 
 
+
+//###########################################################################################################################
+//###########################################################################################################################
 interface TestovaciEntityRepositoryInterfaceMock {    
     /**
      * 
      * @param IdentityInterface $identity
      * @return TestovaciEntityInterfaceMock|null
      */
-    public function get ( IdentityInterface $identity ): ?TestovaciEntityInterfaceMock;    
+    public function get ( $identity ): ?TestovaciEntityInterfaceMock;    
     /**
      * 
      * @param TestovaciEntityInterfaceMock $entity
      * @return void
      */
-    public function add( TestovaciEntityInterfaceMock $entity ): void;        
+    public function add( AccessorInterface $entity ): void;        
     /**
      * 
      * @param TestovaciEntityInterfaceMock $entity 
      * @return void
      */
-    public function remove( TestovaciEntityInterfaceMock $entity  ): void;
+    public function remove( AccessorInterface $entity  ): void;
 }
 
 
 
 
-class TestovaciEntityRepositoryMock extends RepositoryAbstract implements TestovaciEntityRepositoryInterfaceMock {                         
+class TestovaciEntityRepositoryMock extends RepoAbstract_vs implements TestovaciEntityRepositoryInterfaceMock {                         
     // private $identityHydrator;         
     
     public function __construct(            
@@ -218,7 +351,7 @@ class TestovaciEntityRepositoryMock extends RepositoryAbstract implements Testov
         
 //        $this->identityHydrator = $identityHydrator;               
     }                     
-    public function get ( IdentityInterface $identity ): ?TestovaciEntityInterfaceMock {
+    public function get (  $identity ): ?TestovaciEntityInterfaceMock {
         $index = $this->indexFromIdentity($identity);
         if (!isset($this->collection[$index])) {
             //$rowData = new RowData(); 
@@ -239,12 +372,12 @@ class TestovaciEntityRepositoryMock extends RepositoryAbstract implements Testov
 //        return $this->collection[$index] ?? NULL;
 //    }
             
-    public function add( TestovaciEntityInterfaceMock $entity ): void {                
+    public function add( AccessorInterface $entity ): void {                
 //        $index = $this->indexFromEntity($paper);
 //        $this->addEntity($paper, $index);
     }
     
-    public function remove( TestovaciEntityInterfaceMock $entity  ): void {                
+    public function remove( AccessorInterface $entity  ): void {                
 //        $index = $this->indexFromEntity($paper);
 //        $this->removeEntity($entity, $index);
     }
@@ -255,7 +388,7 @@ class TestovaciEntityRepositoryMock extends RepositoryAbstract implements Testov
         return new RowObjectMock();  
     }
     
-    protected function createEntity( $identity): TestovaciEntityInterfaceMock {
+    protected function createEntity( ) {
         return new TestovaciEntityMock( $identity /*.....tady ma byt identita*/);
     }
 
