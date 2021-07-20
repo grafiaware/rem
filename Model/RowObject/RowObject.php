@@ -11,7 +11,7 @@ use Model\RowObject\RowObjectInterface;
  *
  * @author vlse2610
  */
-class RowObject extends RowObjectAbstract implements AttributeInterface, RowObjectInterface{
+class RowObject extends RowObjectAbstract implements  RowObjectInterface{
      
   
 }

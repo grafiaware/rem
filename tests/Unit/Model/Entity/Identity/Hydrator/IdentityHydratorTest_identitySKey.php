@@ -1,7 +1,7 @@
 <?php
-namespace Test\IdentityHydratorTest;
-
-use PHPUnit\Framework\TestCase;
+////namespace Test\IdentityHydratorTest;
+//
+//use PHPUnit\Framework\TestCase;
 
 use Model\Entity\Identity\Hydrator\IdentityHydrator;
 use Model\Entity\Identity\Hydrator\Exception\MissingAttributeFieldValueException;
@@ -14,6 +14,9 @@ use Model\Entity\Identity\Exception\AttemptToSetGeneratedKeyException;
 use Model\Entity\Identity\Hydrator\NameHydrator\AttributeNameHydratorInterface;
 use Model\RowObject\RowObjectInterface;
 use Model\RowObject\RowObjectAbstract;
+
+use Model\Hydrator\AccessorHydratorInterface;
+use Model\Hydrator\NameHydrator\AccessorNameHydratorInterface;
 
 
 class IdentityMock_ForIdentityHydratorTest /*implements IdentityInterface */{

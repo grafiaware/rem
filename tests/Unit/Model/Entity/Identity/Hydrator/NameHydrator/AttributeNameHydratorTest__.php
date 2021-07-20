@@ -1,7 +1,7 @@
 <?php
-//namespace Test\I_AttributeNameIdentityHydratorTest;
-
-use PHPUnit\Framework\TestCase;
+////namespace Test\AttributeNameIdentityHydratorTest;
+//
+//use PHPUnit\Framework\TestCase;
 
 use Model\Hydrator\NameHydrator\AttributeNameHydrator;
 

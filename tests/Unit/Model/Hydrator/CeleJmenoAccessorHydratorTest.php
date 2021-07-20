@@ -3,8 +3,6 @@ namespace Test\CeleJmenoEntityHydratorTest;
 
 use PHPUnit\Framework\TestCase;
 
-use Model\Entity\Hydrator\CeleJmenoEntityHydrator;
-
 use Model\Hydrator\Filter\OneToManyFilterInterface;
 use Model\Hydrator\NameHydrator\AccessorMethodNameHydratorInterface; 
 use Model\Hydrator\NameHydrator\AccessorMethodNameHydrator;
@@ -13,16 +11,16 @@ use Model\Hydrator\NameHydrator\AccessorNameHydrator;
 use Model\Hydrator\CeleJmenoAccessorHydrator;
 use Model\Hydrator\CeleJmenoGluerInterface;
 
-//use Model\Entity\AccesorInterface;
 use Model\Entity\EntityAbstract;
-use Model\Entity\AccessorInterface;
 use Model\Entity\EntityInterface;
 
-use Model\RowObject\AttributeInterface;
+use Model\Entity\Identity\IdentityInterface;
+use Model\Entity\Identity\IdentityAbstract;
+
+use Model\RowObject\RowObjectInterface;
 use Model\RowObject\RowObjectAbstract;
-use Model\RowObject\Key\Key;
+use Model\RowObject\Key\KeyInterface;
 use Model\RowObject\Key\KeyAbstract;
-//use Model\RowObject\Key\Key;
 
 
 class OneToManyFilterMock implements OneToManyFilterInterface {
@@ -61,12 +59,12 @@ class AccessorNameHydratorMock implements AccessorNameHydratorInterface {
 
 
 
-interface IdentityInterfaceMock {
+interface IdentityInterfaceMock  extends IdentityInterface {
 //    public function setUidPrimarniKlicZnaky( string $uidPrimarniKlicZnaky): IdentityMock ; 
 //    public function getUidPrimarniKlicZnaky() :string ;
 }    
 
-class IdentityMock implements AccessorInterface, IdentityInterfaceMock {
+class IdentityMock extends IdentityAbstract implements IdentityInterfaceMock {
 //    public function hasGeneratedKey() : bool {
 //        return false;
 //    }
@@ -81,10 +79,12 @@ class IdentityMock implements AccessorInterface, IdentityInterfaceMock {
 
 interface EntityInterfaceMock extends  EntityInterface{
         public function getCeleJmeno();       
-        public function setCeleJmeno( string $celeJmeno) :TestovaciEntityMock;               
-} 
+        public function getCeleJmenoDruhe() : string ;
+        public function setCeleJmeno( string $celeJmeno) :TestovaciEntityMock;   
+        public function setCeleJmenoDruhe( string $celeJmeno) :TestovaciEntityMock;
+}        
 
-class TestovaciEntityMock  extends EntityAbstract implements   EntityInterfaceMock   {       
+class TestovaciEntityMock  extends EntityAbstract implements  EntityInterfaceMock   {       
     private $celeJmeno;  
     private $celeJmenoDruhe;  
    
@@ -108,13 +108,16 @@ class TestovaciEntityMock  extends EntityAbstract implements   EntityInterfaceMo
     }  
 }
  
-class KeyMock extends KeyAbstract implements AttributeInterface {
+
+interface KeyInterfaceMock extends KeyInterface{    
+}
+class KeyMock extends KeyAbstract implements KeyInterfaceMock {
     
 }
 
-//interface RowObjectInterfaceMock extends AttributeInterface{    
-//}
-class RowObjectMock extends RowObjectAbstract implements AttributeInterface {              
+interface RowObjectInterfaceMock extends RowObjectInterface{    
+}
+class RowObjectMock extends RowObjectAbstract implements RowObjectInterfaceMock {              
     public $uidPrimarniKlicZnaky ;         
 
     public $titulPred;

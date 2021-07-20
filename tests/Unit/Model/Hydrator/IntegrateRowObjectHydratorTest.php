@@ -3,18 +3,20 @@ namespace Test\IntegrateKeyRowObjectHydratorTest;
 
 use PHPUnit\Framework\TestCase;
 
-use Model\RowObject\AttributeInterface;
 use Model\RowObject\RowObjectAbstract;
+use Model\RowObject\RowObjectInterface;
+
+use Model\RowObject\Key\KeyAbstract;
+use Model\RowObject\Key\KeyInterface;
+
 use Model\Hydrator\AttributeHydrator;
-//use Model\RowObject\Hydrator\RowObjectHydrator;
 use Model\Hydrator\NameHydrator\AttributeNameHydratorInterface;
 use Model\Hydrator\Filter\ColumnFilterInterface;
 use Model\Hydrator\Exception\DatetimeConversionFailureException;
 use Model\Hydrator\Exception\UndefinedColumnNameException;
 use Model\Hydrator\Exception\UncompleteKeyException;
 
-use Model\RowObject\Key\KeyAbstract;
-//use Model\RowObject\RowInterface;
+
 
 use Model\RowData\RowData;
 use Model\RowData\RowDataInterface;
@@ -61,8 +63,10 @@ class AttributeNameHydratorROMock implements AttributeNameHydratorInterface {
     }             
  }
 
-
-class RowObjectMock  extends RowObjectAbstract implements AttributeInterface {                  
+interface RowObjectInterfaceMock extends RowObjectInterface {
+    
+}
+class RowObjectMock  extends RowObjectAbstract implements RowObjectInterfaceMock {                  
     public $titulPred;
     public $jmeno;
     public $prijmeni;
@@ -88,13 +92,17 @@ class RowObjectMock  extends RowObjectAbstract implements AttributeInterface {
     
     //v Abstract  public $key
     
-    public function __construct( AttributeInterface $key ) {
+    public function __construct( KeyInterfaceMock $key ) {
         parent::__construct( $key );
     }
     
 }
 
-class KeyMock extends KeyAbstract implements AttributeInterface {
+
+
+interface KeyInterfaceMock extends KeyInterface{    
+}
+class KeyMock extends KeyAbstract implements KeyInterfaceMock {
     public $uidPrimarniKlicZnaky;
     
      //v Abstract  public $generated?
@@ -231,7 +239,7 @@ class IntegrateRowObjectHydratorTest extends TestCase {
 
                  
         $rowDataM = new RowDataMock ();                
-        $rowObjectM = new RowObjectMock( new KeyMock( ["uidPrimarniKlicZnaky" => false ] ));           
+        $rowObjectM = new RowObjectMock( new KeyMock( ["uidPrimarniKlicZnaky" => false ] ));    //generated       
         
         $rowObjectM->key->uidPrimarniKlicZnaky = "KEYklic";
         $rowObjectM->key->klic = "";

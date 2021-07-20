@@ -1,5 +1,5 @@
 <?php
-use PHPUnit\Framework\TestCase;
+//use PHPUnit\Framework\TestCase;
 
 // kontejner
 use  Test\DaoContainerConfigurator;

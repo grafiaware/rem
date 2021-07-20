@@ -1,7 +1,7 @@
 <?php
-namespace Test\IdentityTest;
-
-use PHPUnit\Framework\TestCase;
+//// namespace Test\IdentityTest;
+//
+//use PHPUnit\Framework\TestCase;
 
 use Model\Entity\Identity\Identity;
 use Model\Entity\Identity\Key\Key;

@@ -1,13 +1,18 @@
 <?php
 namespace Model\Entity;
 
+use Model\Entity\AccessorInterface;
+
+use Model\Entity\Identity\IdentityInterface;
+
+
 /**
  *
  * @author vlse2610
  */
 interface EntityInterface extends  AccessorInterface {
     
-    public function getIdentity(): AccessorInterface ;           
+    public function getIdentity(): IdentityInterface ;           
     
     public function setPersisted(): void;
     

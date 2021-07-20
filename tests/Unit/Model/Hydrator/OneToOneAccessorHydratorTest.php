@@ -10,12 +10,16 @@ use Model\Hydrator\Filter\OneToOneFilterInterface;
 use Model\Hydrator\NameHydrator\AccessorMethodNameHydratorInterface;
 
 use Model\Entity\EntityAbstract;
+use Model\Entity\EntityInterface;
 use Model\Entity\Identity\IdentityAbstract;
-use Model\Entity\AccessorInterface;
+use Model\Entity\Identity\IdentityInterface;
 
-use Model\RowObject\AttributeInterface;
+//use Model\RowObject\AttributeInterface;
 use Model\RowObject\RowObjectAbstract;
+use Model\RowObject\RowObjectInterface;
+
 use Model\RowObject\Key\KeyAbstract;
+use Model\RowObject\Key\KeyInterface;
 
 
 class OneToOneFilterMock implements OneToOneFilterInterface {    
@@ -41,12 +45,14 @@ class MethodNameHydrator_Mock implements AccessorMethodNameHydratorInterface {
     }    
 }
 
-interface IdentityInterfaceMock {
+
+
+interface IdentityInterfaceMock extends IdentityInterface {
     public function setUidPrimarniKlicZnaky( string $uidPrimarniKlicZnaky): IdentityMock ; 
     public function getUidPrimarniKlicZnaky() :string ;
 }
 
-class IdentityMock extends IdentityAbstract implements AccessorInterface, IdentityInterfaceMock {
+class IdentityMock extends IdentityAbstract implements  IdentityInterfaceMock {
 
     private  $uidPrimarniKlicZnaky;
     
@@ -62,7 +68,7 @@ class IdentityMock extends IdentityAbstract implements AccessorInterface, Identi
  
 }
 
-interface EntityInterfaceMock  {
+interface EntityInterfaceMock extends EntityInterface  {
         public function getCeleJmeno();        
         public function getPrvekVarchar();
         public function getPrvekChar();
@@ -83,7 +89,7 @@ interface EntityInterfaceMock  {
         public function setPrvekTimestamp(\DateTime $prvekTimestamp) :TestovaciEntityMock;
         public function setPrvekBoolean($prvekBoolean) :TestovaciEntityMock; 
 } 
-class TestovaciEntityMock  extends EntityAbstract implements  AccessorInterface, EntityInterfaceMock   {       
+class TestovaciEntityMock  extends EntityAbstract implements  EntityInterfaceMock   {       
     private $celeJmeno;    
     private $prvekChar;
     private $prvekVarchar;    
@@ -175,12 +181,15 @@ class TestovaciEntityMock  extends EntityAbstract implements  AccessorInterface,
 }
  
 
-
-class KeyMock extends KeyAbstract implements AttributeInterface {
+interface KeyInterfaceMock extends KeyInterface{    
+}
+class KeyMock extends KeyAbstract implements KeyInterfaceMock {
     public $uidPrimarniKlicZnaky;    
      //v Abstract  public $generated?
 }
-class RowObjectMock extends RowObjectAbstract implements AttributeInterface {                  
+interface RowObjectInterfaceMock extends RowObjectInterface{    
+}
+class RowObjectMock extends RowObjectAbstract implements RowObjectInterfaceMock {                  
     public $titulPred;
     public $jmeno;
     public $prijmeni;

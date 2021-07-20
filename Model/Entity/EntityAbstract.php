@@ -4,6 +4,9 @@ namespace Model\Entity;
 use Model\Entity\AccessorInterface;
 use Model\Entity\EntityInterface;
 
+use Model\Entity\Identity;
+use Model\Entity\Identity\IdentityInterface;
+
 /**
  * Description of TableEntityAbstract
  *
@@ -12,7 +15,7 @@ use Model\Entity\EntityInterface;
 abstract class EntityAbstract implements EntityInterface {
     /**
      *
-     * @var AccessorInterface 
+     * @var IdentityInterface 
      */
     private $identity;
     
@@ -22,14 +25,14 @@ abstract class EntityAbstract implements EntityInterface {
     
     
 
-    public function __construct( AccessorInterface $identity ) {
+    public function __construct( IdentityInterface $identity ) {
         $this->identity = $identity;        
     }    
     
-    public function getIdentity(): AccessorInterface {
+    public function getIdentity(): IdentityInterface {
         return $this->identity;
     }
-//    public function setIdentity( AccessorInterface $identity): void {
+//   NENE public function setIdentity( AccessorInterface $identity): void {
 //        $this->identity = $identity;
 //    }
       

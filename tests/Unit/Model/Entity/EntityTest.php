@@ -1,32 +1,24 @@
 <?php
-namespace Test\TestovaciEntityTest;
-
+namespace Test\EntityTest;
 
 use PHPUnit\Framework\TestCase;
 
 use Model\Entity\Identity\IdentityInterface;
-use Model\Entity\Identity\Key\KeyInterface;
-use Model\Entity\AccesorInterface;
+use Model\Entity\Identity\IdentityAbstract;
+
 use Model\Entity\EntityAbstract;
+use Model\Entity\EntityInterface; 
 
 
+interface IdentityInterfaceMock extends IdentityInterface {       
+}
     
-class IdentityMock implements IdentityInterface {
-    public function hasGeneratedKey() : bool {
-        return false;
-    }
-    public function getKey(): KeyInterface{ 
-        return $this->key;
-    }    
-    public function setKey( KeyInterface $key): void {
-        $this->key = $key;
-    }
+class IdentityMock extends IdentityAbstract implements IdentityInterfaceMock {    
  
 }
 
 
-interface TestovaciEntityInterfaceMock extends AccesorInterface {    
-
+interface TestovaciEntityInterfaceMock extends EntityInterface {    
         public function getCeleJmeno();
         public function getPrvekVarchar();
         public function getPrvekChar();
@@ -167,21 +159,21 @@ class TestovaciEntityMock extends EntityAbstract implements TestovaciEntityInter
  *
  * @author vlse2610
  */
-class TestovaciEntityTest extends TestCase {
+class EntityTest extends TestCase {
     /**
      *
      * @var IdentityInterface
      */
     private $identity;
     
-    private $testovaciAttribute;
-    private $testovaciKeyHash;
+//    private $testovaciAttribute;
+//    private $testovaciKeyHash;
         
     
     public function setUp(): void {
-        $this->testovaciKeyHash   = [ 'Klic1' => 'aa', 'Klic2' => 'bb'  ];
-        $this->testovaciAttribute = [ 'Klic1' ,'Klic2'  ];               
-        $this->identity = new IdentityMock ( ); //neni generovany klic    
+//        $this->testovaciKeyHash   = [ 'Klic1' => 'aa', 'Klic2' => 'bb'  ];
+//        $this->testovaciAttribute = [ 'Klic1' ,'Klic2'  ];               
+        $this->identity = new IdentityMock ( ); 
     }
     
     
