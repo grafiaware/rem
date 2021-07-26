@@ -64,8 +64,6 @@ class IdentityMock extends IdentityAbstract implements  IdentityInterfaceMock {
         return $this->uidPrimarniKlicZnaky;
     }        
 
-
- 
 }
 
 interface EntityInterfaceMock extends EntityInterface  {

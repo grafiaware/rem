@@ -14,20 +14,20 @@ interface AccessorHydratorInterface {
      * Hydratuje objekt entity hodnotami  z row objectu.
      * 
      * @param AccessorInterface $entity
-     * @param AttributeInterface $rowObject
+     * @param AttributeInterface $rowObjecta
      * @return void
      */
-    public function hydrate( AccessorInterface $entity, AttributeInterface $rowObject ): void;    
+    public function hydrate( AccessorInterface $entity, AttributeInterface $rowObjecta ): void;    
     
    
      /**
       * Extrahuje hodnoty z objektu entity do row objectu. 
       *     
       * @param AccessorInterface $entity
-      * @param AttributeInterface $rowObject
+      * @param AttributeInterface $rowObjecta
       * @return void
       */
-    public function extract ( AccessorInterface $entity, AttributeInterface $rowObject ): void;      
+    public function extract ( AccessorInterface $entity, AttributeInterface $rowObjecta ): void;      
            
     
     

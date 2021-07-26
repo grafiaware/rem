@@ -39,10 +39,10 @@ class OneToOneAccessorHydrator implements AccessorHydratorInterface {
      * @param AttributeInterface $rowObject
      * @return void
      */
-    public function hydrate( AccessorInterface $entity, AttributeInterface $rowObject ): void {        
+    public function hydrate( AccessorInterface $entity, AttributeInterface $rowObjecta ): void {        
         foreach ( $this->filter as $name ) {      //=> jmeno vlastnosti row objektu        
             $methodName = $this->methodNameHydrator->hydrate( $name );
-            $entity->$methodName( $rowObject->$name );
+            $entity->$methodName( $rowObjecta->$name );
         }        
     }    
        
@@ -54,10 +54,10 @@ class OneToOneAccessorHydrator implements AccessorHydratorInterface {
      * @param AttributeInterface $rowObject
      * @return void
      */
-    public function extract ( AccessorInterface $entity, AttributeInterface $rowObject ): void {       
+    public function extract ( AccessorInterface $entity, AttributeInterface $rowObjecta ): void {       
         foreach ( $this->filter as $name )  {   //=> jmeno vlastnosti row objektu                  
             $methodName = $this->methodNameHydrator->extract( $name );
-            $rowObject->$name = $entity->$methodName() ;
+            $rowObjecta->$name = $entity->$methodName() ;
         }        
     }
     

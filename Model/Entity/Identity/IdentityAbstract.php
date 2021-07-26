@@ -13,7 +13,7 @@ abstract class IdentityAbstract implements IdentityInterface {
     public function getIndexFromIdentity() {
         //get_object_vars - vybere ty "viditelne" a nestaticke
         
-        foreach (get_obj_vars($this) as $nameAttr=>$value) {            
+        foreach ( \get_object_vars($this) as $nameAttr=>$value) {            
            $index =+ $value;                        
         }
         return $index;
