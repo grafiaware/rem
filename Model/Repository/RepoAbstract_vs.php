@@ -6,7 +6,7 @@ use Model\Dao\DaoKeyDbVerifiedInterface;
 use Model\Dao\Exception\DaoKeyVerificationFailedException;
 
 use Model\RowData\PdoRowData;
-
+use Model\RowData\RowData;
 
 
 use Model\Hydrator\AccessorHydratorInterface; //#
@@ -17,7 +17,7 @@ use Model\Entity\EntityAbstract;
 
 use Model\RowObject\AttributeInterface; //#
 use Model\RowObject\RowObject;//#
-use Model\RowObject\RowObjectAbstract;//#
+use Model\RowObject\RowObjectInterface;
 use Model\RowObject\Key\Key;//#
 
 
@@ -31,6 +31,7 @@ use Model\Repository\Exception\BadImplemntastionOfChildRepository;
 
 use Model\Repository\Exception\UnableAddEntityException;
 use Model\Repository\Exception\OperationWithLockedEntityException;
+use Model\RowObject\RowObjectManagerInterface;
 
 /**
  * Description of RepoAbstract
@@ -59,17 +60,24 @@ abstract class RepoAbstract_vs {
     
     private $hydratorsEntity = [];
     private $hydratorsObject = [];
+    
+    /**
+     *
+     * @var RowObjectManagerInterface 
+     */
+    protected $rowObjectManager;
 
     /**
      * @var DaoInterface | DaoKeyDbVerifiedInterface
      * @var  DaoKeyDbVerifiedInterface
      */
     protected $dao;
+    
 
-    /**
-     * @var HydratorInterface array of
-     */
-    protected $hydrator;
+//    /**
+//     * @var HydratorInterface array of
+//     */
+//    protected $hydrator;
 
     /**
      *
@@ -102,26 +110,37 @@ abstract class RepoAbstract_vs {
     
     
 //############################
-    protected function hydrate( AccessorInterface $entity, $rO ,/*AttributeInterface $rowObject*/ $rowData ) {
+    protected function hydratespatnypokus( AccessorInterface $entity, AttributeInterface $rO ,/*AttributeInterface $rowObject*/ $rowData ) {
         /** @var AttributeHydratorInterface $hydrator */
         foreach ($this->hydratorsObject as $hydrator) {
             
-            $hydrator->hydrate( /*$rowObject*/ $rO  , $rowData );
+            $hydrator->hydrate( /*$rowObject*/ $rO , $rowData );
+            $hydrator->hydrate( /*$rowObject*/ $rO->key , $rowData ); // a co key?
         }
         /** @var AccessorHydratorInterface $hydrator */
         foreach ($this->hydratorsEntity as $hydrator) {
             $hydrator->hydrate( $entity, $rO  /* $rowObject*/ );
         }
     }
+    
+    protected function hydrateE( AccessorInterface $entity, AttributeInterface $rowObject ) {       
+      /** @var AccessorHydratorInterface $hydrator */
+        foreach ($this->hydratorsEntity as $hydrator) {
+            $hydrator->hydrate( $entity,  $rowObject );
+        }
+    }
+    
+    
+    
 //############################
     protected function extract( AccessorInterface $entity, AttributeInterface $rowObject, $rowData) {
         /** @var AttributeHydratorInterface $hydrator */
         foreach ($this->hydratorsObject as $hydrator) {
-            $hydrator->hydrate( $rowObject, $rowData );
+            $hydrator->hydrate ( $rowObject, $rowData ); //kravina
         }
         /** @var AccessorHydratorInterface $hydrator */
         foreach ($this->hydratorsEntity as $hydrator) {
-            $hydrator->extract( $entity, $rowObject);
+            $hydrator->extract ( $entity, $rowObject);
         }
     }
 
@@ -142,34 +161,51 @@ abstract class RepoAbstract_vs {
 //    }
 
     
-    /**
-     * 
-     * @param string $index
-     * @param AttributeInterface $rowObject
-     * @return string|null
-     * @throws UnableRecreateEntityException
-     */
-    protected function recreateEntity( $index,   $rowData ): ?string {
-   //protected function recreateEntity($index, AttributeInterface $rowObject): ?string {
-        if ($rowData) {
-            
-            
+    
+protected function recreateEntity( $index, RowObjectInterface $rowObject ) {
+    if ($rowObject) {                        
             $entity = $this->createEntity();  // definována v konkrétní třídě - adept na entity managera
 //            try {
 //                $this->recreateAssociations($rowObject);
 //            } catch (UnableToCreateAssotiatedChildEntity $unex) {
 //                throw new UnableRecreateEntityException("Nelze obnovit agregovanou (vnořenou) entitu v repository ". get_called_class()." s indexem $index.", 0, $unex);
 //            }
-            $key = new Key( [] );
-            $rO = $this->createRowObj( $key);
             
-            $this->hydrate( $entity, $rO , $rowData);
+            $this->hydrateE( $entity,  $rowObject);
             $entity->setPersisted();
             $this->collection[$index] = $entity;
             $this->flushed = false;
         }
         return $index ?? null;
-    }
+    
+}    
+    
+//    /**
+//     * 
+//     * @param string $index
+//     * @param RowDataInterface $rowData
+//     * @return string|null
+//     * @throws UnableRecreateEntityException
+//     */
+//    protected function recreateEntity( $index,  RowData $rowData ): ?string {
+//   //protected function recreateEntity($index, AttributeInterface $rowObject): ?string {
+//        if ($rowData) {                        
+//            $entity = $this->createEntity();  // definována v konkrétní třídě - adept na entity managera
+////            try {
+////                $this->recreateAssociations($rowObject);
+////            } catch (UnableToCreateAssotiatedChildEntity $unex) {
+////                throw new UnableRecreateEntityException("Nelze obnovit agregovanou (vnořenou) entitu v repository ". get_called_class()." s indexem $index.", 0, $unex);
+////            }
+//                    $key = new Key( [] );   //**__??
+//            $rO = $this->createRowObj( $key);
+//            
+//            $this->hydrate( $entity, $rO , $rowData);
+//            $entity->setPersisted();
+//            $this->collection[$index] = $entity;
+//            $this->flushed = false;
+//        }
+//        return $index ?? null;
+//    }
 
     private function reread($index, $rowObject, $entity) {
         try {

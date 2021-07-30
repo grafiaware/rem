@@ -3,14 +3,13 @@ namespace Model\RowObject;
 
 //use Model\RowObject\Key\KeyInterface;
 use Model\RowObject\AttributeInterface;
-use Model\RowObject\RowObjectInterface;
 
 /**
  * Description of RowObjectAbstract
  *
  * @author vlse2610
  */
-abstract class RowObjectAbstract implements RowObjectInterface  {    
+abstract class RowObjectAbstract  {    
     /**
      *
      * @var KeyInterface
