@@ -7,7 +7,7 @@ use Model\Entity\Identity\IdentityInterface;
 /**
  * 
  */
-abstract class IdentityAbstract implements IdentityInterface {
+abstract class IdentityAbstract  {
    
     
     public function getIndexFromIdentity() {

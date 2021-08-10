@@ -13,5 +13,5 @@ namespace Model\Dao;
  * @author pes2704
  */
 interface DaoChildInterface extends DaoInterface {
-    public function getByFk($idFk);
+    public function getByFk($idFk);  // chybí upravit - použít objekz associtivní klíč
 }

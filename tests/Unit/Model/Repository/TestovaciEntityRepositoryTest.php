@@ -8,7 +8,7 @@ use Model\Entity\Identity\IdentityInterface;
 use Model\Entity\EntityInterface;
 use Model\Entity\EntityAbstract;
 use Model\Entity\AccessorInterface;
-use Model\Entity\Identity\Exception\MismatchedIndexesToKeyAttributeFieldsException;
+//use Model\Entity\Identity\Exception\MismatchedIndexesToKeyAttributeFieldsException;
 
 use Model\RowObject\Key\KeyAbstract;
 use Model\RowObject\Key\KeyInterface;
@@ -17,23 +17,21 @@ use Model\RowObject\AttributeInterface;
 use Model\RowObject\RowObjectInterface;
 use Model\RowObject\RowObjectManagerInterface;
 
-use Model\Hydrator\AccessorHydratorInterface;
-use Model\Hydrator\NameHydrator\AccessorNameHydratorInterface;
-use Model\Hydrator\NameHydrator\AccessorMethodNameHydratorInterface;
-use Model\Hydrator\NameHydrator\AttributeNameHydratorInterface;
-use Model\Hydrator\NameHydrator\AttributeNameHydrator;
-use Model\Hydrator\Filter\OneToOneFilterInterface;
-use Model\Hydrator\Filter\ColumnFilterInterface;
-use Model\Hydrator\Filter\ColumnFilter;
-
-
+use Model\Hydrator\NameHydrator\AccessorNameHydrator;
 use Model\Hydrator\NameHydrator\AccessorMethodNameHydrator;
-use Model\Hydrator\Filter\OneToOneFilter;
+use Model\Hydrator\NameHydrator\AttributeNameHydrator;
 
+use Model\Hydrator\Filter\OneToOneFilter;
+use Model\Hydrator\Filter\ColumnFilter;
+use Model\Hydrator\Filter\OneToManyFilter;
+
+use Model\Hydrator\AccessorHydratorInterface;
 use Model\Hydrator\OneToOneAccessorHydrator;
 use Model\Hydrator\CeleJmenoAccessorHydrator;
 use Model\Hydrator\AttributeHydrator;
 use Model\Hydrator\AttributeHydratorInterface;
+use Model\Hydrator\CeleJmenoGluer;
+
 
 use Model\Dao\DaoAbstract;
 use Model\Dao\DaoKeyDbVerifiedInterface;
@@ -43,7 +41,7 @@ use Model\RowData\RowDataInterface;
 use Model\RowData\RowData;
 
 use Model\Repository\RepoAbstract_vs;
-use Model\Repository\RepoInterface;
+use Model\Repository\RepositoryInterface;
 
 use Test\Configuration\DaoContainerConfigurator;
 use Pes\Container\Container;
@@ -61,7 +59,7 @@ interface TestovaciDaoInterfaceMock   /*extends DaoInterface */  {
 /**
  * 'Omezené' Dao.   Constructor v tomto mocku NENI, chybí DaoAbstract.
  */
-class TestovaciDaoMock /*extends DaoAbstract*/ implements TestovaciDaoInterfaceMock {
+class TestovaciDaoMock extends DaoAbstract implements TestovaciDaoInterfaceMock {
     //class Dao extends \Model\Dao\DaoAbstract implements DaoInterfaceMock {    
     
     // nastaveni "konstant"
@@ -335,142 +333,36 @@ class TestovaciEntityMock extends EntityAbstract implements  TestovaciEntityInte
 
 
 //---------------------------------------------------------------------------------------
-//class OneToOneFilter implements OneToOneFilterInterface {    
-//    /**
-//     * @var array
-//     */
-//    private $poleJmen;   
+//class RowObjectManagerMock implements RowObjectManagerInterface {
 //    
-//    public function __construct(  array $poleJmen ) { 
-//        $this->poleJmen = $poleJmen; 
-//    }
-//    //Pozn. - getIterator vrací iterovatelný objekt.        
-//    public function getIterator() : \Traversable{        
-//        return new \ArrayIterator(  $this->poleJmen   );
-//    }        
-//}
-
- /**
- * Filtr pro hydrator typu RowObjectHydrator 
- */
-//class ColumnFilterMock implements ColumnFilterInterface {           
-//    private $poleJmen;               
-//    public function __construct( array $poleJmen ) {
-//        $this->poleJmen = $poleJmen;        
-//    }           
-//    public function getIterator() : \Traversable {        
-//         return new \ArrayIterator( $this->poleJmen );
-//    }             
-//}
-//---------------------------------------------------------------------------------------
-
-
-
-
-//
-////---------------------------------------------------------------------------------------
-//class AttributeNameHydratorROMock implements AttributeNameHydratorInterface {    
-//    public function hydrate(/*$underscoredName*/ $camelCaseName ){
-//        //return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $underscoredName))));
-//        return strtolower(preg_replace('/(?<!^)([A-Z])/', '_$1', $camelCaseName));
-//    }
-//
-//    public function extract( /*$underscoredName*/ $camelCaseName ) {                
-//       //$s2 = strtolower(preg_replace('/(?<!^)([A-Z])/', '_$1', $camelCaseName));
-//       return strtolower(preg_replace('/(?<!^)([A-Z])/', '_$1', $camelCaseName));  
-//       //return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $underscoredName))));
-//    }
-//}
-////---------------------------------------------------------------------------------------
-//class AccessorMethodNameHydratorMock implements AccessorMethodNameHydratorInterface {    
-//    public function hydrate(string $name): string {
-//        return 'set' . ucfirst($name);
-//    }        
-//    public function extract(string $name): string {       
-//        return 'get' . ucfirst($name);
-//    }    
-//}
-//
-//class AccessorNameHydratorMock implements AccessorNameHydratorInterface {   
-//    public function hydrate( string $name ) : string {   
-//        return $name  ;        
-//    }  
-//    public function extract( string $name )  : string {                
-//       return  $name  ;                         
-//    }
-//}
-////---------------------------------------------------------------------------------------
-
-
-//---------------------------------------------------------------------------------------
-class CeleJmenoEntityHydratorMock implements AccessorHydratorInterface {
-    public function hydrate( AccessorInterface $entity, AttributeInterface $rowObject): void {        
-    }
-    public function extract( AccessorInterface $entity, AttributeInterface $rowObject ): void {        
-    }
-}
-//---------------------------------------------------------------------------------------
-//class OneToOneAccessorHydratorMock implements AccessorHydratorInterface {
-//    /**
-//     *
-//     * @var AccessorMethodNameHydratorInterface
-//     */
-//    private $methodNameHydrator;    
-//    /**
-//     * Filtr obsahuje seznam jmen (pole jmen)  vlastností row objektu k hydrataci/extrakci.
-//     * 
-//     * @var  OneToOneFilterInterface    -  extends \IteratorAggregate
-//     */
-//    private $filter;        
+//    public $hydratorsObject;
 //    
-//    public function __construct ( AccessorMethodNameHydratorInterface $methodNameHydrator,  OneToOneFilterInterface $filter  ) { 
-//        $this->methodNameHydrator = $methodNameHydrator;
-//        $this->filter = $filter;       
-//    }        
-//     
-//    /**
-//     * Hydratuje objekt entity hodnotami z row objectu.
-//     * 
-//     * @param AccesorInterface $entity
-//     * @param AttributeInterface $rowObject
-//     * @return void
-//     */
-//    public function hydrate( AccessorInterface $entity, AttributeInterface $rowObjecta ): void {        
-//        foreach ( $this->filter as $name ) {      //=> jmeno vlastnosti row objektu        
-//            $methodName = $this->methodNameHydrator->hydrate( $name );
-//            $entity->$methodName( $rowObjecta->$name );
-//        }        
-//    }    
-//            
-//    /**
-//     * Extrahuje hodnoty z objektu entity do row objectu.
-//     * 
-//     * @param AccesorInterface $entity
-//     * @param AttributeInterface $rowObject
-//     * @return void
-//     */
-//    public function extract ( AccessorInterface $entity, AttributeInterface $rowObjecta ): void {       
-//        foreach ( $this->filter as $name )  {   //=> jmeno vlastnosti row objektu                  
-//            $methodName = $this->methodNameHydrator->extract( $name );
-//            $rowObjecta->$name = $entity->$methodName() ;
-//        }        
+//    public function __construct(  dao ) {
+//        
 //    }
 //    
+//    public function getRowObject() : RowObjectInterface {
+//            $o = new RowObjectMock( new KeyMock( [] ));
+//            return  $o;
+//    }
+//    
+//    function registerHydratorObject(  AttributeHydratorInterface $hydrator) {
+//        $this->hydratorsObject[] = $hydrator;
+//    }
+//    
+//    public function add ( RObject ) {
+//      //extract RObject, Key do new Rowdata
+//      //Dao->insert (Rowdata)
+//      //na konci v dao je obcerstveny Rowdata)   
+//      //hydrate RObject
+//    }
+//    public function get (Key){
+//      //extract  Key do new Rowdata
+//      //Dao->get (Rowdata)
+//      //na konci v dao je obcerstveny Rowdata) 
+//      //hydrate do new RowObject
+//    }
 //}
-
-//---------------------------------------------------------------------------------------
-class RowObjectManagerMock implements RowObjectManagerInterface {
-    
-    public function __construct() {
-        ;
-    }
-    
-    public function getRowObject() : RowObjectInterface {
-            $o = new RowObjectMock( new KeyMock( [] ));
-            return  $o;
-    }
-    
-}
 
 
 
@@ -480,21 +372,21 @@ class RowObjectManagerMock implements RowObjectManagerInterface {
 //################################## R E P O S I T O R Y ####################################################################
 //###########################################################################################################################
 
-interface TestovaciEntityRepositoryInterfaceMock extends RepoInterface {    
+interface TestovaciEntityRepositoryInterfaceMock extends RepositoryInterface {    
     /**
-     * 
+     * repository
      * @param AccessorInterface $identity
      * @return IdentityInterfaceMock|null
-     */
+     */   
     public function get (IdentityInterface $identity ): ?TestovaciEntityInterfaceMock;    
     /**
-     * 
+     * repository
      * @param AccessorInterface $entity
      * @return void
      */
     public function add( AccessorInterface $entity ): void;        
     /**
-     * 
+     * repository
      * @param AccessorInterface $entity 
      * @return void
      */
@@ -509,11 +401,10 @@ class TestovaciEntityRepositoryMock extends RepoAbstract_vs implements Testovaci
     public function __construct(            
                                 TestovaciDaoInterfaceMock $testovaciDao,  
                                 //RowDataInterface $rowData /*docasne*/,//                              
-                                RowObjectManagerInterface $rowObjectManager,
+                                RowObjectManagerInterface $rowObjectManager,            
+                                //AttributeHydratorInterface $attributeHydrator    /*$rowOjectHydrator*/,                  
             
-                                AttributeHydratorInterface $attributeHydrator    /*$rowOjectHydrator*/,                                  
-                                AccessorHydratorInterface $accessorHydrator,
-            
+                                AccessorHydratorInterface $accessorHydrator,            
                                 AccessorHydratorInterface $celeJmenoEHydrator                                
                                 //IdentityHydratorInterface $identityHydrator  
                                ) {                 
@@ -521,24 +412,27 @@ class TestovaciEntityRepositoryMock extends RepoAbstract_vs implements Testovaci
         $this->rowObjectManager = $rowObjectManager;  //->rowObjectManager -  definovanno v abstractu repository  
                   
         //$this->registerEntityHydrator($celeJmenoEHydrator); 
-        $this->registerHydratorObject( $attributeHydrator );   
+        //$this->registerHydratorObject( $attributeHydrator );   
         $this->registerHydratorEntity( $accessorHydrator ); 
         $this->registerHydratorEntity( $celeJmenoEHydrator );
        
     }   
     
    
-    /*v repository*/
+    // * repository
     public function get ( IdentityInterface $identity ): ?TestovaciEntityInterfaceMock {
         $index = $this->indexFromIdentity( $identity );
         if (!isset($this->collection[$index])) {
             
- //        /**/   $rowData = $this->dao->get( $index  ); // vraci konstantni pole - hodnoty z úložistě, $keyHash  zatim neni v metode get pouzito
+ //        /*ale nekde v ROManageru*/   $rowData = $this->dao->insert(   ); //---???????? vraci konstantni pole - hodnoty z úložistě, $keyHash  zatim neni v metode get pouzito
+            
+            //foreach $this->hydratorsEnti as $hydrator                       
             
             /** @var RowObjectInterface $rowObject*/
-            $rowObject = $this->rowObjectManager->getRowObject($index);
+            $rowObject = $this->rowObjectManager->get( $rowObject);
             
-            $this->recreateEntity( $index  , $rowObject ); // v abstractu,    zarazeni do collection v uloziste?rowObjectu, pod indexem  $index
+            
+            //$this->recreateEntity( $index  , $rowObject ); // v abstractu,    zarazeni do collection v uloziste?rowObjectu, pod indexem  $index
         }        
         return $this->collection[$index] ?? NULL;                                //            
     }    
@@ -551,26 +445,36 @@ class TestovaciEntityRepositoryMock extends RepoAbstract_vs implements Testovaci
 //        }
 //        return $this->collection[$index] ?? NULL;
 //    }
-            
+
+    // * repository
     public function add( AccessorInterface $entity ): void {                
-//        $index = $this->indexFromEntity($paper);
-//        $this->addEntity($paper, $index);
+//        $index = $this->indexFromEntity();
+        
+//        /*ale nekde v ROManageru*/   $rowData = $this->dao->insert(   ); //---???????? vraci konstantni pole - hodnoty z úložistě, $keyHash  zatim neni v metode get pouzito
+
+        
+         //foreach $this->hydratorsEnti as $hydrator 
+         // $rowObject = $this->rowObjectManager->add( $rowObject);
+         // 
+         //  $hydrator->hydrate(  $entity   , $rowObject)
+          
     }
     
-    public function remove( AccessorInterface $entity  ): void {                
+    // * repository    
+//    public function remove( AccessorInterface $entity  ): void {                
 //        $index = $this->indexFromEntity($paper);
 //        $this->removeEntity($entity, $index);
     }
     
     
     //------------------------------------------------
+    // * repository
     protected function createRowObj( $key) : AttributeInterface{
         return new RowObjectMock( $key );  
-    }
-    
-    /*konkretni createEntity(),    to  v abstract - nepouzivat*/ 
-    /**
-     * 
+   }   
+    // * repository 
+    /** 
+     * konkretni createEntity(),    to  v abstract - nepouzivat     
      * @return TestovaciEntityInterfaceMock
      */
     protected function createEntity( ) : TestovaciEntityInterfaceMock{
@@ -579,15 +483,13 @@ class TestovaciEntityRepositoryMock extends RepoAbstract_vs implements Testovaci
         return new TestovaciEntityMock( $identity /*?????.....tady ma byt identita ???*/);
     }
 
-
-
+    // * repository
     protected function indexFromRow($row) /*keyHashFromRow*/ {
         return $row['id'];
     }
-    
+    // * repository   
     protected function indexFromIdentity( TestovaciIdentityMock $identity){
-        $indexZIdentity = $identity->getUidPrimarniKlicZnaky() . '_Index';
-        
+        $indexZIdentity = $identity->getUidPrimarniKlicZnaky() . '_Index';        
         //return 'indexFfromIidentity';
         return $indexZIdentity;
     }
@@ -596,7 +498,7 @@ class TestovaciEntityRepositoryMock extends RepoAbstract_vs implements Testovaci
     
     
 //    
-////-------------------------------------------------------------------------------------------------       
+////----------------------------------------neidentifikovane pokusy o cosi---------------------------------------------------------       
 //    /**
 //     * 
 //     * @param type $identity
@@ -687,30 +589,33 @@ class TestovaciEntityRepositoryTest  extends TestCase{
         
         $testovaciDaoM = new TestovaciDaoMock();        
         
-        $this->poleJmen =  [  "prvekVarchar" ,  "prvekChar" , 'jmenoClovek', 'prijmeniClovek'  ] ;   
+        $this->poleJmen =  [  "prvekVarchar" ,  "prvekChar"  ] ;   
         $oneToOneEHydratorM = new OneToOneAccessorHydrator( new AccessorMethodNameHydrator(),
-                                                            new OneToOneFilter( $this->poleJmen) );       
-        $celeJmenoEHydratorM = new CeleJmenoEntityHydratorMock();
-       
+                                                            new OneToOneFilter( $this->poleJmen ) );   
+        $this->poleJmen =  [  'jmenoClovek', 'prijmeniClovek'  ] ; 
+        $celeJmenoEHydratorM = new CeleJmenoAccessorHydrator( new AccessorNameHydrator(), new AccessorMethodNameHydrator(),
+                                                              new OneToManyFilter( $this->poleJmen ), new CeleJmenoGluer() );        
         /* @var $metaDataProvider MetadataProviderMysql */
         $metaDataProvider = self::$container->get(MetadataProviderMysql::class); 
         $poleJmenAttributes =  [ 
             "prvekChar" , "prvekVarchar", "prvekInteger" ,"prvekText", "prvekBoolean",  
             "prvekDate", "prvekDatetime", "prvekTimestamp" , 'jmenoClovek', 'prijmeniClovek'          ] ;             
         $attributeHydratorM =  new AttributeHydrator( 
-                                              new AttributeNameHydrator(),  
-                                              $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
-                                              new ColumnFilter( $poleJmenAttributes )
-                                            ); 
+                                      new AttributeNameHydrator(),  
+                                      $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
+                                      new ColumnFilter( $poleJmenAttributes )                   ); 
         
-        $rowObjectManagerM =  new RowObjectManagerMock();
+        $rowObjectManagerM =  new RowObjectManagerMock( $testovaciDaoM );
+        $rowObjectManagerM->registerHydratorObject( $attributeHydratorM );
+        
         $this->repository = new TestovaciEntityRepositoryMock( 
-                        $testovaciDaoM,   
-                        $rowObjectManagerM,    
-                        $attributeHydratorM, 
-                        $oneToOneEHydratorM, 
-                        $celeJmenoEHydratorM
+                                    //$testovaciDaoM,   
+                                    $rowObjectManagerM,    
+                                    //$attributeHydratorM, 
+                                    $oneToOneEHydratorM, 
+                                    $celeJmenoEHydratorM
         );           
+        
     }        
         
         
@@ -723,9 +628,7 @@ class TestovaciEntityRepositoryTest  extends TestCase{
         
         
      
-        //------------------
-
-        
+        //------------------        
         /* get */ 
         $testovaciEntityNovy = $this->repository->get( $testovaciIdentityM ); //vraceno  nove vyrobene         
         $this->assertInstanceOf( TestovaciEntityInterfaceMock::class, $testovaciEntityNovy );        /*  ocekavana,*/  /*aktualni (nejak vyrobena) */        
@@ -753,6 +656,133 @@ class TestovaciEntityRepositoryTest  extends TestCase{
 
 
 //zde si dam vyhozene hydratory a filtry -
+
+
+//---------------------------------------------------------------------------------------
+//class OneToOneFilter implements OneToOneFilterInterface {    
+//    /**
+//     * @var array
+//     */
+//    private $poleJmen;   
+//    
+//    public function __construct(  array $poleJmen ) { 
+//        $this->poleJmen = $poleJmen; 
+//    }
+//    //Pozn. - getIterator vrací iterovatelný objekt.        
+//    public function getIterator() : \Traversable{        
+//        return new \ArrayIterator(  $this->poleJmen   );
+//    }        
+//}
+
+ /**
+ * Filtr pro hydrator typu RowObjectHydrator 
+ */
+//class ColumnFilterMock implements ColumnFilterInterface {           
+//    private $poleJmen;               
+//    public function __construct( array $poleJmen ) {
+//        $this->poleJmen = $poleJmen;        
+//    }           
+//    public function getIterator() : \Traversable {        
+//         return new \ArrayIterator( $this->poleJmen );
+//    }             
+//}
+//---------------------------------------------------------------------------------------
+
+
+
+
+//
+////---------------------------------------------------------------------------------------
+//class AttributeNameHydratorROMock implements AttributeNameHydratorInterface {    
+//    public function hydrate(/*$underscoredName*/ $camelCaseName ){
+//        //return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $underscoredName))));
+//        return strtolower(preg_replace('/(?<!^)([A-Z])/', '_$1', $camelCaseName));
+//    }
+//
+//    public function extract( /*$underscoredName*/ $camelCaseName ) {                
+//       //$s2 = strtolower(preg_replace('/(?<!^)([A-Z])/', '_$1', $camelCaseName));
+//       return strtolower(preg_replace('/(?<!^)([A-Z])/', '_$1', $camelCaseName));  
+//       //return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $underscoredName))));
+//    }
+//}
+////---------------------------------------------------------------------------------------
+//class AccessorMethodNameHydratorMock implements AccessorMethodNameHydratorInterface {    
+//    public function hydrate(string $name): string {
+//        return 'set' . ucfirst($name);
+//    }        
+//    public function extract(string $name): string {       
+//        return 'get' . ucfirst($name);
+//    }    
+//}
+//
+//class AccessorNameHydratorMock implements AccessorNameHydratorInterface {   
+//    public function hydrate( string $name ) : string {   
+//        return $name  ;        
+//    }  
+//    public function extract( string $name )  : string {                
+//       return  $name  ;                         
+//    }
+//}
+////---------------------------------------------------------------------------------------
+
+
+//---------------------------------------------------------------------------------------
+//class CeleJmenoEntityHydratorMock implements AccessorHydratorInterface {
+//    public function hydrate( AccessorInterface $entity, AttributeInterface $rowObject): void {        
+//    }
+//    public function extract( AccessorInterface $entity, AttributeInterface $rowObject ): void {        
+//    }
+//}
+//---------------------------------------------------------------------------------------
+//class OneToOneAccessorHydratorMock implements AccessorHydratorInterface {
+//    /**
+//     *
+//     * @var AccessorMethodNameHydratorInterface
+//     */
+//    private $methodNameHydrator;    
+//    /**
+//     * Filtr obsahuje seznam jmen (pole jmen)  vlastností row objektu k hydrataci/extrakci.
+//     * 
+//     * @var  OneToOneFilterInterface    -  extends \IteratorAggregate
+//     */
+//    private $filter;        
+//    
+//    public function __construct ( AccessorMethodNameHydratorInterface $methodNameHydrator,  OneToOneFilterInterface $filter  ) { 
+//        $this->methodNameHydrator = $methodNameHydrator;
+//        $this->filter = $filter;       
+//    }        
+//     
+//    /**
+//     * Hydratuje objekt entity hodnotami z row objectu.
+//     * 
+//     * @param AccesorInterface $entity
+//     * @param AttributeInterface $rowObject
+//     * @return void
+//     */
+//    public function hydrate( AccessorInterface $entity, AttributeInterface $rowObjecta ): void {        
+//        foreach ( $this->filter as $name ) {      //=> jmeno vlastnosti row objektu        
+//            $methodName = $this->methodNameHydrator->hydrate( $name );
+//            $entity->$methodName( $rowObjecta->$name );
+//        }        
+//    }    
+//            
+//    /**
+//     * Extrahuje hodnoty z objektu entity do row objectu.
+//     * 
+//     * @param AccesorInterface $entity
+//     * @param AttributeInterface $rowObject
+//     * @return void
+//     */
+//    public function extract ( AccessorInterface $entity, AttributeInterface $rowObjecta ): void {       
+//        foreach ( $this->filter as $name )  {   //=> jmeno vlastnosti row objektu                  
+//            $methodName = $this->methodNameHydrator->extract( $name );
+//            $rowObjecta->$name = $entity->$methodName() ;
+//        }        
+//    }
+//    
+//}
+
+
 
 
 

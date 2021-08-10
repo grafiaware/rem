@@ -9,7 +9,7 @@
 namespace Model\Repository\Association;
 
 use Model\Repository\RepoAssotiatedManyInterface;
-use Model\Repository\RepoInterface;
+use Model\Repository\RepositoryInterface;
 
 /**
  * Description of AssociationOneToManyFactory

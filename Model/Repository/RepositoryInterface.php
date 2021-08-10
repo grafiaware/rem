@@ -6,7 +6,7 @@ namespace Model\Repository;
  *
  * @author pes2704
  */
-interface RepoInterface {
+interface RepositoryInterface {
 
     public function flush(): void;
 }

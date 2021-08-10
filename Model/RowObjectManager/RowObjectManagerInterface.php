@@ -1,12 +1,14 @@
 <?php
-namespace Model\RowObject;
+namespace Model\RowObjectManager;
+
 
 /**
  *
  * @author vlse2610
  */
 interface RowObjectManagerInterface {
-
-    public function getRowObject();
     
+    public function flush () : void ;
+    
+
 }

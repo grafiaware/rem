@@ -58,8 +58,8 @@ abstract class RepoAbstract_vs {
 
     //private $hydrators = [];
     
-    private $hydratorsEntity = [];
-    private $hydratorsObject = [];
+    protected $hydratorsEntity = [];
+    protected $hydratorsObject = [];
     
     /**
      *
@@ -99,11 +99,11 @@ abstract class RepoAbstract_vs {
         $this->associations[$entityInterfaceName] = new AssociationOneToMany($parentReferenceKeyAttribute, $repo);
     }
 
-    protected function registerHydratorObject( /*HydratorInterface*/ AttributeHydratorInterface $hydrator) {
-        $this->hydratorsObject[] = $hydrator;
-    }
+//    protected function registerHydratorObject( /*HydratorInterface*/ AttributeHydratorInterface $hydrator) {
+//        $this->hydratorsObject[] = $hydrator;
+//    }
     
-    protected function registerHydratorEntity( $hydrator ) {
+    protected function registerHydratorEntity( AccessorHydratorInterface $hydrator ) {
             $this->hydratorsEntity [] = $hydrator;
         }    
     
@@ -162,7 +162,7 @@ abstract class RepoAbstract_vs {
 
     
     
-protected function recreateEntity( $index, RowObjectInterface $rowObject ) {
+protected function recreateEntity( $index, /* RowObjectInterface*/ AttributeInterface $rowObject ) {
     if ($rowObject) {                        
             $entity = $this->createEntity();  // definována v konkrétní třídě - adept na entity managera
 //            try {

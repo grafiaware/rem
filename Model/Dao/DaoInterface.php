@@ -8,13 +8,16 @@
 
 namespace Model\Dao;
 
+use Model\RowData\RowDataInterface;
+use Model\RowObject\Key\KeyInterface;
+
 /**
  *
  * @author pes2704
  */
 interface DaoInterface {
-    public function get($id);
-    public function insert($row);
-    public function update($row);
-    public function delete($row);
+    public function get(KeyInterface $key): RowDataInterface;
+    public function insert(RowDataInterface $rowData): void;
+    public function update(RowDataInterface $rowData): void;
+    public function delete(RowDataInterface $rowData): void;
 }
