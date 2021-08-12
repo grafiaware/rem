@@ -21,3 +21,4 @@ interface DaoInterface {
     public function update(RowDataInterface $rowData): void;
     public function delete(RowDataInterface $rowData): void;
 }
+//podle ROMangera add, get, remove, createRowData ,,  update

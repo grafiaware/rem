@@ -47,16 +47,7 @@ abstract class KeyAbstract  implements KeyInterface {
         $this->generated = $generated;
     }
     
-          
-    
-    public function getIndexFromKeyRowObject() : array  {
-        //get_object_vars - vybere ty "viditelne" a nestaticke
-        
-        foreach (get_obj_vars($this) as $nameAttr=>$value) {            
-           $index =+ $value;                        
-        }
-        return $index;
-    }
+                 
     
     
     

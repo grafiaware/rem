@@ -10,6 +10,12 @@ use Model\Hydrator\HydratorInterface;
 use Model\Hydrator\AttributeHydratorInterface;
 
 use Model\Entity\EntityInterface;
+use Model\RowObject\RowObjectInterface;
+use Model\Entity\Identity\IdentityInterface;
+use Model\RowObject\Key\KeyInterface;
+
+use Model\RowObjectManager\RowObjectManagerInterface;
+
 
 use Model\Repository\Association\AssociationOneToOne;
 use Model\Repository\Association\AssociationOneToMany;
@@ -22,7 +28,7 @@ use Model\Repository\Exception\BadImplemntastionOfChildRepository;
 use Model\Repository\Exception\UnableAddEntityException;
 use Model\Repository\Exception\OperationWithLockedEntityException;
 
-use Model\RowObjectManager\RowObjectManagerInterface;
+
 
 
 /**
@@ -97,15 +103,20 @@ abstract class RepositoryAbstract {
         $this->hydrators[] = $hydrator;
     }
 
-    protected function hydrate( EntityInterface $entity, $rowObject ) {
+    protected function hydrate( EntityInterface $entity,RowObjectInterface $rowObject ) {
         foreach ($this->hydrators as $hydrator) {
             $hydrator->hydrate($entity, $rowObject);
         }
     }
 
-    protected function extract(EntityInterface $entity, $rowObject ) {
+    protected function extract(EntityInterface $entity, RowObjectInterface $rowObject ) {
         foreach ($this->hydrators as $hydrator) {
             $hydrator->extract($entity, $rowObject);
+        }
+    }
+     protected function extractI ( IdentityInterface $identity, KeyInterface $key ) {
+        foreach ($this->hydrators as $hydrator) {
+            $hydrator->extract($identity, $key);
         }
     }
 
@@ -127,21 +138,33 @@ abstract class RepositoryAbstract {
 //        throw new BadImplemntastionOfChildRepository("Child repository must implement method indexFromRow().");
 //    }
 
+   
+    
+    
     /**
-     *
-     * @param array $row
-     * @return string index
+     * Přidá 'novou = dosud nepridanou'  entitu do repository->collection. (jiz persistovane a pouzite entity)
+     * 
+     * @param type $index
+     * @param RowObjectInterface $rowObject
+     * @return string|null index
+     * @throws UnableRecreateEntityException
      */
-    protected function recreateEntity($index, $row): ?string {
-        if ($row) {
-            $entity = $this->createEntity();  // definována v konkrétní třídě - adept na entity managera
+    protected function recreateEntity( $index,  RowObjectInterface $rowObject /*$row*/): ?string {
+        if ($rowObject) {
+            /** @var EntityInterface $entity */
+            $entity = $this->ccreateEntity();  // !!!!definována v konkrétní třídě!!!!! - adept na entity managera
+          
             try {
-                $this->recreateAssociations($row);
+                $this->recreateAssociations($rowObject /*$row */);
             } catch (UnableToCreateAssotiatedChildEntity $unex) {
                 throw new UnableRecreateEntityException("Nelze obnovit agregovanou (vnořenou) entitu v repository ". get_called_class()." s indexem $index.", 0, $unex);
             }
-            $this->hydrate($entity, $row);
+            
+            $this->hydrate($entity, $rowObject);
+            $this->hydrate($entity->getIdentity, $rowObject->getKey());
+            
             $entity->setPersisted();
+            
             $this->collection[$index] = $entity;
             $this->flushed = false;
         }
@@ -160,9 +183,11 @@ abstract class RepositoryAbstract {
         $this->flushed = false;
     }
 
-    protected function recreateAssociations(&$row): void {
+    
+    
+    protected function recreateAssociations( $rowObject /*&$row*/): void {
         foreach ($this->associations as $interfaceName => $association) {
-            $row[$interfaceName] = $association->getAssociated($row);
+            $rowObject->$interfaceName/*$row[$interfaceName]*/ = $association->getAssociated( $rowObject  /*$row*/);
         }
     }
 
@@ -181,14 +206,30 @@ abstract class RepositoryAbstract {
         return $key;
     }
 
-    protected function indexFromKey($key) {
-        if (is_array($key)) {
-            return implode(array_values($key));
-        } else{
-            return $key;
-        }
-    }
+//    protected function indexFromKey($key) {
+//        if (is_array($key)) {
+//            return implode(array_values($key));
+//        } else{
+//            return $key;
+//        }
+//    }
 
+    protected function indexFromEntity(  EntityInterface $entity ) {
+        
+        foreach ( ksort (\get_object_vars($entity->getIdentity()) ) as $nameAttr=>$value ) {            
+           $index .= $value;                        
+        }
+        return $index;           
+    }
+    
+    
+    
+    /**
+     * 
+     * @param EntityInterface $entity
+     * @return void
+     * @throws OperationWithLockedEntityException
+     */
     protected function addEntity( EntityInterface $entity): void {
         if ($entity->isLocked()) {
             throw new OperationWithLockedEntityException("Nelze přidávat přidanou nebo smazanou entitu.");
@@ -222,11 +263,11 @@ abstract class RepositoryAbstract {
      *
      * @param type $entity Agregátní entita.
      */
-    protected function addAssociated($row, EntityInterface $entity) {
+    protected function addAssociated( $rowObject/*$row*/, /*?????*/ EntityInterface $entity /*??????*/) {
         foreach ($this->associations as $interfaceName => $association) {
-            foreach ($row[$interfaceName] as $assocEntity) {  // asociovaná entita nemusí existovat - agregát je i tak validní
+            foreach ( /*$row[$interfaceName]*/ $rowObject->$interfaceName as $assocEntity) {  // asociovaná entita nemusí existovat - agregát je i tak validní
                 if (!$assocEntity->isPersisted()) {
-                    $association->addAssociated($assocEntity);
+                    $association->addAssociated($assocEntity, /*, ?????*/);
                 }
             }
         }
@@ -257,10 +298,10 @@ abstract class RepositoryAbstract {
      * @param string $entityInterfaceName
      * @param type $entity Entita nebo null. Asociovaná entita (vrácená pomocí cizího klíče) nemusí existovat.
      */
-    protected function removeAssociated($row, EntityInterface $entity) {
+    protected function removeAssociated(  $rowObject/*$row*/,  /*?????*/ EntityInterface $entity  /*?????*/ ) {
         foreach ($this->associations as $interfaceName => $association) {
             if (isset($row[$interfaceName]) AND $row[$interfaceName]->isPersisted()) {  // asociovaná entita nemusí existovat - agregát je i tak validní
-                $association->removeAssociated($row[$interfaceName]);
+                $association->removeAssociated($row[$interfaceName]  /*,?????*/);
             }
         }
     }
@@ -272,41 +313,58 @@ abstract class RepositoryAbstract {
         if ( !($this instanceof RepoReadonlyInterface)) {
 
             if ( ! ($this->dao instanceof DaoKeyDbVerifiedInterface)) {   // DaoKeyDbVerifiedInterface musí ukládat (insert) vždy již při nastavování hodnoty primárního klíče
-                foreach ($this->new as $entity) {                    
-                    $rowObject = new RowObject(); // $row = [];                                        
+                foreach ($this->new as $entity) {         
+                    
+                    $key = $this->rowObjectManager->createKey();
+                    $rowObject = $this->rowObjectManager->createRowObject($key);
+
                     $this->extract($entity, $rowObject);
-                                                                                
-//                    $this->dao->insert($row);
-//                    $this->addAssociated($row, $entity);
-//                    $this->flushChildRepos();  //pokud je vnořená agregovaná entita - musí se provést její insert
-                    $this->rowObjectManager->add ($rowObject);
-                    $entity->setPersisted();
+                                                                                                    
+                    $this->rowObjectManager->addRowObject($rowObject);
+                    
+                    $this->addAssociated( $rowObject /*$row*/, $entity);     // pridavam mrkev        //pridavam asociovanou entitu do potomk.repositorz
+                    $this->flushChildRepos();  //pokud je vnořená agregovaná entita - musí se provést její insert
+                                       
+                    $entity->setPersisted();                                        
                 }
             }
             $this->new = []; // při dalším pokusu o find se bude volat recteateEntity, entita se zpětně načte z db (včetně případného autoincrement id a dalších generovaných sloupců)
 
+            
+            
             foreach ($this->collection as $entity) {
-                $rowObject = new RowObject(); // $row = [];
                 
-                $this->extract($entity, $rowObject);
-//                $this->addAssociated($row, $entity);
-//                $this->flushChildRepos();  //pokud je vnořená agregovaná entita přidána později - musí se provést její insert teď
+                $key = $this->rowObjectManager->createKey();
+                $rowObject = $this->rowObjectManager->createRowObject($key);
+                
+                $this->extract($entity, $rowObject);   
+                               
+                $this->addAssociated($rowObject, $entity);
+                $this->flushChildRepos();  //pokud je vnořená agregovaná entita přidána později - musí se provést její insert teď
+                
                 if ($entity->isPersisted()) {
-                    if ($row) {     // $row po extractu musí obsahovat nějaká data, která je možno updatovat - v extractu musí být vynechány "readonly" sloupce
-                        $this->dao->update($row);
+                    if ($rowObject) {     // $row po extractu musí obsahovat nějaká data, která je možno updatovat - v extractu musí být vynechány "readonly" sloupce
+                       // $this->dao->update($row);
+                        $this->rowObjectManager->flush();
                     }
                 } else {
                     throw new \LogicException("V collection je nepersistovaná entita.");
                 }
             }
             $this->collection = [];
+            
 
             foreach ($this->removed as $entity) {
-                $row = [];
-                $this->extract($entity, $row);
-                $this->removeAssociated($row, $entity);
+                $key = $this->rowObjectManager->createKey();
+                $rowObject = $this->rowObjectManager->createRowObject($key);              
+                
+                $this->extract($entity, $rowObject);
+                
+                $this->removeAssociated($rowObject, $entity);                                                     
                 $this->flushChildRepos();
-                $this->dao->delete($row);
+                
+                $this->rowObjectManager->removeRowObject($rowObject);   //$this->dao->delete($row);                
+                
                 $entity->setUnpersisted();
             }
             $this->removed = [];

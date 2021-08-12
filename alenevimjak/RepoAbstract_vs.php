@@ -1,5 +1,5 @@
 <?php
-namespace Model\Repository;
+
 
 use Model\Dao\DaoInterface;
 use Model\Dao\DaoKeyDbVerifiedInterface;

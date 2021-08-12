@@ -4,6 +4,7 @@ namespace Model\VS\Repository;
 
 use Model\VS\Entity\TestovaciEntityInterface;
 use Model\VS\Identity\TestovaciIdentityInterface;
+
 use Model\Repository\RepositoryInterface;
 
 /**
@@ -19,6 +20,8 @@ interface TestovaciRepositoryInterface extends RepositoryInterface {
     public function remove ( TestovaciEntityInterface $entity ) : void  ;
     
     
+    
+    //public function createEntity() : TestovaciEntityInterface;
           
   
    

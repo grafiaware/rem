@@ -9,12 +9,9 @@ use Model\RowObjectManager\RowObjectManagerInterface;
  *
  * @author vlse2610
  */
-interface TestovaciRowObjectManagerInterface extends RowObjectManagerInterface{        
+interface TestovaciRowObjectManagerInterface /*extends RowObjectManagerInterface */{        
     
- 
 
-    public function createRObject(   ) :  TestovaciRowObject ;
-    
     
     
 }
