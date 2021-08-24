@@ -30,81 +30,81 @@ use Pes\Database\Metadata\MetadataProviderMysql;
 
 
 
-class AttributeNameHydratorROMock implements AttributeNameHydratorInterface {    
+class AttributeNameHydratorROMock implements AttributeNameHydratorInterface {
     public function hydrate(/*$underscoredName*/ $camelCaseName ){
         //return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $underscoredName))));
         return strtolower(preg_replace('/(?<!^)([A-Z])/', '_$1', $camelCaseName));
     }
 
-    public function extract( /*$underscoredName*/ $camelCaseName ) {                
+    public function extract( /*$underscoredName*/ $camelCaseName ) {
        //$s2 = strtolower(preg_replace('/(?<!^)([A-Z])/', '_$1', $camelCaseName));
-       return strtolower(preg_replace('/(?<!^)([A-Z])/', '_$1', $camelCaseName));  
+       return strtolower(preg_replace('/(?<!^)([A-Z])/', '_$1', $camelCaseName));
        //return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $underscoredName))));
     }
 }
 
- 
- class KeyColumnFilterMock implements ColumnFilterInterface {     
-    private $poleJmen;                
+
+ class KeyColumnFilterMock implements ColumnFilterInterface {
+    private $poleJmen;
     public function __construct( array $poleJmen ) {
-        $this->poleJmen = $poleJmen;        
-    }    
-    public function getIterator() : \Traversable {        
+        $this->poleJmen = $poleJmen;
+    }
+    public function getIterator() : \Traversable {
          return new \ArrayIterator( $this->poleJmen );
-    }             
+    }
  }
 
-interface RowObjectInterfaceMock extends RowObjectInterface{    
+interface RowObjectInterfaceMock extends RowObjectInterface{
 }
-class RowObjectMock  extends RowObjectAbstract implements  RowObjectInterfaceMock {                  
+class RowObjectMock  extends RowObjectAbstract implements  RowObjectInterfaceMock {
     public $titulPred;
     public $jmeno;
     public $prijmeni;
     public $titulZa;
-    
+
     public $prvekChar;
-    public $prvekVarchar;  
+    public $prvekVarchar;
     public $prvekText;
-    public $prvekInteger;   
-    public $prvekBoolean;  
+    public $prvekInteger;
+    public $prvekBoolean;
     /**
-     * @var \DateTime 
+     * @var \DateTime
      */
     public $prvekDate;
-    /**     
-     * @var \DateTime 
+    /**
+     * @var \DateTime
      */
     public $prvekDatetime;
     /**
-     * @var \DateTime 
+     * @var \DateTime
      */
-    public $prvekTimestamp;    
-    
+    public $prvekTimestamp;
+
     //v Abstract  public $key
-    
+
     public function __construct(KeyInterface $key ) {
         parent::__construct( $key );
     }
-    
+
 }
 
-interface KeyInterfaceMock extends KeyInterface{    
+interface KeyInterfaceMock extends KeyInterface{
 }
 class KeyMock extends KeyAbstract implements KeyInterfaceMock {
     public $uidPrimarniKlicZnaky;
-    
+
      //v Abstract  public $generated?
 }
 
 
-class RowDataMock  extends \ArrayObject  implements RowDataInterface {                  
+class RowDataMock  extends \ArrayObject  implements RowDataInterface {
     use RowDataTrait;
 }
 
- 
+
 //---------------------------------------------------------------------------------------------------------------------------
 class KeyRowObjectHydratorTest extends TestCase {
-    
+
     const DB_NAME = 'tester_3_test';
     const DB_HOST = 'localhost';
     const USER = 'root';
@@ -114,179 +114,179 @@ class KeyRowObjectHydratorTest extends TestCase {
     protected static $testDateTimeString;
     protected static $hodnotaDate;
     protected static $hodnotaDateTime;
-    
+
     protected static  $dbhZContaineru;
     protected static  $container;
-       
-    
-    public function setUp(): void {               
-    }       
-    
+
+
+    public function setUp(): void {
+    }
+
     public static function setUpBeforeClass(): void    {
         self::$container = (new DaoContainerConfigurator())->configure(new Container());
-        self::$dbhZContaineru  = self::$container->get(Handler::class); // $dbh = $container->get(Handler::class); 
-        
+        self::$dbhZContaineru  = self::$container->get(Handler::class); // $dbh = $container->get(Handler::class);
+
             // 1 -  nastaveni "konstant"
         self::$testDateString = "2010-09-08";
-        self::$hodnotaDate = \DateTime::createFromFormat("Y-m-d", self::$testDateString = "2010-09-08" )->setTime(0,0,0,0); 
+        self::$hodnotaDate = \DateTime::createFromFormat("Y-m-d", self::$testDateString = "2010-09-08" )->setTime(0,0,0,0);
         self::$testDateTimeString = "2005-06-07 22:23:24";
-        self::$hodnotaDateTime = \DateTime::createFromFormat("Y-m-d H:i:s", self::$testDateTimeString );               
+        self::$hodnotaDateTime = \DateTime::createFromFormat("Y-m-d H:i:s", self::$testDateTimeString );
     }
-    
+
     public static function tearDownAfterClass(): void    {
         self::$container = null;
         self::$dbhZContaineru  = null;
     }
 
-             
+
     //---------------------------------------------------------------------------
-    public function testHydrate(): void {   
+    public function testHydrate(): void {
         $poleJmenKey = [ "uidPrimarniKlicZnaky" ] ;
-        
+
         /* @var $metaDataProvider MetadataProviderMysql */
-        $metaDataProvider = self::$container->get(MetadataProviderMysql::class); 
-        $keyRowObjectHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),  
+        $metaDataProvider = self::$container->get(MetadataProviderMysql::class);
+        $keyRowObjectHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),
                                                  $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
                                                  new KeyColumnFilterMock( $poleJmenKey )
-                                               );          
+                                               );
         $this->assertIsObject($keyRowObjectHydrator, "***CHYBA***" );
-                         
-        $rowObjectM =  new RowObjectMock( new KeyMock( [ "uidPrimarniKlicZnaky"=>false ] ) );      
-        $keyRowObjectHydrator->hydrate( $rowObjectM->key , new RowData( [                                                           
-                                        "uid_primarni_klic_znaky" => "KEYklic"  ] ) );               
-        
-        $this->assertObjectHasAttribute( "uidPrimarniKlicZnaky", $rowObjectM->key,  "***CHYBA***"  );                
-        
-        $this->assertEquals( $rowObjectM->key->uidPrimarniKlicZnaky, "KEYklic" , "***CHYBA***"   );        
+
+        $rowObjectM =  new RowObjectMock( new KeyMock( [ "uidPrimarniKlicZnaky"=>false ] ) );
+        $keyRowObjectHydrator->hydrate( $rowObjectM->key , new RowData( [
+                                        "uid_primarni_klic_znaky" => "KEYklic"  ] ) );
+
+        $this->assertObjectHasAttribute( "uidPrimarniKlicZnaky", $rowObjectM->key,  "***CHYBA***"  );
+
+        $this->assertEquals( $rowObjectM->key->uidPrimarniKlicZnaky, "KEYklic" , "***CHYBA***"   );
     }
-    
-    
-    public function testHydrate_UndefinedColumnNameException(): void { 
+
+
+    public function testHydrate_UndefinedColumnNameException(): void {
         $poleJmenKey = [ "uidPrimarniKlicZnaky", "klicNeexistujiciSloupec" ] ;
-        
+
         /* @var $metaDataProvider MetadataProviderMysql */
-        $metaDataProvider = self::$container->get(MetadataProviderMysql::class); 
-        $keyRowObjectHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),  
+        $metaDataProvider = self::$container->get(MetadataProviderMysql::class);
+        $keyRowObjectHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),
                                                  $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
                                                  new KeyColumnFilterMock( $poleJmenKey )
-                                               );          
+                                               );
         $this->assertIsObject($keyRowObjectHydrator, "***CHYBA***" );
-                         
-        $rowObjectM =  new RowObjectMock(new KeyMock( ["uidPrimarniKlicZnaky"=>false] ) );   
-        
+
+        $rowObjectM =  new RowObjectMock(new KeyMock( ["uidPrimarniKlicZnaky"=>false] ) );
+
         $this->expectException( UndefinedColumnNameException::class );
-        $keyRowObjectHydrator->hydrate( $rowObjectM->key , new RowData( [                                                           
-                                                                "uid_primarni_klic_znaky" => "KEYklic"  ] ) );                               
+        $keyRowObjectHydrator->hydrate( $rowObjectM->key , new RowData( [
+                                                                "uid_primarni_klic_znaky" => "KEYklic"  ] ) );
     }
-    
-    
-//    public function testHydrate_UncompleteKeyException(): void { 
+
+
+//    public function testHydrate_UncompleteKeyException(): void {
 //        $poleJmenKey = [ "uidPrimarniKlicZnaky" ] ;
-//        
+//
 //        /* @var $metaDataProvider MetadataProviderMysql */
-//        $metaDataProvider = self::$container->get(MetadataProviderMysql::class); 
-//        $keyRowObjectHydrator = new  RowHydrator( new AttributeNameHydratorROMock(),  
+//        $metaDataProvider = self::$container->get(MetadataProviderMysql::class);
+//        $keyRowObjectHydrator = new  RowHydrator( new AttributeNameHydratorROMock(),
 //                                                  $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
 //                                                  new KeyColumnFilterMock( $poleJmenKey )
-//                                                );          
+//                                                );
 //        $this->assertIsObject($keyRowObjectHydrator, "***CHYBA***" );
-//                         
-//        $rowObjectM =  new RowObjectMock(new KeyMock(  ["uidPrimarniKlicZnaky"=>false ] ));   
-//        
+//
+//        $rowObjectM =  new RowObjectMock(new KeyMock(  ["uidPrimarniKlicZnaky"=>false ] ));
+//
 //        $this->expectException( UncompleteKeyException::class );
-//        $keyRowObjectHydrator->hydrate( $rowObjectM->key , new RowData( [                                                           
-//                                                                /*"uid_primarni_klic_znaky" => "KEYklic" */ ] ) );    
-//        
-//    } 
-    
-    
-//    public function testHydrate_DatetimeConversionFailureException_Date(): void {         
+//        $keyRowObjectHydrator->hydrate( $rowObjectM->key , new RowData( [
+//                                                                /*"uid_primarni_klic_znaky" => "KEYklic" */ ] ) );
+//
 //    }
-//    public function testHydrate_DatetimeConversionFailureException_Datetime(): void {         
+
+
+//    public function testHydrate_DatetimeConversionFailureException_Date(): void {
 //    }
-    
-    
+//    public function testHydrate_DatetimeConversionFailureException_Datetime(): void {
+//    }
+
+
     //----------------------------------------------------------------------------------------------
-    
-    
-    public function testExtract(): void { 
-        
+
+
+    public function testExtract(): void {
+
         $poleJmenKey = [ "uidPrimarniKlicZnaky" , "klic"] ;
-        
+
         /* @var $metaDataProvider MetadataProviderMysql */
-        $metaDataProvider = self::$container->get( MetadataProviderMysql::class ); 
-        $keyRowObjectHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),  
-                                                 $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/                                                     
-                                                 new KeyColumnFilterMock( $poleJmenKey ));           
+        $metaDataProvider = self::$container->get( MetadataProviderMysql::class );
+        $keyRowObjectHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),
+                                                 $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
+                                                 new KeyColumnFilterMock( $poleJmenKey ));
         $this->assertIsObject( $keyRowObjectHydrator, "***CHYBA***" );
-                 
-        $rowDataM = new RowDataMock ();                
-        $rowObjectM = new RowObjectMock( new KeyMock( ["uidPrimarniKlicZnaky"=>false ] ));           
-        
+
+        $rowDataM = new RowDataMock ();
+        $rowObjectM = new RowObjectMock( new KeyMock( ["uidPrimarniKlicZnaky"=>false ] ));
+
         $rowObjectM->key->uidPrimarniKlicZnaky = "KEYklic";
         $rowObjectM->key->klic = "";
-                
-        $keyRowObjectHydrator->extract( $rowObjectM->key, $rowDataM);         
-      
-        $this->assertArrayHasKey( "uid_primarni_klic_znaky", $rowDataM->getChanged(), "***CHYBA***"  );       
-        $this->assertArrayHasKey( "klic", $rowDataM->getChanged(), "***CHYBA***"  );       
-        
-        $this->assertEquals( $rowDataM->getChanged()["uid_primarni_klic_znaky"], "KEYklic" , "***CHYBA***"   );
-        $this->assertEquals( $rowDataM->getChanged()["klic"], "" , "***CHYBA***"   );
+
+        $keyRowObjectHydrator->extract( $rowObjectM->key, $rowDataM);
+        $changed = $rowDataM->fetchChanged();
+        $this->assertArrayHasKey( "uid_primarni_klic_znaky", $changed, "***CHYBA***"  );
+        $this->assertArrayHasKey( "klic", $changed, "***CHYBA***"  );
+
+        $this->assertEquals( $changed["uid_primarni_klic_znaky"], "KEYklic" , "***CHYBA***"   );
+        $this->assertEquals( $changed["klic"], "" , "***CHYBA***"   );
     }
-    
-    
-    
-    public function testExtract_UndefinedColumnNameException(): void { 
-        
+
+
+
+    public function testExtract_UndefinedColumnNameException(): void {
+
         $poleJmenKey = [ "uidPrimarniKlicZnaky", "klicNeexistujici" ] ;
-        
+
         /* @var $metaDataProvider MetadataProviderMysql */
-        $metaDataProvider = self::$container->get( MetadataProviderMysql::class ); 
-        $keyRowObjectHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),  
-                                                 $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/                                                     
-                                                 new KeyColumnFilterMock( $poleJmenKey ));           
+        $metaDataProvider = self::$container->get( MetadataProviderMysql::class );
+        $keyRowObjectHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),
+                                                 $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
+                                                 new KeyColumnFilterMock( $poleJmenKey ));
         $this->assertIsObject( $keyRowObjectHydrator, "***CHYBA***" );
-                 
-        $rowDataM = new RowDataMock ();                
-        $rowObjectM = new RowObjectMock( new KeyMock( ["uidPrimarniKlicZnaky"=>false ] ));           
-        
+
+        $rowDataM = new RowDataMock ();
+        $rowObjectM = new RowObjectMock( new KeyMock( ["uidPrimarniKlicZnaky"=>false ] ));
+
         $rowObjectM->key->uidPrimarniKlicZnaky = "KEYklic";
         $rowObjectM->key->klicNeexistujici = "neex";
-         
-        $this->expectException( UndefinedColumnNameException::class );      
-        $keyRowObjectHydrator->extract( $rowObjectM->key, $rowDataM); 
-              
+
+        $this->expectException( UndefinedColumnNameException::class );
+        $keyRowObjectHydrator->extract( $rowObjectM->key, $rowDataM);
+
     }
-    
-    
-//    public function testExtract_UncompleteKeyException(): void { 
-//           
+
+
+//    public function testExtract_UncompleteKeyException(): void {
+//
 //        $poleJmenKey = [ "uidPrimarniKlicZnaky" ] ;
-//        
+//
 //        /* @var $metaDataProvider MetadataProviderMysql */
-//        $metaDataProvider = self::$container->get( MetadataProviderMysql::class ); 
-//        $keyRowObjectHydrator = new RowHydrator(  new AttributeNameHydratorROMock(),  
-//                                                     $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/                                                     
-//                                                     new KeyColumnFilterMock( $poleJmenKey ));           
+//        $metaDataProvider = self::$container->get( MetadataProviderMysql::class );
+//        $keyRowObjectHydrator = new RowHydrator(  new AttributeNameHydratorROMock(),
+//                                                     $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
+//                                                     new KeyColumnFilterMock( $poleJmenKey ));
 //        $this->assertIsObject( $keyRowObjectHydrator, "***CHYBA***" );
-//                 
-//        $rowDataM = new RowDataMock ();                
-//        $rowObjectM = new RowObjectMock( new KeyMock( ["uidPrimarniKlicZnaky"=>false ] ));           
-//        
-//        //$rowObjectM->key->uidPrimarniKlicZnaky = "";     
+//
+//        $rowDataM = new RowDataMock ();
+//        $rowObjectM = new RowObjectMock( new KeyMock( ["uidPrimarniKlicZnaky"=>false ] ));
+//
+//        //$rowObjectM->key->uidPrimarniKlicZnaky = "";
 //        // tj. nenastaveno, neexistuje
-//         
-//        $this->expectException( UncompleteKeyException::class );      
-//        $keyRowObjectHydrator->extract( $rowObjectM->key, $rowDataM);                     
-//        
-//    }    
-    
-//    public function testExtract_DatetimeConversionFailureException_Date(): void { 
+//
+//        $this->expectException( UncompleteKeyException::class );
+//        $keyRowObjectHydrator->extract( $rowObjectM->key, $rowDataM);
+//
 //    }
-//    public function testExtract_DatetimeConversionFailureException_Datetime(): void { 
+
+//    public function testExtract_DatetimeConversionFailureException_Date(): void {
 //    }
-    
-    
+//    public function testExtract_DatetimeConversionFailureException_Datetime(): void {
+//    }
+
+
 }
 

@@ -16,9 +16,8 @@ namespace Model\RowData;
  *
  * @author pes2704
  */
-class PdoRowData extends \ArrayObject implements RowDataInterface {
+class PdoRowData extends RowData {
 
-    use RowDataTrait;
 
     /**
      * V kostruktoru se mastaví způsob zapisu dat do PdoRowData objektu na ARRAY_AS_PROPS. Od té chvíle jsou data zapisována metodou offsetSet()
