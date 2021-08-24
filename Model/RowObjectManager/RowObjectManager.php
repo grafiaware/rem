@@ -4,6 +4,7 @@ namespace Model\RowObjectManager;
 
 use Model\RowObjectManager\RowObjectManagerAbstract;
 use Model\RowObjectManager\RowObjectManagerInterface;
+use Model\RowObjectManager\RowObjectManagerSaveImmedientlyInterface;
 
 use Model\RowObject\RowObjectInterface;
 use Model\RowObject\Key\KeyInterface;
@@ -13,7 +14,7 @@ use Model\RowObject\Key\KeyInterface;
  *
  * @author vlse2610
  */
-class RowObjectManager  extends RowObjectManagerAbstract implements RowObjectManagerInterface{
+class RowObjectManager  extends RowObjectManagerAbstract implements RowObjectManagerInterface, RowObjectManagerSaveImmedientlyInterface{
          
     protected function indexFromRowObject(  RowObjectInterface $rowObject) {
         
@@ -36,12 +37,15 @@ class RowObjectManager  extends RowObjectManagerAbstract implements RowObjectMan
             
 // ' presunuto z Repository '
 
-            if ( $this->dao instanceof DaoKeyDbVerifiedInterface ) {  // rezim overovany klic
+            if ( $this->dao instanceof DaoKeyDbVerifiedInterface /*ulozHned*/ ) {  
                 //createRowData
                 $rowData= new PdoRowData(); //$row = [];
                 $this->extract($rowObject, $rowData);
+                
+                
+                // rezim overovany klic, i normalne
                 try {
-                    $this->dao->insertWithKeyVerification($rowData);
+                    $this->dao->insertWithKeyVerification($rowData); 
                     $rowObject->setPersisted();
                     $this->collection[$this->indexFromRowObject($rowObject)] = $rowObject;
                 } catch ( DaoKeyVerificationFailedException $verificationFailedExc) {

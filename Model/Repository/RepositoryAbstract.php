@@ -15,7 +15,9 @@ use Model\Entity\Identity\IdentityInterface;
 use Model\RowObject\Key\KeyInterface;
 
 use Model\RowObjectManager\RowObjectManagerInterface;
-
+use Model\RowObjectManager\RowObjectManager;
+use Model\RowObjectManager\RowObjectManagerSaveImmedientlyInterface;
+use Model\RowObjectManager\Exception\RowObjectManagerSaveImmedientlyFailedException;
 
 use Model\Repository\Association\AssociationOneToOne;
 use Model\Repository\Association\AssociationOneToMany;
@@ -57,16 +59,17 @@ abstract class RepositoryAbstract {
     private $hydrators = [];
    
 
-    /**
-     * @var DaoInterface | DaoKeyDbVerifiedInterface
-     * @var  DaoKeyDbVerifiedInterface
-     */
-    protected $dao;
+//    /**
+//     * @var DaoInterface | DaoKeyDbVerifiedInterface
+//     * @var  DaoKeyDbVerifiedInterface
+//     */
+//    protected $dao;
     
     
     /**
      *
-     * @var RowObjectManagerInterface
+     * @var RowObjectManagerInterface | RowObjectManagerSaveImmedientlyInterface
+     * 
      */
     protected $rowObjectManager; 
 
@@ -152,7 +155,7 @@ abstract class RepositoryAbstract {
     protected function recreateEntity( $index,  RowObjectInterface $rowObject /*$row*/): ?string {
         if ($rowObject) {
             /** @var EntityInterface $entity */
-            $entity = $this->ccreateEntity();  // !!!!definována v konkrétní třídě!!!!! - adept na entity managera
+            $entity = $this->createEntity();  // !!!!definována v konkrétní třídě!!!!! - adept na entity managera
           
             try {
                 $this->recreateAssociations($rowObject /*$row */);
@@ -229,6 +232,7 @@ abstract class RepositoryAbstract {
      * @param EntityInterface $entity
      * @return void
      * @throws OperationWithLockedEntityException
+     * @throws UnableAddEntityException
      */
     protected function addEntity( EntityInterface $entity): void {
         if ($entity->isLocked()) {
@@ -238,22 +242,33 @@ abstract class RepositoryAbstract {
             $this->collection[$this->indexFromEntity($entity)] = $entity;
         } else {
             
-// presunuto do ObjectManager            
-//            if ( $this->dao instanceof DaoKeyDbVerifiedInterface ) {
-//                $row = [];
-//                $this->extract($entity, $row);
+            //$key = $this->rowObjectManager->createKey();
+            $rowObject = $this->rowObjectManager->createRowObject(/*$key*/);
+            $this->extract($entity, $rowObject);
+            
+            
+            if ( $this->rowObjectManager instanceof RowObjectManagerSaveImmedientlyInterface ) { ///nebude na co se optat
+               // $row = [];
+                $key = $this->rowObjectManager->createKey();
+                $rowObject = $this->rowObjectManager->createRowObject($key);
+
+                $this->extract($entity, $rowObject);
+                $this->rowObjectManager->addRowObject($rowObject);
+               
 //                try {
-//                    $this->dao->insertWithKeyVerification($row);
+//                    //$this->dao->insertWithKeyVerification($row);
+//                    $this->rowObjectManager->saveImmendietly($rowObject);
+//                    
 //                    $entity->setPersisted();
 //                    $this->collection[$this->indexFromEntity($entity)] = $entity;
-//                } catch ( DaoKeyVerificationFailedException $verificationFailedExc) {
-//                    throw new UnableAddEntityException('Entitu s nastavenou hodnotou klíče nelze zapsat do databáze.', 0, $verificationFailedExc);
+//                    
+//                } catch ( RowObjectManagerSaveImmedientlyFailedException $failedExc) {
+//                    throw new UnableAddEntityException('Entitu s nastavenou hodnotou klíče nelze zapsat do databáze.', 0, $failedExc);
 //                }
-//            } else {
+            } else {
                 $this->new[] = $entity;
                 $entity->lock();               
- //           }
-        
+            }            
                 
         }
         $this->flushed = false;

@@ -8,19 +8,23 @@ namespace Model\RowData;
  */
 trait RowDataTrait {
 
-    private $changed;
+    private $changed = [];
     private $nulled;
 
-    public function isChanged() {
+    public function isChanged(): bool {
         return count($this->changed) ? TRUE : FALSE;
     }
 
-    public function getChanged() {
+    public function getChanged(): array {
         return $this->changed;
     }
+    
+    public function getIndexesOfChanged(): array {
+        return array_keys($this->changed);
+    }
 
-    public function deleteChanged() {
-        unset($this->changed);
+    public function deleteChanged(): void {
+        $this->changed = [];
     }
 
     public function offsetGet($index) {
