@@ -25,5 +25,11 @@ interface RowObjectInterface extends AttributeInterface {
     public function unLock(): void ;
     
     public function isLocked(): bool ;
+           
+
+    public function isChanged(): bool ;
+    public function fetchChanged(): array ;
+
+    
 
 }

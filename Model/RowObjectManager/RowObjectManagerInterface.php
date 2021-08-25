@@ -15,16 +15,16 @@ interface RowObjectManagerInterface {
     
 
     
-    public function addRowObject( RowObjectInterface $rowObject ): void ;
+    public function add( RowObjectInterface $rowObject ): void ;
            
-    public function getRowObject( KeyInterface $key  )  :  RowObjectInterface ;
+    public function get( KeyInterface $key  )  :  RowObjectInterface ;
     
-    public function removeRowObject( RowObjectInterface $rowObject ): void ;
+    public function remove( RowObjectInterface $rowObject ): void ;
     
        
     
     
-    public function createKey () : KeyInterface ;
+    //public function createKey () : KeyInterface ;
     
     public function createRowObject ( KeyInterface $key ) : RowObjectInterface ;
        

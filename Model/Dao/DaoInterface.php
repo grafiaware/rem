@@ -18,13 +18,17 @@ use Model\RowObject\Key\KeyInterface;
 interface DaoInterface {
     
     public function get(KeyInterface $key): RowDataInterface;
+    
+    
     /**
      * zapise insertem, a v pripade ze byla dogenerovavana nejake hodnoty, data,  refreshuje $rowData 
      * 
      * @param RowDataInterface $rowData
      * @return void
      */
-    public function insert(RowDataInterface $rowData): void; //zapise
+    public function insert(RowDataInterface $rowData): void; 
+    
+    
     public function update(RowDataInterface $rowData): void;
     public function delete(RowDataInterface $rowData): void;
 }

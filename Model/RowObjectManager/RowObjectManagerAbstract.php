@@ -43,8 +43,7 @@ abstract class RowObjectManagerAbstract {
     
 
     /**
-     * @var DaoInterface | DaoKeyDbVerifiedInterface
-     * @var  DaoKeyDbVerifiedInterface
+     * @var DaoInterface 
      */
     protected $dao;
    

@@ -20,11 +20,11 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
     
     
     function __construct( AccessorHydratorInterface $accessorHydrator,
-                          RowObjectManagerInterface $rOManager
+                          RowObjectManagerInterface $rowObjectManager
             ) {
         
         $this->registerHydrator( $accessorHydrator ); 
-        $this->rowObjectManager = $rOManager;
+        $this->rowObjectManager = $rowObjectManager;
         
     }
     

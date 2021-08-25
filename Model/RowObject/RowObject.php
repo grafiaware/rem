@@ -1,7 +1,6 @@
 <?php
 namespace Model\RowObject;
 
-use Model\RowObject\AttributeInterface;
 use Model\RowObject\RowObjectAbstract;
 use Model\RowObject\RowObjectInterface;
 

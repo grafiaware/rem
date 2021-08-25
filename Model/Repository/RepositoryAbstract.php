@@ -15,9 +15,8 @@ use Model\Entity\Identity\IdentityInterface;
 use Model\RowObject\Key\KeyInterface;
 
 use Model\RowObjectManager\RowObjectManagerInterface;
-use Model\RowObjectManager\RowObjectManager;
-use Model\RowObjectManager\RowObjectManagerSaveImmedientlyInterface;
-use Model\RowObjectManager\Exception\RowObjectManagerSaveImmedientlyFailedException;
+//use Model\RowObjectManager\RowObjectManagerSaveImmedientlyInterface;
+//use Model\RowObjectManager\Exception\RowObjectManagerSaveImmedientlyFailedException;
 
 use Model\Repository\Association\AssociationOneToOne;
 use Model\Repository\Association\AssociationOneToMany;
@@ -58,26 +57,15 @@ abstract class RepositoryAbstract {
 
     private $hydrators = [];
    
-
-//    /**
-//     * @var DaoInterface | DaoKeyDbVerifiedInterface
-//     * @var  DaoKeyDbVerifiedInterface
-//     */
-//    protected $dao;
     
     
     /**
      *
-     * @var RowObjectManagerInterface | RowObjectManagerSaveImmedientlyInterface
+     * @var RowObjectManagerInterface
      * 
      */
     protected $rowObjectManager; 
-
-    
-    /**
-     * @var HydratorInterface array of
-     */
-//    protected $hydrator;
+   
     
 
     /**
@@ -246,34 +234,37 @@ abstract class RepositoryAbstract {
             $rowObject = $this->rowObjectManager->createRowObject(/*$key*/);
             $this->extract($entity, $rowObject);
             
-            
-            if ( $this->rowObjectManager instanceof RowObjectManagerSaveImmedientlyInterface ) { ///nebude na co se optat
-               // $row = [];
-                $key = $this->rowObjectManager->createKey();
-                $rowObject = $this->rowObjectManager->createRowObject($key);
-
-                $this->extract($entity, $rowObject);
-                $this->rowObjectManager->addRowObject($rowObject);
-               
+            $this->rowObjectManager->addRowObject($rowObject);
+            if  ($rowObject->isChanged() ) {                
+                $this->hydrate($entity, $rowObject);
+                $rowObject->fetchChanged(); //na vymazani zmenenzch
+            }
+                        
+//            if ( $this->rowObjectManager instanceof RowObjectManagerSaveImmedientlyInterface ) { ///nebude na co se optat
+//               // $row = [];
+//                $key = $this->rowObjectManager->createKey();
+//                $rowObject = $this->rowObjectManager->createRowObject($key);
+//                $this->extract($entity, $rowObject);
+//                $this->rowObjectManager->addRowObject($rowObject);//               
 //                try {
 //                    //$this->dao->insertWithKeyVerification($row);
-//                    $this->rowObjectManager->saveImmendietly($rowObject);
-//                    
+//                    $this->rowObjectManager->saveImmendietly($rowObject);                    
 //                    $entity->setPersisted();
-//                    $this->collection[$this->indexFromEntity($entity)] = $entity;
-//                    
+//                    $this->collection[$this->indexFromEntity($entity)] = $entity;                    
 //                } catch ( RowObjectManagerSaveImmedientlyFailedException $failedExc) {
 //                    throw new UnableAddEntityException('Entitu s nastavenou hodnotou klíče nelze zapsat do databáze.', 0, $failedExc);
 //                }
-            } else {
-                $this->new[] = $entity;
-                $entity->lock();               
-            }            
+//            } else {
+//                $this->new[] = $entity;
+//                $entity->lock();               
+//            }            
                 
         }
         $this->flushed = false;
     }
 
+    
+    
     /**
      *
      * @param type $entity Agregátní entita.
