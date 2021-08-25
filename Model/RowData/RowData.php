@@ -11,7 +11,7 @@ namespace Model\RowData;
  */
 class RowData extends \ArrayObject implements RowDataInterface {
 
-    private $changed;
+    private $changed = [];
 
     /**
      * V kostruktoru se mastaví způsob zapisu dat do RowData objektu na ARRAY_AS_PROPS a pokud je zadán parametr $data, zapíší se tato data
@@ -23,7 +23,7 @@ class RowData extends \ArrayObject implements RowDataInterface {
     }
 
     public function isChanged(): bool {
-        return (isset($this->changed) AND count($this->changed)) ? TRUE : FALSE;
+        return ($this->changed) ? TRUE : FALSE;
     }
 
     /**
@@ -34,13 +34,10 @@ class RowData extends \ArrayObject implements RowDataInterface {
      * @return array
      */
     public function fetchChanged(): array {
-        if (isset($this->changed)) {
-            $ret = $this->changed;
-            unset($this->changed);
-        } else {
-            $ret = [];  // zajišťuje správný návratový typ + když není isset($this->changed) tak přiřazení $ret = $this->changed volá metodu offsetGet('changed')
+        $ret = $this->changed;
+        if ($this->isChanged()) {
+            $this->changed = [];
         }
-
         return $ret;
     }
 
@@ -75,23 +72,30 @@ class RowData extends \ArrayObject implements RowDataInterface {
      * @param type $value
      */
     public function offsetSet($index, $value) {
-//        if ($this->getChangedWasCalled) {
-//            throw new LogicException('Již byla zavolána metoda getChanged() a data jsou zničena. Objekt nelze dále používat.');
-//        }
-        if (isset($value)) {
+//        if (isset($value)) {
             // změněná nebo nová data
-            if (parent::offsetExists($index) AND parent::offsetGet($index) != $value) {
-                parent::offsetUnset($index);
-                $this->changed[$index] = $value;
-            } elseif (!parent::offsetExists($index)) {  // nová data nebo opakovaně měněná data
+            if (!parent::offsetExists($index) OR parent::offsetGet($index) !== $value) {
+                parent::offsetSet($index, $value);
                 $this->changed[$index] = $value;
             }
-        } elseif (parent::offsetExists($index) AND parent::offsetGet($index) !== NULL) {
-        // kontrola !== NULL je nutná, extract volá všechny settery a pokud vlastnost nebyla vůbec nastavena setter vrací NULL
-        // musím kontrolavat, že data jsou NULL, ale původně nebyla - proto nelze volat offseUnset (ale data se neduplikují, v changed je jen konstanta)
-            // smazat existující data
-            $this->changed[$index] = self::CODE_FOR_NULL_VALUE;
-        }
+//        }
+
+
+//        if (isset($value)) {
+//            // změněná nebo nová data
+//            if (parent::offsetExists($index) AND parent::offsetGet($index) !== $value) {
+//                parent::offsetSet($index, $value);
+//                $this->changed[$index] = $value;
+//            } elseif (!parent::offsetExists($index)) {  // nová data nebo opakovaně měněná data
+//                $this->changed[$index] = $value;
+//            }
+//        } elseif (parent::offsetExists($index) AND parent::offsetGet($index) !== NULL) {
+//        // kontrola !== NULL je nutná, extract volá všechny settery a pokud vlastnost nebyla vůbec nastavena setter vrací NULL
+//        // musím kontrolavat, že data jsou NULL, ale původně nebyla - proto nelze volat offseUnset (ale data se neduplikují, v changed je jen konstanta)
+//            // smazat existující data
+//            parent::offsetSet($index, $value);
+//            $this->changed[$index] = self::CODE_FOR_NULL_VALUE;
+//        }
     }
 
 }
