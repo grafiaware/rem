@@ -14,7 +14,7 @@ interface RowDataInterface extends \IteratorAggregate, \ArrayAccess, \Serializab
     // extenduje všechna rozhraní, která implementuje \ArrayObject mimo \Traversable - to nelze neb je prázdné
 
     /**
-     * Vrací TRUE, pokud hodnoty objektu byly změněny od jeho instancování nebo od posledního volání metody ->deleteChanged()
+     * Vrací TRUE, pokud hodnoty objektu byly změněny od jeho instancování nebo od posledního volání metody ->fetchChanged()
      * @return bool
      */
     public function isChanged(): bool;
