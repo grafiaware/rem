@@ -3,7 +3,9 @@
 namespace Model\VS\Repository;
 
 use Model\VS\Entity\TestovaciEntityInterface;
+use Model\VS\Entity\TestovaciEntity;
 use Model\VS\Identity\TestovaciIdentityInterface;
+use Model\VS\Identity\TestovacIdentity;
 
 
 use Model\Repository\RepositoryAbstract;
@@ -30,7 +32,6 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
     
     
     public function add( TestovaciEntityInterface $entity): void {
-        //$index = $this->indexFromEntity( $entity ); //je v addEntity
                 
         $this->addEntity($entity);      
     }
@@ -38,18 +39,11 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
 
     
     public function get( TestovaciIdentityInterface $identity):  TestovaciEntityInterface {
-        $index = $this->indexFromIdentity($identity);
-        if (!isset($this->collection[$index])) {
-            //$rowData = new RowData(); 
-            //$rowData = $this->dao->get( $identity->getKeyHash() ); // vraci konstantni pole - hodnoty z úložistě, $keyHash  zatim neni v metode get pouzito
-      
-            //nemam key
-            $this->extractI( $identity, $key );
-            
-            $rowObject = $this->rowObjectManager->getRowObject( $key );
-            //vyzvednout rowObject z managera
-                        
-            $this->recreateEntity( $index,  $rowObject ); // v abstractu,  
+        $index = $identity->getIndexFromIdentity();
+        
+        if (!isset($this->collection[$index]) /*and (!isset($this->removed[$index] )) */  ) {
+                                    
+            $this->recreateEntity(  /*$identity */ /*$index*/ ); // v abstractu,  
             // zarazeni do collection z uloziste( db, soubor , atd.... ), pod indexem  $index   
             // pozn. kdyz neni v ulozisti - asi neni ani $rowObject
         }
@@ -60,6 +54,7 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
 
     public function remove( TestovaciEntityInterface $entity): void {
         
+        $this->removeEntity($entity);    
     }
 
     
@@ -68,12 +63,11 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
      * 
      * @return TestovaciEntityInterface
      */
-//    public function createEntity() : TestovaciEntityInterface {
-//        
-//        //vyrobit prazdnou konkr. entity
-//         return new TestovaciEntity ( new TestovacIdentity() ) ;
-//        
-//    }
+    public function createEntity() : TestovaciEntityInterface {        
+        //vyrobit prazdnou konkr. entity
+        return new TestovaciEntity ( new TestovacIdentity() ) ;
+        
+    }
         
     
             

@@ -19,7 +19,7 @@ use Model\Hydrator\Exception\UndefinedColumnNameException;
 
 use Model\RowData\RowData;
 use Model\RowData\RowDataInterface;
-use Model\RowData\RowDataTrait;
+//use Model\RowData\RowDataTrait;
 
 use Test\Configuration\DaoContainerConfigurator;
 use Pes\Container\Container;
@@ -94,9 +94,9 @@ class KeyMock extends KeyAbstract implements KeyInterfaceMock {
 }
 
 
-class RowDataMock  extends \ArrayObject  implements RowDataInterface {
-    use RowDataTrait;
-}
+//class RowDataMock  extends \ArrayObject  implements RowDataInterface {
+//    use RowDataTrait;
+//}
 
 
 //---------------------------------------------------------------------------------------------------------------------------
@@ -291,7 +291,8 @@ class RowHydratorTest extends TestCase {
                                       );
         $this->assertIsObject($rowHydrator, "***CHYBA***" );
 
-        $rowDataM = new RowDataMock ();
+        //$rowDataM = new RowDataMock ();
+        $rowDataM = new RowData ();
         $rowObjectM = new RowObjectMock( new KeyMock( [],[] ));
 
         $rowObjectM->prvekChar = "QWERTZ" ;
@@ -341,7 +342,8 @@ class RowHydratorTest extends TestCase {
                                       );
         $this->assertIsObject($rowHydrator, "***CHYBA***" );
 
-        $rowDataM = new RowDataMock ();
+        //$rowDataM = new RowDataMock ();
+        $rowDataM = new RowData();
         $rowObjectM = new RowObjectMock( new KeyMock( [],[] ));
 
         $rowObjectM->prvekChar = "QWERTZ" ;
@@ -375,7 +377,8 @@ class RowHydratorTest extends TestCase {
                                       );
         $this->assertIsObject($rowHydrator, "***CHYBA***" );
 
-        $rowDataM = new RowDataMock ();
+        //$rowDataM = new RowDataMock ();
+        $rowDataM = new RowData ();
         $rowObjectM = new RowObjectMock( new KeyMock( [],[] ));
 
         $rowObjectM->prvekChar = "QWERTZ" ;
@@ -407,7 +410,8 @@ class RowHydratorTest extends TestCase {
                                                    );
         $this->assertIsObject($rowHydrator, "***CHYBA***" );
 
-        $rowDataM = new RowDataMock ();
+        //$rowDataM = new RowDataMock ();
+        $rowDataM = new RowData ();
         $rowObjectM = new RowObjectMock( new KeyMock( [],[] ));
 
         $rowObjectM->prvekChar = "QWERTZ" ;

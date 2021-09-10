@@ -109,11 +109,6 @@ class KeyMock extends KeyAbstract implements KeyInterfaceMock {
 }
 
 
-class RowDataMock  extends \ArrayObject  implements RowDataInterface {
-    use RowDataTrait;
-}
-
-
 //-----------------------------------------------------------------------------------------
 
 /**
@@ -238,7 +233,7 @@ class IntegrateRowObjectHydratorTest extends TestCase {
         $this->assertIsObject( $keyRowObjectHydrator, "***CHYBA***" );
 
 
-        $rowDataM = new RowDataMock ();
+        $rowDataM = new RowData();
         $rowObjectM = new RowObjectMock( new KeyMock( ["uidPrimarniKlicZnaky" => false ] ));    //generated
 
         $rowObjectM->key->uidPrimarniKlicZnaky = "KEYklic";

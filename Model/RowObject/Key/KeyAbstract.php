@@ -23,7 +23,7 @@ abstract class KeyAbstract  implements KeyInterface {
     
     
     
-    public function __construct ( /*array $attribute  , */ array $generated ) {
+    public function __construct ( /*array $attribute  , */ /* array $generated*/ ) {
         //$this->attribute = $attribute;        
 
 
@@ -44,7 +44,7 @@ abstract class KeyAbstract  implements KeyInterface {
 //        }             
         
         //$this->attribute = $attribute;
-        $this->generated = $generated;
+        //$this->generated = $generated;
     }
     
                  

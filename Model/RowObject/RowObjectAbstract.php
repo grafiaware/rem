@@ -11,7 +11,7 @@ use Model\RowObject\RowObjectInterface;
  *
  * @author vlse2610
  */
-abstract class RowObjectAbstract implements RowObjectInterface {    
+abstract class RowObjectAbstract /*implements RowObjectInterface*/ {    
     /**
      *
      * @var KeyInterface
@@ -58,6 +58,14 @@ abstract class RowObjectAbstract implements RowObjectInterface {
          return $this->locked;    
     }
     
+    
+    public function isChanged(): bool {
+        return false;
+    }
+    
+    public function fetchChanged(): array {
+        return [];
+    }
     
   }  
     
