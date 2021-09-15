@@ -1,5 +1,5 @@
 <?php
-namespace Model\VS\RowObject;
+namespace Model\Testovaci\RowObject;
 
 use Model\RowObject\RowObjectInterface;
 use Model\RowObject\RowObjectAbstract;

@@ -9,5 +9,6 @@ use Model\Entity\AccessorInterface;
  */
 interface IdentityInterface  extends AccessorInterface{
     
-    public function getIndexFromIdentity() ;
+   // public function getIndexFromIdentity() ;
+    
 }

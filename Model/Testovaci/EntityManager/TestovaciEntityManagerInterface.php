@@ -1,6 +1,6 @@
 <?php
 
-namespace Model\VS\EntityManager;
+namespace Model\Testovaci\EntityManager;
 
 /**
  *

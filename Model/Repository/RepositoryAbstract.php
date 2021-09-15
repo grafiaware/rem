@@ -96,18 +96,23 @@ abstract class RepositoryAbstract implements RepositoryInterface {
         $this->hydrators[] = $hydrator;
     }
 
-    protected function hydrate( EntityInterface $entity,RowObjectInterface $rowObject ) {
+    protected function hydrate( EntityInterface $entity, RowObjectInterface $rowObject ) {
         foreach ($this->hydrators as $hydrator) {
             $hydrator->hydrate($entity, $rowObject);
         }
     }
+    protected function hydrateIdentity( IdentityInterface $identity, KeyInterface $key ) {
+        foreach ($this->hydrators as $hydrator) {
+            $hydrator->hydrate( $identity, $key);
+        }
+    }
 
-    protected function extract(EntityInterface $entity, RowObjectInterface $rowObject ) {
+    protected function extract( EntityInterface $entity, RowObjectInterface $rowObject ) {
         foreach ($this->hydrators as $hydrator) {
             $hydrator->extract($entity, $rowObject);
         }
     }
-    protected function extractI ( IdentityInterface $identity, KeyInterface $key ) {
+    protected function extractIdentity ( IdentityInterface $identity, KeyInterface $key ) {
         foreach ($this->hydrators as $hydrator) {
             $hydrator->extract($identity, $key);
         }
@@ -135,20 +140,20 @@ abstract class RepositoryAbstract implements RepositoryInterface {
     
     
     /**
-     * Přidá 'novou = dosud nepridanou'  entitu do repository->collection. (jiz persistovane a pouzite entity)
-     * 
-     * @param type $index
-     * @param RowObjectInterface $rowObject
-     * @return string|null index
+     * Přidá dosud nepridanou  entitu do repository->collection. Jedna se o jiz persistovane a pouzite entity.
+     *      
+     * @param type $identity
+     * @return string|null  vlastne index
      * @throws UnableRecreateEntityException
      */
-    protected function recreateEntity( /*TestovaciIdentityInterface $identity *//*$index */  ): ?string {        
+    protected function recreateEntity(  $identity   /*$index */  ): /*EntityInterface*/ ?string {        
         //$rowData = new RowData(); 
         //$rowData = $this->dao->get( $identity->getKeyHash() ); // vraci konstantni pole - hodnoty z úložistě, $keyHash  zatim neni v metode get pouzito      
-        //nemam key       rowObjectManager->createKey
-        //$this->extractI( $identity, $key );
-            
-        $key = $this->rowObjectManager->getKey();
+   
+        $key = $this->rowObjectManager->createKey();
+        $this->extractIdentity( $identity, $key );
+
+        //$this->rowObjectManager->createRowObject();
         $rowObject = $this->rowObjectManager->get( $key );
         //vyzvednout rowObject z managera
         if ($rowObject) {          
@@ -165,10 +170,9 @@ abstract class RepositoryAbstract implements RepositoryInterface {
                                     
             //---------------------------------------------
             $this->hydrate($entity, $rowObject);
-            //$this->hydrate($entity->getIdentity, $rowObject->getKey());
+            $this->hydrateIdentity($entity->getIdentity(), $rowObject->getKey());
             
-            $entity->setPersisted();
-                        
+            $entity->setPersisted();                        
             $index = $entity->getIdentity()->getIndexFromIdentity();
           
             $this->collection[$index] = $entity;
@@ -228,7 +232,11 @@ abstract class RepositoryAbstract implements RepositoryInterface {
 
     protected function indexFromEntity(  EntityInterface $entity ) {
         
-        foreach ( ksort (\get_object_vars($entity->getIdentity()) ) as $nameAttr=>$value ) {            
+        $a = \get_object_vars($entity->getIdentity()); 
+        $b = ksort ($a);
+        
+        $index="";
+        foreach ( $a  as $nameAttr=>$value ) {            
            $index .= $value;                        
         }
         return $index;           
@@ -255,7 +263,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             $rowObject = $this->rowObjectManager->createRowObject();
             $this->extract($entity, $rowObject);
             
-            $this->rowObjectManager->addRowObject($rowObject);               
+            $this->rowObjectManager->add($rowObject);               
             
             //-----------------------------------
             if  ($rowObject->isChanged() ) {                
@@ -320,9 +328,9 @@ abstract class RepositoryAbstract implements RepositoryInterface {
     
     
     protected function removeEntity(EntityInterface $entity): void {
-        if ($entity->isLocked()) {
-            throw new OperationWithLockedEntityException("Nelze mazat přidanou nebo smazanou entitu.");
-        }
+//        if ($entity->isLocked()) {
+//            throw new OperationWithLockedEntityException("Nelze mazat přidanou nebo smazanou entitu.");
+//        }
         
         if ($entity->isPersisted()) {
             $index = $this->indexFromEntity($entity);
@@ -364,7 +372,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
                    // $key = $this->rowObjectManager->createKey();
                     $rowObject = $this->rowObjectManager->createRowObject();
                     $this->extract($entity, $rowObject);                                                                                                    
-                    $this->rowObjectManager->addRowObject($rowObject);                              
+                    $this->rowObjectManager->add($rowObject);                              
                     
                     $this->addAssociated( $rowObject, $entity);     // pridavam mrkev        //pridavam asociovanou entitu do potomk.repository
                     $this->flushChildRepos();  //pokud je vnořená agregovaná entita - musí se provést její insert

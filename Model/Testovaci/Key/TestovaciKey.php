@@ -1,5 +1,5 @@
 <?php
-namespace Model\VS\Key;
+namespace Model\Testovaci\Key;
 
 use Model\RowObject\Key\KeyAbstract;
 use Model\RowObject\Key\KeyInterface;

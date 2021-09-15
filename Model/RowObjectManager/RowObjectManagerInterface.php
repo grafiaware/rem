@@ -14,22 +14,55 @@ interface RowObjectManagerInterface {
     public function flush () : void ;
     
 
+          
+    /**
+     * Vrací RowObject  vyhledany podle klice Key. Nebo vrati null.
+     * 
+     * @param KeyInterface $key
+     * @return RowObjectInterface|null
+     */       
+    public function get( KeyInterface $key  )  :  ?RowObjectInterface ;   
     
-    //public function add( RowObjectInterface $rowObject ): void ;
-           
-    public function get( KeyInterface $key  )  :  RowObjectInterface ;
-    public function getKey(   )  : KeyInterface  ;
     
+    /**
+     * Odstraní RowObject z "RowObjectManagera".
+     * @param RowObjectInterface $rowObject
+     * @return void
+     */
     public function remove( RowObjectInterface $rowObject ): void ;
     
        
     
+        //public function createKey () : KeyInterface ;
     
-    //public function createKey () : KeyInterface ;
     
-    public function createRowObject (  ) /*: RowObjectInterface*/ ;
     
-    public function addRowObject(  RowObjectInterface $rowObject): void ;
+    
+    /**
+     * Vytvoří nový RowObject.
+     * 
+     * @return RowObjectInterface
+     */
+    public function createRowObject (  ) : RowObjectInterface ;
+    
+    
+     /**
+     * Vytvoří nový Key.
+     * 
+     * @return Key
+     */
+    public function createKey (  ) : KeyInterface ;
+    
+    
+    
+    
+    /**
+     * Přidá  RowObject do "RowObjectManagera", do úložiště.
+     * 
+     * @param RowObjectInterface $rowObject
+     * @return void
+     */
+    public function add(  RowObjectInterface $rowObject): void ;
 
 
 

@@ -14,11 +14,13 @@ interface EntityInterface extends  AccessorInterface {
     
     public function getIdentity(): IdentityInterface ;           
     
+    
     public function setPersisted(): void;
     
     public function setUnpersisted(): void ;
     
     public function isPersisted(): bool ;        
+    
     
     public function lock(): void ;
     

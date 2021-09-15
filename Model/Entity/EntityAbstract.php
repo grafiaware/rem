@@ -50,6 +50,7 @@ abstract class EntityAbstract implements EntityInterface {
     }
         
     
+    
     public function lock(): void {
         $this->locked = true;
     }    

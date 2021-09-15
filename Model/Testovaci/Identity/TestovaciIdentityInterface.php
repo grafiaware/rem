@@ -1,5 +1,5 @@
 <?php
-namespace Model\VS\Identity;
+namespace Model\Testovaci\Identity;
 
 use Model\Entity\Identity\IdentityInterface;
 /**
@@ -8,6 +8,12 @@ use Model\Entity\Identity\IdentityInterface;
  * @author vlse2610
  */
 interface TestovaciIdentityInterface extends IdentityInterface{
+    
+    public function getId(): string ;
+
+    public function setId(string $id):TestovacIdentity ;
+    
        
+     public function getIndexFromIdentity() ;
     
 }

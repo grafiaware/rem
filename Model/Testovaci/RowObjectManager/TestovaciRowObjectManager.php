@@ -1,5 +1,5 @@
 <?php
-namespace Model\VS\RowObjectManager;
+namespace Model\Testovaci\RowObjectManager;
 
 use Model\RowObjectManager\RowObjectManagerInterface;
 use Model\RowObject\Key\KeyInterface;
@@ -7,7 +7,8 @@ use Model\RowObject\Key\Key;
 use Model\RowObject\RowObjectInterface;
 use Model\RowObject\RowObject;
 
-use Model\VS\RowObject\TestovaciRowObject;
+use Model\Testovaci\RowObject\TestovaciRowObject;
+use Model\Testovaci\Key\TestovaciKey;
 
 
 
@@ -18,34 +19,39 @@ use Model\VS\RowObject\TestovaciRowObject;
  */
 class TestovaciRowObjectManager implements RowObjectManagerInterface {
         
-    public function flush () : void {}
+    public function flush () : void {
         
-    //public function add( RowObjectInterface $rowObject ): void ;
-           
-    public function get( KeyInterface $key  )  :  RowObjectInterface {
+    }
+        
+    
+    
+    public function get( KeyInterface $key  )  :  ?RowObjectInterface {
         return new RowObject($key);
         
     }
     
     
-    public function getKey(   )  : KeyInterface {
-        return new Key();
-    }
+  
     
     
     public function remove( RowObjectInterface $rowObject ): void {
         
     }
     
-               
-    //public function createKey () : KeyInterface ;
+   
     
-    public function createRowObject (  ) : TestovaciRowObject {
+    public function createRowObject (  ) : RowObjectInterface {
             $key = new Key();
         return new TestovaciRowObject( $key );
     }
     
-    public function addRowObject(  RowObjectInterface $rowObject): void {
+    
+    public function createKey (  ) : KeyInterface {
+        return new TestovaciKey( );
+    }
+    
+    
+    public function add( RowObjectInterface $rowObject): void {
         
     }
     
