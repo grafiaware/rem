@@ -38,10 +38,21 @@ class TestovacIdentity extends IdentityAbstract implements  TestovaciIdentityInt
     
      public function getIndexFromIdentity() {
         //get_object_vars - vybere ty "viditelne" a nestaticke
-        $index='';
-        foreach ( \get_object_vars($this) as $nameAttr=>$value) {            
-           $index =+ $value;                        
+//        $index='';
+//        foreach ( \get_object_vars($this) as $nameAttr=>$value) {            
+//           $index =+ $value;                        
+//        }
+//        return $index;
+        
+        $a = \get_object_vars($this); 
+        $b = ksort ($a);
+        
+        $index="";
+        foreach ( $a  as $nameAttr=>$value ) {            
+           $index .= $value;                        
         }
-        return $index;
+        return $index;    
+        
+        
     }
 }

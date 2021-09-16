@@ -12,6 +12,7 @@ use Model\Hydrator\AccessorHydratorInterface;
 
 use Model\Entity\EntityInterface;
 use Model\RowObject\RowObjectInterface;
+use Model\RowObject\RowObject;
 use Model\Entity\Identity\IdentityInterface;
 use Model\RowObject\Key\KeyInterface;
 
@@ -230,17 +231,17 @@ abstract class RepositoryAbstract implements RepositoryInterface {
 //        }
 //    }
 
-    protected function indexFromEntity(  EntityInterface $entity ) {
-        
-        $a = \get_object_vars($entity->getIdentity()); 
-        $b = ksort ($a);
-        
-        $index="";
-        foreach ( $a  as $nameAttr=>$value ) {            
-           $index .= $value;                        
-        }
-        return $index;           
-    }
+//    protected function indexFromEntity(  EntityInterface $entity ) {
+//        
+//        $a = \get_object_vars($entity->getIdentity()); 
+//        $b = ksort ($a);
+//        
+//        $index="";
+//        foreach ( $a  as $nameAttr=>$value ) {            
+//           $index .= $value;                        
+//        }
+//        return $index;           
+//    }
     
     
     
@@ -256,24 +257,30 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             throw new OperationWithLockedEntityException("Nelze přidávat přidanou nebo smazanou entitu.");
         }
         if ($entity->isPersisted()) {
-            $this->collection[$this->indexFromEntity($entity)] = $entity;
+            //$this->collection[ $this->indexFromEntity($entity) ] = $entity;
+            $this->collection[ $entity->getIdentity()->getIndexFromIdentity() ] = $entity;
+            
+            
         } else {
+                        
             
             //$key = $this->rowObjectManager->createKey();
+            
+            /** @var RowObject $rowObject */
             $rowObject = $this->rowObjectManager->createRowObject();
             $this->extract($entity, $rowObject);
             
             $this->rowObjectManager->add($rowObject);               
             
             //-----------------------------------
-            if  ($rowObject->isChanged() ) {                
+            if  ($rowObject->isChanged() ) {    //NEVIM JAK SE TO UDEJE           
                 $this->hydrate($entity, $rowObject);
                 $rowObject->fetchChanged(); //na vymazani zmenenych
             }                           
             $this->addAssociated( $rowObject , $entity);     // pridavam mrkev        //pridavam asociovanou entitu do potomk.repository
             $this->flushChildRepos();  //pokud je vnořená agregovaná entita - musí se provést její insert     
             
-                        
+                    
             //--------------------------------------
             if ($rowObject->isPersisted() ) {
                 $this->collection[] = $entity;
@@ -333,7 +340,8 @@ abstract class RepositoryAbstract implements RepositoryInterface {
 //        }
         
         if ($entity->isPersisted()) {
-            $index = $this->indexFromEntity($entity);
+            $index = $entity->getIdentity()->getIndexFromIdentity();
+            //$index = $this->indexFromEntity($entity);
             $this->removed[ $index ] = $entity;
             
             unset($this->collection[$index]);

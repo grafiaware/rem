@@ -19,6 +19,7 @@ abstract class EntityAbstract implements EntityInterface {
      */
     private $identity;
     
+    
     private $persisted=false;
     
     private $locked=false;   
@@ -52,11 +53,12 @@ abstract class EntityAbstract implements EntityInterface {
     
     
     public function lock(): void {
+        $this->identity->lock();
         $this->locked = true;
     }    
-    public function unLock(): void {
-        $this->locked = false;
-    }
+//    public function unLock(): void {
+//        $this->locked = false;
+//    }
     public function isLocked(): bool {
         return $this->locked;                
     }

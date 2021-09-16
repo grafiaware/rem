@@ -9,6 +9,21 @@ use Model\Entity\Identity\IdentityInterface;
  */
 abstract class IdentityAbstract  {
    
+    private $locked=false;   
+    
+    
+    
+       
+    public function lock(): void {       
+        $this->locked = true;
+    }    
+
+    public function isLocked(): bool {
+        return $this->locked;                
+    }
+    
+    
+    
     
 //    public function getIndexFromIdentity() {
 //        //get_object_vars - vybere ty "viditelne" a nestaticke

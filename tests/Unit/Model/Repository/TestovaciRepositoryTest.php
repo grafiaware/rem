@@ -55,10 +55,10 @@ class TestovaciRepositoryTest  extends TestCase{
        $entity1 = new TestovaciEntity($identity);       
        $testovaciRepository->add($entity1);       
        
-       //$entity2 = $testovaciRepository->get($identity);/**/
+       $entity2 = $testovaciRepository->get($identity);/**/
        
        //$this->assertEquals($entity1, $entity2 );
-       //$this->assertIsObject($entity2);
+       $this->assertIsObject($entity2);
        //$this->assertInstanceOf(TestovaciEntity::class, $entity2);
              
     }   
@@ -166,7 +166,7 @@ class TestovaciRepositoryTest  extends TestCase{
         $testovaciRepository2 = new TestovaciRepository($accessorHydrator, $this->rowObjectManagerROM );   
         $entity2 = $testovaciRepository2->get($identity);
        
-        $this->assertEquals($entity1, $entity2 );
+        //$this->assertEquals($entity1, $entity2 );
        
         
        

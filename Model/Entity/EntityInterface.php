@@ -24,7 +24,7 @@ interface EntityInterface extends  AccessorInterface {
     
     public function lock(): void ;
     
-    public function unLock(): void ;
+//    public function unLock(): void ;
     
     public function isLocked(): bool ;
     
