@@ -10,5 +10,14 @@ use Model\RowObject\Key\KeyInterface;
  * @author vlse2610
  */
 class TestovaciKey extends KeyAbstract implements KeyInterface {
-    //put your code here
+    /**
+     *
+     * @var string
+     */
+    public $id1;
+    /**
+     *
+     * @var string
+     */
+    public $id2;
 }

@@ -22,11 +22,14 @@ use Model\Repository\Exception\UnableRecreateEntityException;
 class TestovaciRepository extends RepositoryAbstract implements TestovaciRepositoryInterface  {
     
     
-    function __construct( AccessorHydratorInterface $accessorHydrator,
+    function __construct( AccessorHydratorInterface $accessorHydratorEntity,
+                          AccessorHydratorInterface $accessorHydratorIdentity,
                           RowObjectManagerInterface $rowObjectManager
             ) {
         
-        $this->registerHydrator( $accessorHydrator ); 
+        $this->registerHydratorEntity( $accessorHydratorEntity ); 
+        $this->registerHydratorIdentity( $accessorHydratorIdentity ); 
+         
         $this->rowObjectManager = $rowObjectManager;
         
     }

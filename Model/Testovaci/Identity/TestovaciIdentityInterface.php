@@ -9,11 +9,16 @@ use Model\Entity\Identity\IdentityInterface;
  */
 interface TestovaciIdentityInterface extends IdentityInterface{
     
-    public function getId(): string ;
+    
+    
+    public function getId1(): string ;
+    public function getId2(): string ;
 
-    public function setId(string $id):TestovacIdentity ;
+    public function setId1(string $id):TestovacIdentity ;
+    public function setId2(string $id):TestovacIdentity ;
+       
     
        
-     public function getIndexFromIdentity() ;
+    public function getIndexFromIdentity() ;
     
 }

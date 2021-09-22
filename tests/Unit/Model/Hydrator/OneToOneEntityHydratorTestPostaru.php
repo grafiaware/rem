@@ -99,7 +99,7 @@ class OneToOneEntityHydratorTestPostaru extends TestCase {
         
         // 4 -  hydratovani
         $novaPlnenaTestovaciEntity  =  new TestovaciEntity( $this->identity );           
-        $oneToOneEntityHydrator->hydrate( $novaPlnenaTestovaciEntity, $this->testovaciZdrojovyRowObject );                
+        $oneToOneEntityHydrator->hydrateEntity( $novaPlnenaTestovaciEntity, $this->testovaciZdrojovyRowObject );                
                 
         // 5 - kontrola hydratace    
         $getMethodNameHydrator = new GetMethodNameHydrator();

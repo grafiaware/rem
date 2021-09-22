@@ -38,29 +38,64 @@ class TestovaciRepositoryTest  extends TestCase{
     
     
     public function testAdd() { 
-       $testovaciRowObjectManager  = new TestovaciRowObjectManager();       
-       $methodNameHydrator = new AccessorMethodNameHydrator();
-       $poleJmen = $poleJmenAttributes =  [ 
-//           "id_1", "id_2"
-//            "prvekVarchar", "prvekDatetime", "celeJmeno"
+        $testovaciRowObjectManager  = new TestovaciRowObjectManager();    
+        
+        $methodNameHydratorEntity = new AccessorMethodNameHydrator();
+        $methodNameHydratorIdentity = new AccessorMethodNameHydrator();
+        $poleJmenIdentity =   [ 
+            "id1", "id2",];
+        $poleJmenEntity =  [             
+            "prvekVarchar", "prvekDatetime", "celeJmeno"];
 //            "prvekChar" , "prvekVarchar", "prvekInteger" ,"prvekText", "prvekBoolean",  
 //            "prvekDate", "prvekDatetime", "prvekTimestamp" , 'jmenoClovek', 'prijmeniClovek' 
-            ] ; 
-       $filter = new OneToOneFilter($poleJmen);
-       $accessorHydrator = new OneToOneAccessorHydrator($methodNameHydrator, $filter) ;
-       $testovaciRepository = new TestovaciRepository($accessorHydrator, $testovaciRowObjectManager);
+//            ] ; 
+        $filterEntity = new OneToOneFilter( $poleJmenEntity);
+        $filterIdentity = new OneToOneFilter( $poleJmenIdentity);
+        $accessorHydratorEntity = new OneToOneAccessorHydrator($methodNameHydratorEntity, $filterEntity) ;
+        $accessorHydratorIdentity = new OneToOneAccessorHydrator($methodNameHydratorIdentity, $filterIdentity) ;
+        
+        $testovaciRepository = new TestovaciRepository( $accessorHydratorEntity, $accessorHydratorIdentity, $testovaciRowObjectManager);
               
-       $identity = new TestovacIdentity();
+        $identity = new TestovacIdentity(); 
+            $identity->setId1('66');         
+            $identity->setId2('33') ;
+        $entity1 = new TestovaciEntity( $identity );              
+            $entity1->setCeleJmeno("Jméno Celé"); 
+            $entity1->setPrvekVarchar('') ;
+            $entity1->setPrvekDatetime(new \DateTime('2000-01-01')) ;
        
-       $entity1 = new TestovaciEntity($identity);       
-       $testovaciRepository->add($entity1);       
+              
+        $testovaciRepository->add($entity1);      //######## add, do new #######
+        
+        //######## get, entity (je v new) tj.neni v collection, recreateEntity vytvori NOVY object $entity2 #######
+        $entity2 = $testovaciRepository->get($identity);    
+        $this->assertIsObject($entity2);
+        //$this->assertEquals($entity1, $entity2 ); /*nevhodne na objekty*/     
+        //       $this->assertObjectEquals( $entity1 , $entity2); /* takovy assert neexistuje */     
+        $this->assertContainsOnlyInstancesOf( TestovaciEntity::class, [$entity2] );              
+        $this->assertInstanceOf(TestovaciEntity::class, $entity2);
+
+        $e1Hodnota = $entity1->getCeleJmeno();              
+        $e2Hodnota = $entity2->getCeleJmeno();
+        $this->assertEquals($e1Hodnota, $e2Hodnota);
+
+        $e1Hodnota = $entity1->getPrvekDatetime();              
+        $e2Hodnota = $entity2->getPrvekDatetime();
+        $this->assertEquals($e1Hodnota, $e2Hodnota);
+
+        $e1Hodnota = $entity1->getPrvekVarchar();              
+        $e2Hodnota = $entity2->getPrvekVarchar();
+        $this->assertEquals($e1Hodnota, $e2Hodnota);
+
+
+        $entity1->setCeleJmeno("Cecilka Nová");      
+        $this->assertEquals("Cecilka Nová", $entity1->getCeleJmeno() );
+
+        //entity2 je jiny objekt nez entity1
+        $this->assertNotEquals("Cecilka Nová", $entity2->getCeleJmeno() ); //je to jiny objekt
+
+
        
-       $entity2 = $testovaciRepository->get($identity);/**/
-       
-       //$this->assertEquals($entity1, $entity2 );
-       $this->assertIsObject($entity2);
-       //$this->assertInstanceOf(TestovaciEntity::class, $entity2);
-             
     }   
     
     
@@ -74,39 +109,48 @@ class TestovaciRepositoryTest  extends TestCase{
         //-------test remove z uloziste  s flush ---------
         $this->rowObjectManagerROM  = new TestovaciRowObjectManager();       
        
-        $methodNameHydrator = new AccessorMethodNameHydrator();
-        $poleJmen = $poleJmenAttributes =  [ 
-//           "id_1", "id_2"
-//            "prvekVarchar", "prvekDatetime", "celeJmeno"
+        $methodNameHydrator = new AccessorMethodNameHydrator();        
+        $poleJmenIdentity = [ 
+            "id1", "id2",];
+        $poleJmenEntity = $poleJmenAttributes =  [             
+            "prvekVarchar", "prvekDatetime", "celeJmeno"];
 //            "prvekChar" , "prvekVarchar", "prvekInteger" ,"prvekText", "prvekBoolean",  
 //            "prvekDate", "prvekDatetime", "prvekTimestamp" , 'jmenoClovek', 'prijmeniClovek' 
-            ] ; 
-        $filter = new OneToOneFilter($poleJmen);
-        $accessorHydrator = new OneToOneAccessorHydrator($methodNameHydrator, $filter) ;
-        $testovaciRepository1 = new TestovaciRepository($accessorHydrator, $this->rowObjectManagerROM );
+//            ] ; 
+        $filterEntity = new OneToOneFilter($poleJmenEntity);
+        $filterIdentity = new OneToOneFilter($poleJmenIdentity);
+        $accessorHydratorEntity = new OneToOneAccessorHydrator($methodNameHydrator, $filterEntity) ;
+        $accessorHydratorIdentity = new OneToOneAccessorHydrator($methodNameHydrator, $filterIdentity) ;
+            
+        $testovaciRepository1 = new TestovaciRepository( $accessorHydratorEntity, $accessorHydratorIdentity, $this->rowObjectManagerROM );
               
         $identity = new TestovacIdentity();
+            $identity->setId1('66');         
+            $identity->setId2('33') ;
         $entity1 = new TestovaciEntity($identity);
+            $entity1->setCeleJmeno("Jméno Celé"); 
+            $entity1->setPrvekVarchar('') ;
+            $entity1->setPrvekDatetime(new \DateTime('2000-01-01')) ;
        
-        $testovaciRepository1->add($entity1);     
-        $testovaciRepository1->flush(); 
-        //****dostala se az do uloziste****, neni v collection, ani new, ani remove
+        $testovaciRepository1->add($entity1);     //entity v new
+        $testovaciRepository1->flush();             //entity !!!! ma byt v collection !!! -- PODIVAT    ############
+        //****dostala se az do uloziste****, neni , ani new, ani remove
         
-        $testovaciRepository1->remove($entity1);  //TADY HLASLO VYJIMKU--asi to tkhle nechceme
-        //OperationWithLockedEntityException
         
-        $testovaciRepository1->flush(); 
+        
+        
+        
+        $testovaciRepository1->remove($entity1);  //  #### remove #####  //entity v remove       
+        $testovaciRepository1->flush();          //entity neni v repository
         //****dostalo se az do uloziste*** - entita proste neexistuje
         
-        $testovaciRepository2 = new TestovaciRepository($accessorHydrator, $this->rowObjectManagerROM );   
-        $entity2 = $testovaciRepository2->get($identity); //nema vratit nic ???
+        $testovaciRepository2 = new TestovaciRepository($accessorHydratorEntity, $accessorHydratorIdentity, $this->rowObjectManagerROM );   
+        $entity2 = $testovaciRepository2->get($identity); // vratit null
         
-        //nema vratit nic ??? --nevim momentalne
-        
-        $this->assertIsObject($entity2);
-        //$this->assertIsNotObject($entity2);
-        
-        
+      // asi, a test null
+        $this->assertIsNotObject($entity2);
+        $this->assertNull($entity2);
+                
         
        
 //        
@@ -116,7 +160,7 @@ class TestovaciRepositoryTest  extends TestCase{
 //       
 //        $methodNameHydrator = new AccessorMethodNameHydrator();
 //        $poleJmen = $poleJmenAttributes =  [ 
-////            "id_1", "id_2"
+////            "id1", "id2"
 ////            "prvekVarchar", "prvekDatetime", "celeJmeno"
 ////            "prvekChar" , "prvekVarchar", "prvekInteger" ,"prvekText", "prvekBoolean",  
 ////            "prvekDate", "prvekDatetime", "prvekTimestamp" , 'jmenoClovek', 'prijmeniClovek' 
@@ -145,16 +189,20 @@ class TestovaciRepositoryTest  extends TestCase{
         //-------test get z uloziste  ---------         
         $this->rowObjectManagerROM  = new TestovaciRowObjectManager();       
        
-        $methodNameHydrator = new AccessorMethodNameHydrator();
-        $poleJmen = $poleJmenAttributes =  [ 
-//           "id_1", "id_2"
-//            "prvekVarchar", "prvekDatetime", "celeJmeno"            
+        $methodNameHydrator = new AccessorMethodNameHydrator();        
+        $poleJmenIdentity = [ 
+            "id1", "id2",];
+        $poleJmenEntity = $poleJmenAttributes =  [             
+            "prvekVarchar", "prvekDatetime", "celeJmeno"];
 //            "prvekChar" , "prvekVarchar", "prvekInteger" ,"prvekText", "prvekBoolean",  
 //            "prvekDate", "prvekDatetime", "prvekTimestamp" , 'jmenoClovek', 'prijmeniClovek' 
-            ] ; 
-        $filter = new OneToOneFilter($poleJmen);
-        $accessorHydrator = new OneToOneAccessorHydrator($methodNameHydrator, $filter) ;
-        $testovaciRepository1 = new TestovaciRepository($accessorHydrator, $this->rowObjectManagerROM );
+//            ] ; 
+        $filterEntity = new OneToOneFilter($poleJmenEntity);
+        $filterIdentity = new OneToOneFilter($poleJmenIdentity);
+        $accessorHydratorEntity = new OneToOneAccessorHydrator($methodNameHydrator, $filterEntity) ;
+        $accessorHydratorIdentity = new OneToOneAccessorHydrator($methodNameHydrator, $filterIdentity) ;
+        
+        $testovaciRepository1 = new TestovaciRepository($accessorHydratorEntity, $accessorHydratorIdentity, $this->rowObjectManagerROM );
               
         $identity = new TestovacIdentity();
         $entity1 = new TestovaciEntity($identity);
@@ -163,7 +211,7 @@ class TestovaciRepositoryTest  extends TestCase{
         $testovaciRepository1->flush();   //donuti "zapsat do uloziste" - nebo zatim alespon "nekam do ROManagera" , napr. do pole
        
         //nove=jine repository se stejnym ROManagerem
-        $testovaciRepository2 = new TestovaciRepository($accessorHydrator, $this->rowObjectManagerROM );   
+        $testovaciRepository2 = new TestovaciRepository($accessorHydratorEntity,$accessorHydratorIdentity, $this->rowObjectManagerROM );   
         $entity2 = $testovaciRepository2->get($identity);
        
         //$this->assertEquals($entity1, $entity2 );

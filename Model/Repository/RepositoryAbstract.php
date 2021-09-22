@@ -15,6 +15,7 @@ use Model\RowObject\RowObjectInterface;
 use Model\RowObject\RowObject;
 use Model\Entity\Identity\IdentityInterface;
 use Model\RowObject\Key\KeyInterface;
+use Model\RowObject\Key\Key;
 
 use Model\RowObjectManager\RowObjectManagerInterface;
 //use Model\RowObjectManager\RowObjectManagerSaveImmedientlyInterface;
@@ -58,7 +59,8 @@ abstract class RepositoryAbstract implements RepositoryInterface {
      */
     private $associations = [];
 
-    private $hydrators = [];
+    private $hydratorsEntity = [];
+    private $hydratorsIdentity = [];
    
     
     
@@ -93,28 +95,31 @@ abstract class RepositoryAbstract implements RepositoryInterface {
 
     
     
-    protected function registerHydrator( AccessorHydratorInterface $hydrator) {
-        $this->hydrators[] = $hydrator;
+    protected function registerHydratorEntity( AccessorHydratorInterface $hydrator) {
+        $this->hydratorsEntity[] = $hydrator;
+    }
+    protected function registerHydratorIdentity( AccessorHydratorInterface $hydrator) {
+        $this->hydratorsIdentity[] = $hydrator;
     }
 
-    protected function hydrate( EntityInterface $entity, RowObjectInterface $rowObject ) {
-        foreach ($this->hydrators as $hydrator) {
-            $hydrator->hydrate($entity, $rowObject);
+    protected function hydrateEntity( EntityInterface $entity, RowObjectInterface $rowObject ) {
+        foreach ($this->hydratorsEntity as $hydrator) {
+            $hydrator->hydrate( $entity, $rowObject);
         }
     }
     protected function hydrateIdentity( IdentityInterface $identity, KeyInterface $key ) {
-        foreach ($this->hydrators as $hydrator) {
+        foreach ($this->hydratorsIdentity as $hydrator) {
             $hydrator->hydrate( $identity, $key);
         }
     }
 
-    protected function extract( EntityInterface $entity, RowObjectInterface $rowObject ) {
-        foreach ($this->hydrators as $hydrator) {
+    protected function extractEntity( EntityInterface $entity, RowObjectInterface $rowObject ) {
+        foreach ($this->hydratorsEntity as $hydrator) {
             $hydrator->extract($entity, $rowObject);
         }
     }
     protected function extractIdentity ( IdentityInterface $identity, KeyInterface $key ) {
-        foreach ($this->hydrators as $hydrator) {
+        foreach ($this->hydratorsIdentity as $hydrator) {
             $hydrator->extract($identity, $key);
         }
     }
@@ -170,7 +175,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             }
                                     
             //---------------------------------------------
-            $this->hydrate($entity, $rowObject);
+            $this->hydrateEntity($entity, $rowObject);
             $this->hydrateIdentity($entity->getIdentity(), $rowObject->getKey());
             
             $entity->setPersisted();                        
@@ -268,13 +273,14 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             
             /** @var RowObject $rowObject */
             $rowObject = $this->rowObjectManager->createRowObject();
-            $this->extract($entity, $rowObject);
+            $this->extractEntity( $entity, $rowObject );
+            $this->extractIdentity( $entity->getIdentity(), $rowObject->getKey() );            
             
             $this->rowObjectManager->add($rowObject);               
             
             //-----------------------------------
             if  ($rowObject->isChanged() ) {    //NEVIM JAK SE TO UDEJE           
-                $this->hydrate($entity, $rowObject);
+                $this->hydrateEntity($entity, $rowObject);
                 $rowObject->fetchChanged(); //na vymazani zmenenych
             }                           
             $this->addAssociated( $rowObject , $entity);     // pridavam mrkev        //pridavam asociovanou entitu do potomk.repository
@@ -287,8 +293,8 @@ abstract class RepositoryAbstract implements RepositoryInterface {
                 $entity->setPersisted();
             }
             else {
-                $this->new[] = $entity;
-                $entity->lock();   
+                $this->new[] = $entity;                
+                $entity->lock();                  
             }
       
             
@@ -376,10 +382,12 @@ abstract class RepositoryAbstract implements RepositoryInterface {
 
                            //if ( ! ($this->dao instanceof DaoKeyDbVerifiedInterface)) {   // DaoKeyDbVerifiedInterface musí ukládat (insert) vždy již při nastavování hodnoty primárního klíče
                 foreach ($this->new as $entity) {         
-                    
-                   // $key = $this->rowObjectManager->createKey();
+                                                         
+                    /** @var  RowObject  $rowObject*/
                     $rowObject = $this->rowObjectManager->createRowObject();
-                    $this->extract($entity, $rowObject);                                                                                                    
+                    $this->extractEntity( $entity, $rowObject);   
+    /*****/      $this->extractIdentity( $entity->getIdentity(), $rowObject->getKey() ); 
+                    
                     $this->rowObjectManager->add($rowObject);                              
                     
                     $this->addAssociated( $rowObject, $entity);     // pridavam mrkev        //pridavam asociovanou entitu do potomk.repository
@@ -396,7 +404,8 @@ abstract class RepositoryAbstract implements RepositoryInterface {
                 
                 //$key = $this->rowObjectManager->createKey();
                 $rowObject = $this->rowObjectManager->createRowObject();                
-                $this->extract($entity, $rowObject);   
+                $this->extractEntity($entity, $rowObject);   
+    /*****/        $this->extractIdentity( $entity->getIdentity(), $rowObject->getKey() ); 
                                
                 $this->addAssociated($rowObject, $entity);
                 $this->flushChildRepos();  //pokud je vnořená agregovaná entita přidána později - musí se provést její insert teď
@@ -415,7 +424,8 @@ abstract class RepositoryAbstract implements RepositoryInterface {
 
             foreach ($this->removed as $entity) {
                 $rowObject = $this->rowObjectManager->createRowObject();                              
-                $this->extract($entity, $rowObject);
+                $this->extractEntity($entity, $rowObject);
+        /*****/    $this->extractIdentity( $entity->getIdentity(), $rowObject->getKey() ); 
                 
                 $this->removeAssociated($rowObject, $entity);                                                     
                 $this->flushChildRepos();

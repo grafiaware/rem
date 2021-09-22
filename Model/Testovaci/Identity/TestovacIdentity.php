@@ -15,22 +15,31 @@ class TestovacIdentity extends IdentityAbstract implements  TestovaciIdentityInt
      *
      * @var string
      */
-    private $id_1;
+    private $id1;
      /**
      *
      * @var string
      */
-    private $id_2;
+    private $id2;
+    
+    public function __construct( ) {
+
+    }  
     
     
-    
-    
-    public function getId(): string {
-        return $this->id;
+    public function getId1(): string {
+        return $this->id1;
+    }
+    public function getId2(): string {
+        return $this->id2;
     }
 
-    public function setId(string $id):TestovacIdentity {
-        $this->id = $id;
+    public function setId1(string $id):TestovacIdentity {
+        $this->id1 = $id;
+        return $this;
+    }
+     public function setId2(string $id):TestovacIdentity {
+        $this->id2 = $id;
         return $this;
     }
 

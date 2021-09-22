@@ -18,6 +18,12 @@ use Model\Testovaci\Key\TestovaciKey;
  * @author vlse2610
  */
 class TestovaciRowObjectManager implements RowObjectManagerInterface {
+    /**
+     *
+     * @var TestovaciRowObject 
+     */
+    private $schovavacka;
+    
         
     public function flush () : void {
         
@@ -26,22 +32,27 @@ class TestovaciRowObjectManager implements RowObjectManagerInterface {
     
     
     public function get( KeyInterface $key  )  :  ?RowObjectInterface {
-        return new RowObject($key);
-        
+//        $O = new TestovaciRowObject($key);
+//        $O->prvekDatetime = new \DateTime('2000-01-01');
+//        $O->prvekVarchar = '';
+//        $O->celeJmeno = "Jméno Celé";
+//        return $O;
+        //return new TestovaciRowObject($key);
+        return $this->schovavacka;
+       
     }
     
-    
-  
+   
     
     
     public function remove( RowObjectInterface $rowObject ): void {
-        
+        $this->schovavacka=null;
     }
     
    
     
     public function createRowObject (  ) : RowObjectInterface {
-            $key = new Key();
+            $key = new TestovaciKey();
         return new TestovaciRowObject( $key );
     }
     
@@ -52,6 +63,8 @@ class TestovaciRowObjectManager implements RowObjectManagerInterface {
     
     
     public function add( RowObjectInterface $rowObject): void {
+        
+        $this->schovavacka = $rowObject;
         
     }
     

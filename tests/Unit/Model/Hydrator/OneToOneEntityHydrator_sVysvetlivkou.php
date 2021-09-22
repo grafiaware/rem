@@ -257,7 +257,7 @@ class OneToOneEntityHydratorTest_sVysvetlivkou extends TestCase {
         // 4 -  hydratovani
         $identity = new IdentityMock_forOOHT(  ); //['b']
         $novaPlnenaTestovaciEntity  =  new TestovaciEntityMock_forOOHT(  $identity  );           
-        $oneToOneEntityHydrator->hydrate( $novaPlnenaTestovaciEntity, $testovaciZdrojovyRowObjectNaplneny );                
+        $oneToOneEntityHydrator->hydrateEntity( $novaPlnenaTestovaciEntity, $testovaciZdrojovyRowObjectNaplneny );                
                 
         // 5 - kontrola hydratace           
         foreach (  $this->seznamJmen as  $value )  /* $value  je vlastnost rowobjectu!!!!!*/    {             

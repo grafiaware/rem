@@ -5,6 +5,8 @@ namespace Model\Testovaci\Entity;
 use Model\Entity\EntityAbstract;
 use Model\Testovaci\Entity\TestovaciEntityInterface;
 
+use Model\Testovaci\Identity\TestovaciIdentityInterface;
+
 /**
  * Description of TestovaciEntity
  *
@@ -31,6 +33,16 @@ class TestovaciEntity extends EntityAbstract implements TestovaciEntityInterface
          */
         private $prvekDatetime;
         
+      
+        /**
+         * 
+         * @param IdentityInterface $identity
+         */
+        public function __construct( TestovaciIdentityInterface $identity ) {
+            parent::__construct($identity);
+         
+            
+    }  
         
        
         public function getCeleJmeno(): string {
@@ -39,7 +51,7 @@ class TestovaciEntity extends EntityAbstract implements TestovaciEntityInterface
         public function getPrvekVarchar(): string {
             return $this->prvekVarchar;
         }              
-        public function getPrvekDatetime(): \DateTime {
+        public function getPrvekDatetime(): \DateTime {            
             return $this->prvekDatetime;
         }
 
