@@ -9,4 +9,13 @@ namespace Model\Repository;
 interface RepositoryInterface {
 
     public function flush(): void;
+    
+    
+    
+    //--------------------------------------------------
+    public function getCollectionProTest(): array ;
+    public function getNewProTest(): array ;
+    public function getRemovedProTest(): array ;
+    
+    
 }

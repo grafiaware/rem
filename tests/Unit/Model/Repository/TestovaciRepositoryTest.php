@@ -63,15 +63,15 @@ class TestovaciRepositoryTest  extends TestCase{
             $entity1->setCeleJmeno("Jméno Celé"); 
             $entity1->setPrvekVarchar('') ;
             $entity1->setPrvekDatetime(new \DateTime('2000-01-01')) ;
-       
-              
+                     
         $testovaciRepository->add($entity1);      //######## add, do new #######
+       
         
-        //######## get, entity (je v new) tj.neni v collection, recreateEntity vytvori NOVY object $entity2 #######
-        $entity2 = $testovaciRepository->get($identity);    
+        //######## get, entity (je v new) tj.neni v collection, 
+        $entity2 = $testovaciRepository->get($identity);    //recreateEntity vytvori NOVY object $entity2 #######
         $this->assertIsObject($entity2);
-        //$this->assertEquals($entity1, $entity2 ); /*nevhodne na objekty*/     
-        //       $this->assertObjectEquals( $entity1 , $entity2); /* takovy assert neexistuje */     
+        
+        //$this->assertEquals($entity1, $entity2 ); /*nevhodne na objekty*/  //$this->assertObjectEquals( $entity1 , $entity2); /* takovy assert neexistuje */     
         $this->assertContainsOnlyInstancesOf( TestovaciEntity::class, [$entity2] );              
         $this->assertInstanceOf(TestovaciEntity::class, $entity2);
 
@@ -87,14 +87,24 @@ class TestovaciRepositoryTest  extends TestCase{
         $e2Hodnota = $entity2->getPrvekVarchar();
         $this->assertEquals($e1Hodnota, $e2Hodnota);
 
-
         $entity1->setCeleJmeno("Cecilka Nová");      
         $this->assertEquals("Cecilka Nová", $entity1->getCeleJmeno() );
-
         //entity2 je jiny objekt nez entity1
         $this->assertNotEquals("Cecilka Nová", $entity2->getCeleJmeno() ); //je to jiny objekt
 
-
+        
+        //CO JE V NEW - je entity1, bez indexu 
+        //CO JE V COLLECTION - ebntity2 , s indexem
+        1;
+        $testovaciRepository->flush();  //CO SE STANE
+        //pro new --- ROManager->add(rowObject) new=[]
+        //pro collection  --- ROManager->flush   collection=[]
+        
+        $this->assertEquals([], $testovaciRepository->getCollectionProTest() );
+        $this->assertEquals([], $testovaciRepository->getNewProTest() );
+        $this->assertEquals([], $testovaciRepository->getRemovedProTest() );
+        
+        1;
        
     }   
     
@@ -136,9 +146,7 @@ class TestovaciRepositoryTest  extends TestCase{
         $testovaciRepository1->flush();             //entity !!!! ma byt v collection !!! -- PODIVAT    ############
         //****dostala se az do uloziste****, neni , ani new, ani remove
         
-        
-        
-        
+       
         
         $testovaciRepository1->remove($entity1);  //  #### remove #####  //entity v remove       
         $testovaciRepository1->flush();          //entity neni v repository

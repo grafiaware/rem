@@ -455,4 +455,25 @@ abstract class RepositoryAbstract implements RepositoryInterface {
     }
 
 
+    
+    
+    
+    
+    
+    
+     //--------------------------------------------------
+    public function getCollectionProTest(): array  {
+        return $this->collection;        
+    }
+    
+    public function getNewProTest(): array  {
+        return $this->new;        
+    }
+    public function getRemovedProTest(): array  {
+        return $this->removed;        
+    }
+    
+    
+    
+    
 }
