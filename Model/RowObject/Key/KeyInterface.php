@@ -10,6 +10,6 @@ use Model\RowObject\AttributeInterface;
  */
 interface KeyInterface  extends AttributeInterface{
    
-   //  public function getIndexFromKeyRowObjectKey() : array ; 
+    public function getIndexFromKey ();
      
 }

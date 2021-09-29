@@ -152,7 +152,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
      * @return string|null  vlastne index
      * @throws UnableRecreateEntityException
      */
-    protected function recreateEntity(  $identity   /*$index */  ): /*EntityInterface*/ ?string {        
+    protected function recreateEntity(  $identity   /*$index */  ):  ?string {        
         //$rowData = new RowData(); 
         //$rowData = $this->dao->get( $identity->getKeyHash() ); // vraci konstantni pole - hodnoty z úložistě, $keyHash  zatim neni v metode get pouzito      
    
@@ -177,11 +177,11 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             //---------------------------------------------
             $this->hydrateEntity($entity, $rowObject);
             $this->hydrateIdentity($entity->getIdentity(), $rowObject->getKey());
-            
-            $entity->setPersisted();                        
-            $index = $entity->getIdentity()->getIndexFromIdentity();
-          
+                                           
+            $index = $entity->getIdentity()->getIndexFromIdentity();          
             $this->collection[$index] = $entity;
+            $entity->setPersisted();   
+            
             $this->flushed = false;
         }
         return $index ?? null;
@@ -271,8 +271,9 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             
             //$key = $this->rowObjectManager->createKey();
             
-            /** @var RowObject $rowObject */
-            $rowObject = $this->rowObjectManager->createRowObject();
+            /** @var RowObjectInterface $rowObject */
+            $rowObject = $this->rowObjectManager->createRowObject();  
+            //persisted = false, locked = false
             $this->extractEntity( $entity, $rowObject );
             $this->extractIdentity( $entity->getIdentity(), $rowObject->getKey() );            
             
@@ -284,10 +285,10 @@ abstract class RepositoryAbstract implements RepositoryInterface {
                 $rowObject->fetchChanged(); //na vymazani zmenenych
             }                           
             $this->addAssociated( $rowObject , $entity);     // pridavam mrkev        //pridavam asociovanou entitu do potomk.repository
-            $this->flushChildRepos();  //pokud je vnořená agregovaná entita - musí se provést její insert     
-            
-                    
+            $this->flushChildRepos();  //pokud je vnořená agregovaná entita - musí se provést její insert                                     
             //--------------------------------------
+            
+            //nema tady byt $entity??->isPersisted() ???
             if ($rowObject->isPersisted() ) {
                 $this->collection[] = $entity;
                 $entity->setPersisted();
@@ -341,17 +342,17 @@ abstract class RepositoryAbstract implements RepositoryInterface {
     
     
     protected function removeEntity(EntityInterface $entity): void {
-//        if ($entity->isLocked()) {
-//            throw new OperationWithLockedEntityException("Nelze mazat přidanou nebo smazanou entitu.");
-//        }
+        if ($entity->isLocked()) {
+            throw new OperationWithLockedEntityException("Nelze mazat přidanou nebo smazanou entitu.");
+        }
         
         if ($entity->isPersisted()) {
             $index = $entity->getIdentity()->getIndexFromIdentity();
             //$index = $this->indexFromEntity($entity);
-            $this->removed[ $index ] = $entity;
+            $this->removed[ /*$index*/ ] = $entity;
             
             unset($this->collection[$index]);
-           // $entity->setUnpersisted();
+            //$entity->setUnpersisted();
             
             $entity->lock();
         } 
@@ -383,10 +384,10 @@ abstract class RepositoryAbstract implements RepositoryInterface {
                            //if ( ! ($this->dao instanceof DaoKeyDbVerifiedInterface)) {   // DaoKeyDbVerifiedInterface musí ukládat (insert) vždy již při nastavování hodnoty primárního klíče
                 foreach ($this->new as $entity) {         
                                                          
-                    /** @var  RowObject  $rowObject*/
+                    /** @var  RowObjectInterface  $rowObject*/
                     $rowObject = $this->rowObjectManager->createRowObject();
                     $this->extractEntity( $entity, $rowObject);   
-    /*****/      $this->extractIdentity( $entity->getIdentity(), $rowObject->getKey() ); 
+                    $this->extractIdentity( $entity->getIdentity(), $rowObject->getKey() ); 
                     
                     $this->rowObjectManager->add($rowObject);                              
                     
@@ -405,7 +406,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
                 //$key = $this->rowObjectManager->createKey();
                 $rowObject = $this->rowObjectManager->createRowObject();                
                 $this->extractEntity($entity, $rowObject);   
-    /*****/        $this->extractIdentity( $entity->getIdentity(), $rowObject->getKey() ); 
+                $this->extractIdentity( $entity->getIdentity(), $rowObject->getKey() ); 
                                
                 $this->addAssociated($rowObject, $entity);
                 $this->flushChildRepos();  //pokud je vnořená agregovaná entita přidána později - musí se provést její insert teď
@@ -425,7 +426,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             foreach ($this->removed as $entity) {
                 $rowObject = $this->rowObjectManager->createRowObject();                              
                 $this->extractEntity($entity, $rowObject);
-        /*****/    $this->extractIdentity( $entity->getIdentity(), $rowObject->getKey() ); 
+                $this->extractIdentity( $entity->getIdentity(), $rowObject->getKey() ); 
                 
                 $this->removeAssociated($rowObject, $entity);                                                     
                 $this->flushChildRepos();

@@ -1,5 +1,5 @@
 <?php
-namespace Model\RowObject;
+//namespace Model\RowObject;
 
 use Model\RowObject\RowObjectAbstract;
 use Model\RowObject\RowObjectInterface;
@@ -10,7 +10,7 @@ use Model\RowObject\RowObjectInterface;
  *
  * @author vlse2610
  */
-class RowObject extends RowObjectAbstract implements  RowObjectInterface{
+class RowObjectxx extends RowObjectAbstractxx implements  RowObjectInterfacexx {
      
   
 }

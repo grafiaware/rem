@@ -21,8 +21,7 @@ interface RowObjectManagerInterface {
      * @param KeyInterface $key
      * @return RowObjectInterface|null
      */       
-    public function get( KeyInterface $key  )  :  ?RowObjectInterface ;   
-    
+    public function get( KeyInterface $key  )  :  ?RowObjectInterface ;              
     
     /**
      * Odstraní RowObject z "RowObjectManagera".
@@ -30,10 +29,18 @@ interface RowObjectManagerInterface {
      * @return void
      */
     public function remove( RowObjectInterface $rowObject ): void ;
-    
-       
-    
-        //public function createKey () : KeyInterface ;
+                    
+    /**
+     * Přidá  RowObject do "RowObjectManagera", do úložiště.
+     * 
+     * @param RowObjectInterface $rowObject
+     * @return void
+     */
+    public function add(  RowObjectInterface $rowObject): void ;
+
+
+   
+ 
     
     
     
@@ -44,8 +51,7 @@ interface RowObjectManagerInterface {
      * @return RowObjectInterface
      */
     public function createRowObject (  ) : RowObjectInterface ;
-    
-    
+        
      /**
      * Vytvoří nový Key.
      * 
@@ -53,19 +59,6 @@ interface RowObjectManagerInterface {
      */
     public function createKey (  ) : KeyInterface ;
     
-    
-    
-    
-    /**
-     * Přidá  RowObject do "RowObjectManagera", do úložiště.
-     * 
-     * @param RowObjectInterface $rowObject
-     * @return void
-     */
-    public function add(  RowObjectInterface $rowObject): void ;
-
-
-
        
     
 }

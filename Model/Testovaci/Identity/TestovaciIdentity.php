@@ -10,7 +10,7 @@ use Model\Testovaci\Identity\TestovaciIdentityInterface;
  *
  * @author vlse2610
  */
-class TestovacIdentity extends IdentityAbstract implements  TestovaciIdentityInterface {
+class TestovaciIdentity extends IdentityAbstract implements  TestovaciIdentityInterface {
     /**
      *
      * @var string
@@ -34,11 +34,11 @@ class TestovacIdentity extends IdentityAbstract implements  TestovaciIdentityInt
         return $this->id2;
     }
 
-    public function setId1(string $id):TestovacIdentity {
+    public function setId1(string $id):TestovaciIdentity {
         $this->id1 = $id;
         return $this;
     }
-     public function setId2(string $id):TestovacIdentity {
+     public function setId2(string $id):TestovaciIdentity {
         $this->id2 = $id;
         return $this;
     }

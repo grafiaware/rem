@@ -18,8 +18,7 @@ abstract class RowObjectAbstract /*implements RowObjectInterface*/ {
      */
     public $key ;    
     
-    private $persisted=false;
-    
+    private $persisted=false;    
     private $locked=false;           
     
     

@@ -5,7 +5,7 @@ namespace Model\Testovaci\Repository;
 use Model\Testovaci\Entity\TestovaciEntityInterface;
 use Model\Testovaci\Entity\TestovaciEntity;
 use Model\Testovaci\Identity\TestovaciIdentityInterface;
-use Model\Testovaci\Identity\TestovacIdentity;
+use Model\Testovaci\Identity\TestovaciIdentity;
 
 
 use Model\Repository\RepositoryAbstract;
@@ -44,13 +44,19 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
     
     public function get( TestovaciIdentityInterface $identity):  ?TestovaciEntityInterface {
         $index = $identity->getIndexFromIdentity();
+                        
         
-        if (!isset($this->collection[$index]) /*and (!isset($this->removed[$index] )) */  ) {
-                                    
+        
+        
+        
+        if  ( !isset($this->collection[$index] )   )
+                /*and (!isset($this->removed[$index] )
+                  and (!isset($this->new[$index] )) */   {
+                                                
             /*$entity*/
             $index = $this->recreateEntity( $identity  /*$index*/ ); // v abstractu,  
-            // zaradi do collection z uloziste( db, soubor , atd.... ), pod indexem  $index   
-            // pozn. kdyz neni v ulozisti - asi neni ani $rowObject
+            // ZARADI DO COLLECTION z uloziste( db, soubor , atd.... ), pod indexem  $index   
+            // pozn. kdyz neni v ulozisti - ...asi... neni ani $rowObject
             
             
 //             if (  !$indexVraceny ) {
@@ -76,7 +82,7 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
      */
     protected function createEntity() : TestovaciEntityInterface {        
         //vyrobit prazdnou konkr. entity
-        return new TestovaciEntity ( new TestovacIdentity() ) ;
+        return new TestovaciEntity ( new TestovaciIdentity() ) ;
         
     }
         

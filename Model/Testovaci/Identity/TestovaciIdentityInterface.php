@@ -14,8 +14,8 @@ interface TestovaciIdentityInterface extends IdentityInterface{
     public function getId1(): string ;
     public function getId2(): string ;
 
-    public function setId1(string $id):TestovacIdentity ;
-    public function setId2(string $id):TestovacIdentity ;
+    public function setId1(string $id):TestovaciIdentity ;
+    public function setId2(string $id):TestovaciIdentity ;
        
     
        

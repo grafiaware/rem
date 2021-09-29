@@ -1,11 +1,11 @@
 <?php
 namespace Model\Testovaci\RowObjectManager;
 
+use Model\RowObjectManager\RowObjectManagerAbstract;
+
 use Model\RowObjectManager\RowObjectManagerInterface;
 use Model\RowObject\Key\KeyInterface;
-use Model\RowObject\Key\Key;
 use Model\RowObject\RowObjectInterface;
-use Model\RowObject\RowObject;
 
 use Model\Testovaci\RowObject\TestovaciRowObject;
 use Model\Testovaci\Key\TestovaciKey;
@@ -17,20 +17,22 @@ use Model\Testovaci\Key\TestovaciKey;
  *
  * @author vlse2610
  */
-class TestovaciRowObjectManager implements RowObjectManagerInterface {
-    /**
-     *
-     * @var TestovaciRowObject 
-     */
-    private $schovavacka;
+class TestovaciRowObjectManager extends RowObjectManagerAbstract implements RowObjectManagerInterface {
     
-        
+    
+    /**
+    *
+    * @var array
+    */
+    private $poleRowObjectu ;
+    
+    
+    
+    
     public function flush () : void {
         
     }
-        
-    
-    
+  
     public function get( KeyInterface $key  )  :  ?RowObjectInterface {
 //        $O = new TestovaciRowObject($key);
 //        $O->prvekDatetime = new \DateTime('2000-01-01');
@@ -38,18 +40,23 @@ class TestovaciRowObjectManager implements RowObjectManagerInterface {
 //        $O->celeJmeno = "Jméno Celé";
 //        return $O;
         //return new TestovaciRowObject($key);
-        return $this->schovavacka;
-       
+        return $this->poleRowObjectu[$key->getIndexFromKey()];
     }
-    
    
-    
-    
     public function remove( RowObjectInterface $rowObject ): void {
-        $this->schovavacka=null;
+        
+        $this->poleRowObjectu[$rowObject->getKey()->getIndexFromKey()]=null;
     }
     
-   
+    public function add( RowObjectInterface $rowObject): void {
+        
+        $this->poleRowObjectu[$rowObject->getKey()->getIndexFromKey()] = $rowObject;
+        
+    }
+    
+    
+    
+    
     
     public function createRowObject (  ) : RowObjectInterface {
             $key = new TestovaciKey();
@@ -62,10 +69,6 @@ class TestovaciRowObjectManager implements RowObjectManagerInterface {
     }
     
     
-    public function add( RowObjectInterface $rowObject): void {
-        
-        $this->schovavacka = $rowObject;
-        
-    }
+   
     
 }

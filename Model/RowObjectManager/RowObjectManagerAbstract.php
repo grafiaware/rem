@@ -23,6 +23,22 @@ use Model\Dao\Exception\DaoKeyVerificationFailedException;
  * @author vlse2610
  */
 abstract class RowObjectManagerAbstract implements RowObjectManagerInterface{
+//    /**
+//     *
+//     * @var array
+//     */
+//    protected $poleRowObjectu ;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 //    public static $counter;
 //    protected $count;
 //    protected $oid;
