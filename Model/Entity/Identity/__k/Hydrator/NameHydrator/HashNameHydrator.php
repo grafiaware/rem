@@ -1,7 +1,8 @@
 <?php
-//namespace Model\Entity\Identity\Key\Hydrator\NameHydrator;
+namespace Model\Entity\Identity\__k\Hydrator\NameHydrator;
 
-//use Model\Entity\Identity\Key\Hydrator\NameHydrator\HashNameHydratorInterface;
+
+use Model\Entity\Identity\__k\Hydrator\NameHydrator\HashNameHydratorInterface;
 
 
 /**

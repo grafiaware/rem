@@ -1,8 +1,8 @@
 <?php
-//namespace Model\Entity\Key\Hydrator;
+namespace Model\Entity\Identity\Hydrator\__k\Hydrator;
 
-//use Model\Entity\Identity\Key\KeyInterface;
-//use Model\RowObject\RowObjectInterface;
+use Model\Entity\Identity\__k\KeyInterface;
+use Model\RowObject\RowObjectInterface;
 
     
 interface KeyHydratorInterface {

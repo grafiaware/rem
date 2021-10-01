@@ -81,19 +81,7 @@ abstract class RowObjectManagerAbstract implements RowObjectManagerInterface{
 //        }
 //    }
 //         
-//    
-//    protected function createRowObject() {
-//        throw new BadImplemntastionOfChildRepository("Child repository must implement method createRowObject().");
-//    }
-//    
-//
-//    
-//       
-//    
-//   
-//    
-//    
-//    
+
 //    
 //    
 //    

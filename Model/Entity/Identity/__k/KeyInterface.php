@@ -1,6 +1,7 @@
 <?php
-//namespace Model\Entity\Identity\Key;
-//use Model\Entity\Identity\Key\KeyInterface;
+namespace Model\Entity\Identity\__k;
+
+use Model\Entity\Identity\__k\KeyInterface;
 
 /**
  *

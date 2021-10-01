@@ -1,7 +1,7 @@
 <?php
-//namespace Model\Entity\Identity\Key\Exception;
+namespace Model\Entity\Identity\__k\Exception;
 
-//use Model\Entity\Identity\Key\KeyInterface;
+use Model\Entity\Identity\__k\KeyExceptionInterface;
 
 
 /**

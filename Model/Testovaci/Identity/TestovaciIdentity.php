@@ -34,11 +34,11 @@ class TestovaciIdentity extends IdentityAbstract implements  TestovaciIdentityIn
         return $this->id2;
     }
 
-    public function setId1(string $id):TestovaciIdentity {
+    public function setId1(string $id): TestovaciIdentityInterface {
         $this->id1 = $id;
         return $this;
     }
-     public function setId2(string $id):TestovaciIdentity {
+     public function setId2(string $id):TestovaciIdentityInterface {
         $this->id2 = $id;
         return $this;
     }

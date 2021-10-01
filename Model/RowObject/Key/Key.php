@@ -2,7 +2,6 @@
 namespace Model\RowObject\Key;
 
 use Model\RowObject\Key\KeyAbstract;
-//use Model\RowObject\Key\KeyInterface;
 use Model\RowObject\AttributeInterface;
 
 

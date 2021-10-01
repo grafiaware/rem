@@ -17,9 +17,7 @@ use Model\Testovaci\Key\TestovaciKey;
  *
  * @author vlse2610
  */
-class TestovaciRowObjectManager extends RowObjectManagerAbstract implements RowObjectManagerInterface {
-    
-    
+class TestovaciRowObjectManager extends RowObjectManagerAbstract implements RowObjectManagerInterface {  
     /**
     *
     * @var array
@@ -34,19 +32,16 @@ class TestovaciRowObjectManager extends RowObjectManagerAbstract implements RowO
     }
   
     public function get( KeyInterface $key  )  :  ?RowObjectInterface {
-//        $O = new TestovaciRowObject($key);
-//        $O->prvekDatetime = new \DateTime('2000-01-01');
-//        $O->prvekVarchar = '';
-//        $O->celeJmeno = "Jméno Celé";
-//        return $O;
-        //return new TestovaciRowObject($key);
+
         return $this->poleRowObjectu[$key->getIndexFromKey()];
     }
    
+    
     public function remove( RowObjectInterface $rowObject ): void {
         
         $this->poleRowObjectu[$rowObject->getKey()->getIndexFromKey()]=null;
     }
+    
     
     public function add( RowObjectInterface $rowObject): void {
         

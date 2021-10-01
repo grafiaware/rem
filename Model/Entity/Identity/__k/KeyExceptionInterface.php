@@ -1,6 +1,5 @@
 <?php
-//namespace Model\Entity\Identity\Key\Exception;
-
+namespace Model\Entity\Identity\__k;
 /**
  *
  * @author vlse2610

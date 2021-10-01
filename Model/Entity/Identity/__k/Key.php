@@ -1,9 +1,9 @@
 <?php
-//namespace Model\Entity\Identity\Key;
+namespace Model\Entity\Identity\__k;
 
-//use Model\Entity\Identity\Key\Exception\IndexMismatchInKeyAttributtesException;
-//use Model\Entity\Identity\Key\Exception\InvalidValueInGeneratedFieldException;
-//use Model\Entity\Identity\Key\Exception\AttemptToSetGeneratedKeyException;
+use Model\Entity\Identity\__k\Exception\IndexMismatchInKeyAttributtesException;
+use Model\Entity\Identity\__k\Exception\InvalidValueInGeneratedFieldException;
+use Model\Entity\Identity\__k\Exception\AttemptToSetGeneratedKeyException;
 
 /**
  * Description of Key

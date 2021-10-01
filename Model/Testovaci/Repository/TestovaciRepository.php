@@ -45,23 +45,16 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
     public function get( TestovaciIdentityInterface $identity):  ?TestovaciEntityInterface {
         $index = $identity->getIndexFromIdentity();
                         
-        
-        
-        
-        
-        if  ( !isset($this->collection[$index] )   )
-                /*and (!isset($this->removed[$index] )
-                  and (!isset($this->new[$index] )) */   {
+     
+        if  ( !isset($this->collection[$index] )   
+                /*and ( !($identity->isLocked()) ) */  ) //and (!isset($this->new[$index] )) 
+                {
                                                 
             /*$entity*/
             $index = $this->recreateEntity( $identity  /*$index*/ ); // v abstractu,  
             // ZARADI DO COLLECTION z uloziste( db, soubor , atd.... ), pod indexem  $index   
             // pozn. kdyz neni v ulozisti - ...asi... neni ani $rowObject
             
-            
-//             if (  !$indexVraceny ) {
-//                  throw new UnableRecreateEntityException("Nelze obnovit entitu v repository ". get_called_class()." s indexem $index.");
-//             }
             
         }
         

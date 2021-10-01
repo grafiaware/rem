@@ -1,19 +1,19 @@
 <?php
-//namespace Test\KeyTest;
-//
-//use PHPUnit\Framework\TestCase;
+namespace Test\__test_Key;
 
-use Model\Entity\Identity\Key\Key;
-use Model\Entity\Identity\Key\Exception\InvalidValueInGeneratedFieldException;
-use Model\Entity\Identity\Key\Exception\IndexMismatchInKeyAttributtesException;
-use Model\Entity\Identity\Key\Exception\AttemptToSetGeneratedKeyException;
+use PHPUnit\Framework\TestCase;
+
+use Model\Entity\Identity\__k\Key;
+use Model\Entity\Identity\__k\Exception\InvalidValueInGeneratedFieldException;
+use Model\Entity\Identity\__k\Exception\IndexMismatchInKeyAttributtesException;
+use Model\Entity\Identity\__k\Exception\AttemptToSetGeneratedKeyException;
 
 /**
  * Description of KeyTest
  *
  * @author vlse2610
  */
-class KeyTest /*extends TestCase*/  {     
+class KeyTest extends TestCase  {     
     
     public function setUp(): void {        
     }        

@@ -1,5 +1,5 @@
 <?php
-//namespace Model\Entity\Identity\Key\Hydrator\NameHydrator;
+namespace Model\Entity\Identity\__k\Hydrator\NameHydrator;
 
 /**
  * Jmena metod hydrate() a extract() jsou v NameHydratoru (kazdem)  pouze rozlisovaci,

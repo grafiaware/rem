@@ -1,9 +1,9 @@
 <?php
-//namespace Model\Entity\Key\Hydrator; 
+namespace Model\Entity\Identity\__k\Hydrator;
 
-//use Model\Entity\Identity\Key\KeyInterface;
-//use Model\RowObject\RowObjectInterface;
-//use Model\Entity\Identity\Key\Hydrator\NameHydrator\HashNameHydratorInterface;
+use Model\Entity\Identity\__k\KeyInterface;
+use Model\RowObject\RowObjectInterface;
+use Model\Entity\Identity\__k\Hydrator\NameHydrator\HashNameHydratorInterface;
 
 
 

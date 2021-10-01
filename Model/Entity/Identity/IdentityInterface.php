@@ -10,6 +10,7 @@ use Model\Entity\AccessorInterface;
 interface IdentityInterface  extends AccessorInterface{
     
     public function lock(): void ;    
+    public function unlock(): void ;  
     
     public function isLocked(): bool ;
     

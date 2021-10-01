@@ -68,26 +68,38 @@ class TestovaciRepositoryTest  extends TestCase{
             $entity1->setPrvekVarchar('') ;
             $entity1->setPrvekDatetime(new \DateTime('2000-01-01')) ;
                      
-        $testovaciRepository->add($entity1);      //######## add, do new #######
-       
-        // entity (je v new) tj.neni v collection,
+        $testovaciRepository->add($entity1);      //######## add, do new #######       
+        // entity1 (je v new), (tj.) neni v collection,
+         
         //######## get, 
-        $entity2 = $testovaciRepository->get($identity);    //recreateEntity vytvori NOVY object $entity2 #######
-        // entity je v new a collection --- TO JE PODLE ME BLBE#
-$j=11;
-        $this->assertIsObject($entity2);
+        $entity2 = $testovaciRepository->get($identity);    //recreateEntity nevytvori NOVY object $entity2, tj. dobre
+        // entity1 je stale v new  a je locked
+        $this->assertNull($entity2);
         
-        //$this->assertEquals($entity1, $entity2 ); /*nevhodne na objekty*/  //$this->assertObjectEquals( $entity1 , $entity2); /* takovy assert neexistuje */     
+        
+        
+        $testovaciRepository->flush();  
+        // entity1 se   "pomoci rOManager->add  posune smerem k  ulozisti" = rowObject se prida do rOManagera
+       
+        //  // entity1 uz neni locked   //?????
+        
+        
+        $entity2 = $testovaciRepository->get($identity);    
+        //recreateEntity vytvori NOVY object $entity2 , //entity2 je v collection  
+        $this->assertIsObject($entity2);
+       
         $this->assertContainsOnlyInstancesOf( TestovaciEntity::class, [$entity2] );              
-        $this->assertInstanceOf(TestovaciEntity::class, $entity2);
-
+        $this->assertInstanceOf(TestovaciEntity::class, $entity2);        
+               
+        //$this->assertEquals($entity1, $entity2 ); /*nevhodne na objekty*/  //$this->assertObjectEquals( $entity1 , $entity2); /* takovy assert neexistuje */     
+        
         $e1Hodnota = $entity1->getCeleJmeno();              
         $e2Hodnota = $entity2->getCeleJmeno();
         $this->assertEquals($e1Hodnota, $e2Hodnota);
 
         $e1Hodnota = $entity1->getPrvekDatetime();              
         $e2Hodnota = $entity2->getPrvekDatetime();
-        $this->assertEquals($e1Hodnota, $e2Hodnota);
+        //$this->assertEquals($e1Hodnota, $e2Hodnota);
 
         $e1Hodnota = $entity1->getPrvekVarchar();              
         $e2Hodnota = $entity2->getPrvekVarchar();
@@ -97,21 +109,20 @@ $j=11;
         $this->assertEquals("Cecilka Nová", $entity1->getCeleJmeno() );
         //entity2 je jiny objekt nez entity1
         $this->assertNotEquals("Cecilka Nová", $entity2->getCeleJmeno() ); //je to jiny objekt
-
         
-        //CO JE V NEW - je entity1, bez indexu 
+        //CO JE V NEW - nic
         //CO JE V COLLECTION - entity2 , s indexem
-$j=11;
-        $testovaciRepository->flush();  //CO SE STANE
-        //pro new --- ROManager->add(rowObject),  new=[]
-        //pro collection  --- ROManager->flush,   collection=[]
+        
+        
+
+        $testovaciRepository->flush();  
+            //pro new --- ROManager->add(rowObject),  new=[]
+            //pro collection  --- ROManager->flush,   collection=[]
         
         $this->assertEquals([], $testovaciRepository->getCollectionProTest() );
         $this->assertEquals([], $testovaciRepository->getNewProTest() );
         $this->assertEquals([], $testovaciRepository->getRemovedProTest() );
         
-$j=11;
-       
     }   
     
     
@@ -150,13 +161,13 @@ $j=11;
        
         $testovaciRepository1->add($entity);     //entity v new
         $testovaciRepository1->flush();             
-        //****dostala se az do uloziste****, neni , ani new, ani remove. ............ zatim je v rowObject v schovavacka
+        //****dostala se az do uloziste****, neni , ani new, ani remove. ............ zatim je v rowObject 
        
         $this->rowObjectManagerROM =  clone $testovaciRowObjectManager;
         
         $testovaciRepository1->remove($entity);  //  #### remove #####  //entity v remove       
         $testovaciRepository1->flush();          //entity neni v repository ani v new, ani v remove, ani v collection
-                                                 //rowObject v schovavacka :  schovavacka neexistuje, je null
+                                                 
         //****vymazani se dostalo se az do uloziste*** - entita v repository proste neexistuje
         
         $entity21 = $testovaciRepository1->get($identity); // vraci null        
