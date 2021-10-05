@@ -153,7 +153,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
      * @return string|null  vlastne index
      * @throws UnableRecreateEntityException
      */
-    protected function recreateEntity(  $identity   /*$index */  ):  ?string {        
+    protected function recreateEntity(  $identity  ):  ?string {        
         //$rowData = new RowData(); 
         //$rowData = $this->dao->get( $identity->getKeyHash() ); // vraci konstantni pole - hodnoty z úložistě, $keyHash  zatim neni v metode get pouzito      
    
@@ -328,11 +328,16 @@ abstract class RepositoryAbstract implements RepositoryInterface {
         if ($entity->isPersisted()) {
             $this->removed[  ] = $entity;
             
-            unset($this->collection[$index]);
+            $index =  $entity->getIdentity()->getIndexFromIdentity();
+            if (isset ($this->collection[$index]) ) {    ////  *** a ma tam byt :????? nekdy????
+                unset($this->collection[$index]);
+            }
+
             //$entity->setUnpersisted();
             
             $entity->lock();
-        } 
+        } //else  bud notice do logu - mazu nepersistovamou entitu / nebo nic nedelat
+        
         
         $this->flushed = false;
     }
@@ -372,7 +377,8 @@ abstract class RepositoryAbstract implements RepositoryInterface {
                     $this->flushChildRepos();  //pokud je vnořená agregovaná entita - musí se provést její insert
                                        
                     $entity->setPersisted();       
-                    /*$entity->unLock();*/
+                    
+                    $entity->unLock();
                 }
             
             $this->new = []; // při dalším pokusu o find se bude volat recteateEntity, entita se zpětně načte z db (včetně případného autoincrement id a dalších generovaných sloupců)
@@ -391,7 +397,8 @@ abstract class RepositoryAbstract implements RepositoryInterface {
                 
                 if ($entity->isPersisted()) {
                     if ($rowObject) {     // $row po extractu musí obsahovat nějaká data, která je možno updatovat - v extractu musí být vynechány "readonly" sloupce
-                       // $this->dao->update($row);                       
+                            // $this->dao->update($row);         
+                       //nedelat nic,...  vyse  se obcerstvil rowObject, ktery je v  rowObjectManageru
                     }
                 } else {
                     throw new \LogicException("V collection je nepersistovaná entita.");
@@ -421,7 +428,8 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             if ($this->new OR $this->removed) {
                 throw new \LogicException("Repo je read only a byly do něj přidány nebo z něj smazány entity.");
             }
-        }               
+        }  
+        
         $this->rowObjectManager->flush();
         $this->flushed = true;
     }

@@ -51,7 +51,7 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
                 {
                                                 
             /*$entity*/
-            $index = $this->recreateEntity( $identity  /*$index*/ ); // v abstractu,  
+            $index = $this->recreateEntity( $identity  ); // v abstractu,  
             // ZARADI DO COLLECTION z uloziste( db, soubor , atd.... ), pod indexem  $index   
             // pozn. kdyz neni v ulozisti - ...asi... neni ani $rowObject
             
