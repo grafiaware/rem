@@ -33,7 +33,7 @@ class TestovaciRowObjectManager extends RowObjectManagerAbstract implements RowO
   
     public function get( KeyInterface $key  )  :  ?RowObjectInterface {
 
-        return $this->poleRowObjectu[$key->getIndexFromKey()];
+        return $this->poleRowObjectu[$key->getIndexFromKey()] ?? NULL; 
     }
    
     

@@ -4,6 +4,11 @@ namespace Test\TestovaciRepositoryTest;
 use PHPUnit\Framework\TestCase;
 use Model\Testovaci\RowObjectManager\TestovaciRowObjectManager;
 use Model\Testovaci\Repository\TestovaciRepository;
+use Model\Testovaci\Entity\TestovaciEntity;
+use Model\Testovaci\Identity\TestovaciIdentity;
+use Model\Hydrator\NameHydrator\AccessorMethodNameHydrator;
+use Model\Hydrator\Filter\OneToOneFilter;
+use Model\Hydrator\OneToOneAccessorHydrator;
 
 
 /**
@@ -11,24 +16,24 @@ use Model\Testovaci\Repository\TestovaciRepository;
  *
  * @author vlse2610
  */
-class TestovaciRepositoryTestA {
+class TestovaciRepositoryTestA  extends TestCase {
     /**
      * 
      */
-    private $rowObjectManager ;
+   private static $rowObjectManager ;
     
-    private $testovaciRepository;
-    
-    
+   private  $testovaciRepository;
     
     
-    public function setUpBeforeClass(): void {
-         $this->rowObjectManager = new TestovaciRowObjectManager();
+    
+    
+    public static function setUpBeforeClass(): void {
+        self::$rowObjectManager = new TestovaciRowObjectManager();
         
     }
     
     
-    public function setUp(): void {
+    protected function setUp(): void {
         $methodNameHydratorEntity = new AccessorMethodNameHydrator();
         $methodNameHydratorIdentity = new AccessorMethodNameHydrator();
         $poleJmenIdentity =   [ 
@@ -44,38 +49,103 @@ class TestovaciRepositoryTestA {
         $accessorHydratorEntity = new OneToOneAccessorHydrator($methodNameHydratorEntity, $filterEntity) ;
         $accessorHydratorIdentity = new OneToOneAccessorHydrator($methodNameHydratorIdentity, $filterIdentity) ;
 
-        $this->testovaciRepository = new TestovaciRepository( $accessorHydratorEntity, $accessorHydratorIdentity,  $this->rowObjectManager);
+        $this->testovaciRepository = new TestovaciRepository( $accessorHydratorEntity, $accessorHydratorIdentity,  self::$rowObjectManager );
               
     }
     
     
     
     
-    public function testAdd_1() { 
+    public function testAdd() { 
         $identity1 = new TestovaciIdentity(); 
             $identity1->setId1('66');         
             $identity1->setId2('33') ;
         $entity1 = new TestovaciEntity( $identity1 );              
             $entity1->setCeleJmeno("Jméno Celé"); 
             $entity1->setPrvekVarchar('') ;
-            $entity1->setPrvekDatetime(new \DateTime('2000-01-01')) ;            
+            $entity1->setPrvekDatetime(new \DateTime('2000-01-01')) ;                              
             
         $this->testovaciRepository->add($entity1);
-        $this->testovaciRepository->flush();
+        $this->assertFalse($entity1->isPersisted() );
+       // $this->assertTrue($entity1->isLocked() ); //lock netestovat
+        
+        $this->testovaciRepository->flush();          
+        $this->assertTrue($entity1->isPersisted() );
+       // $this->assertFalse($entity1->isLocked() );  //lock netestovat
         
             
     
     }
     
-    public function testAdd_2() { 
-        $identity1 = new TestovaciIdentity(); 
-            $identity1->setId1('66');         
-            $identity1->setId2('33') ;
-        $entity1 = new TestovaciEntity( $identity1 );              
-            $entity1->setCeleJmeno("Jméno Celé"); 
-            $entity1->setPrvekVarchar('') ;
-            $entity1->setPrvekDatetime(new \DateTime('2000-01-01')) ;
     
-        $this->testovaciRepository->get($identity1);
+    
+    
+    public function testGet() { 
+        $identity1 = new TestovaciIdentity(); 
+           $identity1->setId1('66');         
+           $identity1->setId2('33') ;                
+    
+        $entity2 = $this->testovaciRepository->get($identity1);
+        
+        $this->assertContainsOnlyInstancesOf( TestovaciEntity::class, [$entity2] );              
+        $this->assertInstanceOf(TestovaciEntity::class, $entity2);  
+        
+        $this->assertTrue($entity2->isPersisted() );
+        //$this->assertFalse($entity2->isLocked() );   //lock netestovat
+        $this->assertEquals( "Jméno Celé" , $entity2->getCeleJmeno());
+        $e2Hodnota = $entity2->getPrvekDatetime();
+        $this->assertEquals ( '01-01-2000', $e2Hodnota->format( "d-m-Y" ) );
+        $this->assertEquals( "" ,  $entity2->getPrvekVarchar());                            
+        
+        /** @var TestovaciIdentity $identity2 */
+        $identity2 = $entity2->getIdentity();
+        $this->assertEquals("66", $identity2->getId1() );
+        $this->assertEquals("33", $identity2->getId2() );
+        //-----------------------------------------------------
+        
+        
+        
+        // takova entita v repository neni
+        $identity2 = new TestovaciIdentity(); 
+           $identity2->setId1('66');         
+           $identity2->setId2('31') ;   
+        $entity3 = $this->testovaciRepository->get($identity2);   
+        $this->assertIsNotObject($entity3);
+        $this->assertNull($entity3);
         
     }
+    
+    
+    
+    public function testRemove() { 
+        $identity1 = new TestovaciIdentity(); 
+           $identity1->setId1('66');         
+           $identity1->setId2('33') ;
+        $entity1 = new TestovaciEntity( $identity1 );              
+           $entity1->setCeleJmeno("Jméno Celé"); 
+           $entity1->setPrvekVarchar('') ;
+           $entity1->setPrvekDatetime(new \DateTime('2000-01-01')) ;                              
+       
+        $entity2 = $this->testovaciRepository->get($identity1);
+        $this->assertContainsOnlyInstancesOf( TestovaciEntity::class, [$entity2] );              
+        $this->assertInstanceOf(TestovaciEntity::class, $entity2);  
+           
+        $this->testovaciRepository->remove($entity1);    
+        
+// se asi nevymazal
+        $entity3 = $this->testovaciRepository->get($identity1);
+        $this->assertNull($entity3);
+           
+           
+    }
+    
+    
+    
+    
+    protected function tearDown(): void
+    {
+        $this->testovaciRepository->__destruct();
+    }
+    
+    
+}
