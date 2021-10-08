@@ -32,6 +32,7 @@ use Model\Repository\Exception\BadImplemntastionOfChildRepository;
 
 use Model\Repository\Exception\UnableAddEntityException;
 use Model\Repository\Exception\OperationWithLockedEntityException;
+use Model\Repository\Exception\UnpersistedEntityInCollectionException;
 
 use Model\Repository\RepositoryInterface;
 use Model\Repository\RepositoryReadOnlyInterface;
@@ -401,7 +402,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
                        //nedelat nic,...  vyse  se obcerstvil rowObject, ktery je v  rowObjectManageru
                     }
                 } else {
-                    throw new \LogicException("V collection je nepersistovaná entita.");
+                    throw new UnpersistedEntityInCollectionException ("V collection je nepersistovaná entita.");
                 }
             }
             $this->collection = [];
