@@ -1,6 +1,8 @@
 <?php
-
 namespace Model\Repository\Exception;
+
+use Model\Repository\Exception\RepositoryExceptionInterface;
+
 
 /**
  * Description of UnpersistedEntityInCollection

@@ -7,5 +7,12 @@ namespace Model\Repository;
  * @author vlse2610
  */
 interface RepositoryReadOnlyInterface {
-    //put your code here
+     public function flush(): void;
+    
+    
+    
+    //--------------------------------------------------
+    public function getCollectionProTest(): array ;
+    public function getNewProTest(): array ;
+    public function getRemovedProTest(): array ;
 }

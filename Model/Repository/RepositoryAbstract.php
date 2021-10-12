@@ -29,10 +29,9 @@ use Model\Repository\RepoAssotiatedManyInterface;
 use Model\Repository\Exception\UnableToCreateAssotiatedChildEntity;
 use Model\Repository\Exception\UnableRecreateEntityException;
 use Model\Repository\Exception\BadImplemntastionOfChildRepository;
-
-use Model\Repository\Exception\UnableAddEntityException;
 use Model\Repository\Exception\OperationWithLockedEntityException;
 use Model\Repository\Exception\UnpersistedEntityInCollectionException;
+use Model\Repository\Exception\UnableWriteToReadOnlyRepoException;
 
 use Model\Repository\RepositoryInterface;
 use Model\Repository\RepositoryReadOnlyInterface;
@@ -323,7 +322,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
     
     protected function removeEntity(EntityInterface $entity): void {
         if ($entity->isLocked()) {
-            throw new OperationWithLockedEntityException("Nelze mazat přidanou nebo smazanou entitu.");
+            throw new OperationWithLockedEntityException("Nelze mazat (právě) přidanou nebo smazanou entitu.");
         }
         
         if ($entity->isPersisted()) {
@@ -413,8 +412,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
                 $key = $this->rowObjectManager->createKey();
                 $this->extractIdentity( $entity->getIdentity(), $key ); 
                 $rowObject = $this->rowObjectManager->get($key);
-                //$this->extractEntity($entity, $rowObject);       //obcerstveny rowObject --- ma se delat???
-                                                
+                //$this->extractEntity($entity, $rowObject);       //obcerstveny rowObject --- ma se delat???                                                
                 
                 $this->removeAssociated($rowObject, $entity);                                                     
                 $this->flushChildRepos();
@@ -427,7 +425,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
 
         } else {
             if ($this->new OR $this->removed) {
-                throw new \LogicException("Repo je read only a byly do něj přidány nebo z něj smazány entity.");
+                throw new UnableWriteToReadOnlyRepoException("Repo je read only a byly do něj přidány nebo z něj smazány entity.");
             }
         }  
         

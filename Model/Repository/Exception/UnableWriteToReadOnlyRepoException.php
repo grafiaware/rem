@@ -4,13 +4,12 @@ namespace Model\Repository\Exception;
 
 use Model\Repository\Exception\RepositoryExceptionInterface;
 
-
 /**
- * Description of UnableAddRowObjectException
+ * Description of UnableWriteToReadOnlyRepoException
  *
  * @author vlse2610
  */
-class UnableAddRowObjectException extends \UnexpectedValueException implements RepositoryExceptionInterface  {
+class UnableWriteToReadOnlyRepoException  extends \LogicException implements RepositoryExceptionInterface {
     //put your code here
 }
 
