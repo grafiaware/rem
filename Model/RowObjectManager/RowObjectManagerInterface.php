@@ -21,7 +21,17 @@ interface RowObjectManagerInterface {
      * @param KeyInterface $key
      * @return RowObjectInterface|null
      */       
-    public function get( KeyInterface $key  )  :  ?RowObjectInterface ;              
+    public function get( KeyInterface $key  )  :  ?RowObjectInterface ;    
+    
+    
+    /**
+     * Vrací RowObject  vyhledany podle klice ForeignKey.  ?Nebo vrati null.?
+     *     
+     * @param KeyInterface $key
+     * @return RowObjectInterface|null
+     */
+    public function getByForeignKey ( KeyInterface $key  )  :  ?RowObjectInterface ;
+    
     
     /**
      * Odstraní RowObject z "RowObjectManagera".

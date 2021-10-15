@@ -36,6 +36,12 @@ class TestovaciRowObjectManager extends RowObjectManagerAbstract implements RowO
         return $this->poleRowObjectu[$key->getIndexFromKey()] ?? NULL; 
     }
    
+   
+    public function getByForeignKey( KeyInterface $foreignKey  )  :  ?RowObjectInterface {
+
+        //return $this->poleRowObjectu[$key->getIndexFromKey()] ?? NULL; 
+    }
+    
     
     public function remove( RowObjectInterface $rowObject ): void {
         

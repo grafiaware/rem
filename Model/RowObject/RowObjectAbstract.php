@@ -11,12 +11,19 @@ use Model\RowObject\RowObjectInterface;
  *
  * @author vlse2610
  */
-abstract class RowObjectAbstract /*implements RowObjectInterface*/ {    
+abstract class RowObjectAbstract implements RowObjectInterface  {    
     /**
      *
      * @var KeyInterface
      */
     public $key ;    
+    
+    /**
+     *
+     * @var KeyInterface
+     */    
+    public $foreignKey;
+    
     
     private $persisted=false;    
     private $locked=false;           
@@ -28,10 +35,18 @@ abstract class RowObjectAbstract /*implements RowObjectInterface*/ {
    
     
     
-     public function getKey(): KeyInterface {
+    public function getKey(): KeyInterface {
         return $this->key;
     }
       
+    
+    public function getForeignKey(): KeyInterface {
+        return $this->foreignKey;
+    }
+    public function setForeignKey( KeyInterface $foreignKey): KeyInterface {
+        $this->foreignKey = $foreignKey;
+    }
+    
     
     
     public function setPersisted(): void {

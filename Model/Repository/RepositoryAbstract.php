@@ -153,13 +153,14 @@ abstract class RepositoryAbstract implements RepositoryInterface {
      * @return string|null  vlastne index
      * @throws UnableRecreateEntityException
      */
-    protected function recreateEntity(  $identity  ):  ?string {        
+    protected function recreateEntity( IdentityInterface $identity  ):  ?string {        
         //$rowData = new RowData(); 
         //$rowData = $this->dao->get( $identity->getKeyHash() ); // vraci konstantni pole - hodnoty z úložistě, $keyHash  zatim neni v metode get pouzito      
    
         $key = $this->rowObjectManager->createKey();
         $this->extractIdentity( $identity, $key );
 
+        
         //$this->rowObjectManager->createRowObject();
         $rowObject = $this->rowObjectManager->get( $key );
         //vyzvednout rowObject z managera
@@ -250,6 +251,9 @@ abstract class RepositoryAbstract implements RepositoryInterface {
         if ($entity->isLocked()) {
             throw new OperationWithLockedEntityException("Nelze přidávat přidanou nebo smazanou entitu.");
         }
+        if ($this instanceof RepositoryReadOnlyInterface) {
+            throw new UnableWriteToReadOnlyRepoException("Repo je typu ".RepositoryReadOnlyInterface::class.", Nelze přidávat entity.");
+        }
         if ($entity->isPersisted()) {
             $this->collection[ $entity->getIdentity()->getIndexFromIdentity() ] = $entity;            
             
@@ -318,13 +322,37 @@ abstract class RepositoryAbstract implements RepositoryInterface {
     }
 
     
+    protected function getEntity(  IdentityInterface $identity ) :?EntityInterface {
+        $index = $identity->getIndexFromIdentity();
+                             
+        if  ( !isset($this->collection[$index] )   )       /*and ( !($identity->isLocked()) ) */  //and (!isset($this->new[$index] ))                             
+        {            
+            /*$entity*/
+            $index = $this->recreateEntity( $identity  ); // v abstractu,  
+            // ZARADI DO COLLECTION z uloziste( db, soubor , atd.... ), pod indexem  $index   
+            // pozn. kdyz neni v ulozisti - ...asi... neni ani $rowObject                        
+        }
+        
+        return $this->collection[$index] ?? NULL;            
+    }
     
     
+    
+    
+    
+    /**
+     * 
+     * @param EntityInterface $entity
+     * @return void
+     * @throws OperationWithLockedEntityException
+     */
     protected function removeEntity(EntityInterface $entity): void {
         if ($entity->isLocked()) {
             throw new OperationWithLockedEntityException("Nelze mazat (právě) přidanou nebo smazanou entitu.");
         }
-        
+        if ($this instanceof RepositoryReadOnlyInterface) {
+            throw new UnableWriteToReadOnlyRepoException("Repo je typu ".RepositoryReadOnlyInterface::class.", Nelze odebírat entity.");
+        }        
         if ($entity->isPersisted()) {
             $this->removed[  ] = $entity;
             
@@ -346,7 +374,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
      *
      * @param string $entityInterfaceName
      * @param type $entity Entita nebo null. Asociovaná entita (vrácená pomocí cizího klíče) nemusí existovat.
-     */
+     */   
     protected function removeAssociated(  $rowObject/*$row*/,  /*?????*/ EntityInterface $entity  /*?????*/ ) {
         foreach ($this->associations as $interfaceName => $association) {
             if (isset($row[$interfaceName]) AND $row[$interfaceName]->isPersisted()) {  // asociovaná entita nemusí existovat - agregát je i tak validní
@@ -361,73 +389,65 @@ abstract class RepositoryAbstract implements RepositoryInterface {
         if ($this->flushed) {
             return;
         }
-        if ( !( $this instanceof RepositoryReadOnlyInterface )) {
-
                            //if ( ! ($this->dao instanceof DaoKeyDbVerifiedInterface)) {   // DaoKeyDbVerifiedInterface musí ukládat (insert) vždy již při nastavování hodnoty primárního klíče
-                foreach ($this->new as $entity) {         
-                                                         
-                    /** @var  RowObjectInterface  $rowObject*/
-                    $rowObject = $this->rowObjectManager->createRowObject();
-                    $this->extractEntity( $entity, $rowObject);   
-                    $this->extractIdentity( $entity->getIdentity(), $rowObject->getKey() ); 
-                    
-                    $this->rowObjectManager->add($rowObject);                              
-                    
-                    $this->addAssociated( $rowObject, $entity);     // pridavam mrkev        //pridavam asociovanou entitu do potomk.repository
-                    $this->flushChildRepos();  //pokud je vnořená agregovaná entita - musí se provést její insert
-                                       
-                    $entity->setPersisted();       
-                    
-                    $entity->unLock();
+        foreach ($this->new as $entity) {         
+
+            /** @var  RowObjectInterface  $rowObject*/
+            $rowObject = $this->rowObjectManager->createRowObject();
+            $this->extractEntity( $entity, $rowObject);   
+            $this->extractIdentity( $entity->getIdentity(), $rowObject->getKey() ); 
+
+            $this->rowObjectManager->add($rowObject);                              
+
+            $this->addAssociated( $rowObject, $entity);     // pridavam mrkev        //pridavam asociovanou entitu do potomk.repository
+            $this->flushChildRepos();  //pokud je vnořená agregovaná entita - musí se provést její insert
+
+            $entity->setPersisted();       
+
+            $entity->unLock();
+        }
+
+        $this->new = []; // při dalším pokusu o find se bude volat recteateEntity, entita se zpětně načte z db (včetně případného autoincrement id a dalších generovaných sloupců)
+
+
+
+        foreach ($this->collection as $entity) {
+
+            $key = $this->rowObjectManager->createKey();
+            $this->extractIdentity( $entity->getIdentity(), $key ); 
+            $rowObject = $this->rowObjectManager->get($key);
+            $this->extractEntity($entity, $rowObject);       //obcerstveny rowObject
+
+            $this->addAssociated($rowObject, $entity);
+            $this->flushChildRepos();  //pokud je vnořená agregovaná entita přidána později - musí se provést její insert teď
+
+            if ($entity->isPersisted()) {
+                if ($rowObject) {     // $row po extractu musí obsahovat nějaká data, která je možno updatovat - v extractu musí být vynechány "readonly" sloupce
+                        // $this->dao->update($row);         
+                   //nedelat nic,...  vyse  se obcerstvil rowObject, ktery je v  rowObjectManageru
                 }
-            
-            $this->new = []; // při dalším pokusu o find se bude volat recteateEntity, entita se zpětně načte z db (včetně případného autoincrement id a dalších generovaných sloupců)
-
-            
-            
-            foreach ($this->collection as $entity) {
-                
-                $key = $this->rowObjectManager->createKey();
-                $this->extractIdentity( $entity->getIdentity(), $key ); 
-                $rowObject = $this->rowObjectManager->get($key);
-                $this->extractEntity($entity, $rowObject);       //obcerstveny rowObject
-                                                 
-                $this->addAssociated($rowObject, $entity);
-                $this->flushChildRepos();  //pokud je vnořená agregovaná entita přidána později - musí se provést její insert teď
-                
-                if ($entity->isPersisted()) {
-                    if ($rowObject) {     // $row po extractu musí obsahovat nějaká data, která je možno updatovat - v extractu musí být vynechány "readonly" sloupce
-                            // $this->dao->update($row);         
-                       //nedelat nic,...  vyse  se obcerstvil rowObject, ktery je v  rowObjectManageru
-                    }
-                } else {
-                    throw new UnpersistedEntityInCollectionException ("V collection je nepersistovaná entita.");
-                }
+            } else {
+                throw new UnpersistedEntityInCollectionException ("V collection je nepersistovaná entita.");
             }
-            $this->collection = [];
-            
+        }
+        $this->collection = [];
 
-            foreach ($this->removed as $entity) {
-                
-                $key = $this->rowObjectManager->createKey();
-                $this->extractIdentity( $entity->getIdentity(), $key ); 
-                $rowObject = $this->rowObjectManager->get($key);
-                //$this->extractEntity($entity, $rowObject);       //obcerstveny rowObject --- ma se delat???                                                
-                
-                $this->removeAssociated($rowObject, $entity);                                                     
-                $this->flushChildRepos();
-                
-                $this->rowObjectManager->remove($rowObject);   //$this->dao->delete($row);                
-                
-                $entity->setUnpersisted();
-            }
-            $this->removed = [];
 
-        } else {
-            if ($this->new OR $this->removed) {
-                throw new UnableWriteToReadOnlyRepoException("Repo je read only a byly do něj přidány nebo z něj smazány entity.");
-            }
-        }  
+        foreach ($this->removed as $entity) {
+
+            $key = $this->rowObjectManager->createKey();
+            $this->extractIdentity( $entity->getIdentity(), $key ); 
+            $rowObject = $this->rowObjectManager->get($key);
+            //$this->extractEntity($entity, $rowObject);       //obcerstveny rowObject --- ma se delat???                                                
+
+            $this->removeAssociated($rowObject, $entity);                                                     
+            $this->flushChildRepos();
+
+            $this->rowObjectManager->remove($rowObject);   //$this->dao->delete($row);                
+
+            $entity->setUnpersisted();
+        }
+        $this->removed = [];
         
         $this->rowObjectManager->flush();
         $this->flushed = true;

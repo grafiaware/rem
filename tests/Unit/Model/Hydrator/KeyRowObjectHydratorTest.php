@@ -88,12 +88,25 @@ class RowObjectMock  extends RowObjectAbstract implements  RowObjectInterfaceMoc
 
 }
 
-interface KeyInterfaceMock extends KeyInterface{
+
+interface KeyInterfaceMock extends KeyInterface{   
+    public function setHash( array $hash): void ;
+    public function getHash(): array ;
+    public function getGenerated(): array ;
+    public function setGenerated( array  $generated ): void ;
+
+    public function isEqual( KeyInterface $key ) : bool;
+    
 }
 class KeyMock extends KeyAbstract implements KeyInterfaceMock {
     public $uidPrimarniKlicZnaky;
 
-     //v Abstract  public $generated?
+    public function setHash( array $hash): void {}
+    public function getHash(): array {}
+    public function getGenerated(): array {}
+    public function setGenerated( array  $generated ): void {}
+
+    public function isEqual( KeyInterface $key ) : bool{}    
 }
 
 

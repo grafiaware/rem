@@ -47,16 +47,16 @@ class AssociationAbstract {
         return $childKey;
     }
 
-//    /**
-//     *
-//     * @param string|array $key
-//     * @return type
-//     */
-//    protected function indexFromKey($key) {
-//        if (is_array($key)) {
-//            return implode(array_values($key));
-//        } else{
-//            return $key;
-//        }
-//    }
+    /**
+     *
+     * @param string|array $key
+     * @return type
+     */
+    protected function indexFromKey($key) {
+        if (is_array($key)) {
+            return implode(array_values($key));
+        } else{
+            return $key;
+        }
+    }
 }

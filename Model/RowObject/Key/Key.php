@@ -2,7 +2,7 @@
 namespace Model\RowObject\Key;
 
 use Model\RowObject\Key\KeyAbstract;
-use Model\RowObject\AttributeInterface;
+//use Model\RowObject\AttributeInterface;
 
 
 /**
@@ -10,7 +10,9 @@ use Model\RowObject\AttributeInterface;
  *
  * @author vlse2610
  */
-class Key extends KeyAbstract implements AttributeInterface {
+class Key extends KeyAbstract implements KeyInterface {
+    
+    
     
 //    /**
 //    * 
@@ -18,17 +20,10 @@ class Key extends KeyAbstract implements AttributeInterface {
 //    */
 //    public function __construct( array $generated ) {
 //        $this->generated = $generated;        
-//    }
-   
-    
-    
-//    
-//    public function getGenerated(): array {
-//        
+//    }      
+//    public function getGenerated(): array {       
 //    }            
-//    
-//    public function setGenerated( array  $generated ): void {
-//        
+//    public function setGenerated( array  $generated ): void {     
 //    }
     
 }

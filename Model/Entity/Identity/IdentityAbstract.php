@@ -25,7 +25,8 @@ abstract class IdentityAbstract implements IdentityInterface {
     }
     
     
-    
+       
+  
     
 //    public function getIndexFromIdentity() {
 //        //get_object_vars - vybere ty "viditelne" a nestaticke

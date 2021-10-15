@@ -13,5 +13,7 @@ interface IdentityInterface  extends AccessorInterface{
     public function unlock(): void ;  
     
     public function isLocked(): bool ;
+              
+  //  public function getIndexFromIdentity() : string ;
     
 }
