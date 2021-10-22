@@ -12,7 +12,7 @@ interface RepositoryReadOnlyInterface {
     
     
     //--------------------------------------------------
-    public function getCollectionProTest(): array ;
-    public function getNewProTest(): array ;
-    public function getRemovedProTest(): array ;
+//    public function getCollectionProTest(): array ;
+//    public function getNewProTest(): array ;
+//    public function getRemovedProTest(): array ;
 }

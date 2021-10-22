@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Model\Repository\Association;
+//namespace Model\Repository\Association;
 
 /**
  *

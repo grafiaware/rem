@@ -34,15 +34,16 @@ class TestovaciEntity extends EntityAbstract implements TestovaciEntityInterface
         private $prvekDatetime;
         
       
+        
         /**
          * 
-         * @param IdentityInterface $identity
+         * @param TestovaciIdentityInterface $identity
          */
         public function __construct( TestovaciIdentityInterface $identity ) {
             parent::__construct($identity);
          
             
-    }  
+        }  
         
        
         public function getCeleJmeno(): string {

@@ -6,7 +6,7 @@ use Model\Testovaci\Entity\TestovaciEntityInterface;
 use Model\Testovaci\Entity\TestovaciEntity;
 use Model\Testovaci\Identity\TestovaciIdentityInterface;
 use Model\Testovaci\Identity\TestovaciIdentity;
-use Model\Testovaci\Identity\TestovaciReferenceIdentityInterface;
+use Model\Testovaci\Identity\TestovaciCarrotIdentityInterface;
 
 
 use Model\Repository\RepositoryAbstract;
@@ -25,7 +25,11 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
     
     function __construct( AccessorHydratorInterface $accessorHydratorEntity,
                           AccessorHydratorInterface $accessorHydratorIdentity,
-                          RowObjectManagerInterface $rowObjectManager
+                          RowObjectManagerInterface $rowObjectManager, 
+            
+                          AssociationOneToOneInterface $associationOneToOne
+            
+            
             ) {
         
         $this->registerHydratorEntity( $accessorHydratorEntity ); 
@@ -33,6 +37,11 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
          
         $this->rowObjectManager = $rowObjectManager;
         
+        $this->registerOneToOneAssociation(
+                \Model\Testovaci\Entity\TestovaciAssociatedCarrorEntity,
+                $parentReferenceKeyAttribute, 
+                $repo)
+        ???
     }
     
     
@@ -46,12 +55,7 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
         $re = $this->getEntity( $identity );  
     return   $re;        
     }        
-    
-    
-    public function getByReference (TestovaciReferenceIdentityInterface $identityReference ) : ?TestovaciEntityInterface {
-        
-    }
-    
+               
     
     
     

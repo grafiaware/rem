@@ -168,7 +168,7 @@ class IntegrateRowObjectHydratorTest extends TestCase {
         $poleJmenDoFiltruHydratoruRO =  [
             "prvekChar" , "prvekVarchar", "prvekInteger" ,"prvekText", "prvekBoolean",
             "prvekDate", "prvekDatetime", "prvekTimestamp"           ] ;
-        $poleJmenKlice = [ "uidPrimarniKlicZnaky" ] ;
+        $poleJmenKlice = [ "uidTestovaciTable" ] ;
 
         /* @var $metaDataProvider MetadataProviderMysql */
         $metaDataProvider = self::$container->get(MetadataProviderMysql::class);
@@ -191,10 +191,10 @@ class IntegrateRowObjectHydratorTest extends TestCase {
                       "prvek_date" =>  self::$testDateString,
                       "prvek_datetime" => self::$testDateTimeString,
                       "prvek_timestamp" => self::$testDateTimeString,
-                      "uid_primarni_klic_znaky" => "KEYklic"
+                      "uid_testovaci_table" => "KEYklic"
              ]  );
 
-        $rowObjectM =  new RowObjectMock(new KeyMock( [ "uidPrimarniKlicZnaky" => false ] ) );
+        $rowObjectM =  new RowObjectMock(new KeyMock( [ "uidTestovaciTable" => false ] ) );
         $rowObjectHydrator->hydrate( $rowObjectM , $rowData );
         $keyRowObjectHydrator->hydrate( $rowObjectM->key , $rowData );
 
@@ -218,8 +218,8 @@ class IntegrateRowObjectHydratorTest extends TestCase {
 
         //-------------------------------
 
-        $this->assertObjectHasAttribute( "uidPrimarniKlicZnaky", $rowObjectM->key,  "***CHYBA***"  );
-        $this->assertEquals( $rowObjectM->key->uidPrimarniKlicZnaky, "KEYklic" , "***CHYBA***"   );
+        $this->assertObjectHasAttribute( "uidTestovaciTable", $rowObjectM->key,  "***CHYBA***"  );
+        $this->assertEquals( $rowObjectM->key->uidTestovaciTable, "KEYklic" , "***CHYBA***"   );
 
     }
 
@@ -230,7 +230,7 @@ class IntegrateRowObjectHydratorTest extends TestCase {
         $poleJmenDoFiltruHydratoru =  [
             "prvekChar" , "prvekVarchar", "prvekInteger" ,"prvekText", "prvekBoolean",
             "prvekDate", "prvekDatetime", "prvekTimestamp"     ] ;
-        $poleJmenKey = [ "uidPrimarniKlicZnaky" , "klic"] ;
+        $poleJmenKey = [ "uidTestovaciTable" , "klic"] ;
 
         /* @var $metaDataProvider MetadataProviderMysql */
         $metaDataProvider = self::$container->get( MetadataProviderMysql::class );
@@ -246,9 +246,9 @@ class IntegrateRowObjectHydratorTest extends TestCase {
 
 
         $rowDataM = new RowData();
-        $rowObjectM = new RowObjectMock( new KeyMock( ["uidPrimarniKlicZnaky" => false ] ));    //generated
+        $rowObjectM = new RowObjectMock( new KeyMock( ["uidTestovaciTable" => false ] ));    //generated
 
-        $rowObjectM->key->uidPrimarniKlicZnaky = "KEYklic";
+        $rowObjectM->key->uidTestovaciTable = "KEYklic";
         $rowObjectM->key->klic = "";
 
         $rowObjectM->prvekChar = "QWERTZ" ;
@@ -285,10 +285,10 @@ class IntegrateRowObjectHydratorTest extends TestCase {
 
         //------------------------------------------------
 
-        $this->assertArrayHasKey( "uid_primarni_klic_znaky", $changed, "***CHYBA***"  );
+        $this->assertArrayHasKey( "uid_testovaci_table", $changed, "***CHYBA***"  );
         $this->assertArrayHasKey( "klic", $changed, "***CHYBA***"  );
 
-        $this->assertEquals( $changed["uid_primarni_klic_znaky"], "KEYklic" , "***CHYBA***"   );
+        $this->assertEquals( $changed["uid_testovaci_table"], "KEYklic" , "***CHYBA***"   );
         $this->assertEquals( $changed["klic"], "" , "***CHYBA***"   );
 
     }

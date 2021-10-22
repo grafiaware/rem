@@ -40,12 +40,12 @@ abstract class RowObjectAbstract implements RowObjectInterface  {
     }
       
     
-    public function getForeignKey(): KeyInterface {
-        return $this->foreignKey;
-    }
-    public function setForeignKey( KeyInterface $foreignKey): KeyInterface {
-        $this->foreignKey = $foreignKey;
-    }
+//    public function getForeignKey(): KeyInterface {
+//        return $this->foreignKey;
+//    }
+//    public function setForeignKey( KeyInterface $foreignKey): KeyInterface {
+//        $this->foreignKey = $foreignKey;
+//    }
     
     
     

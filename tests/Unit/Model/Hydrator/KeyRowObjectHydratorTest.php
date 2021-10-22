@@ -154,7 +154,7 @@ class KeyRowObjectHydratorTest extends TestCase {
 
     //---------------------------------------------------------------------------
     public function testHydrate(): void {
-        $poleJmenKey = [ "uidPrimarniKlicZnaky" ] ;
+        $poleJmenKey = [ "uidTestovaciTable" ] ;
 
         /* @var $metaDataProvider MetadataProviderMysql */
         $metaDataProvider = self::$container->get(MetadataProviderMysql::class);
@@ -164,13 +164,13 @@ class KeyRowObjectHydratorTest extends TestCase {
                                                );
         $this->assertIsObject($keyRowObjectHydrator, "***CHYBA***" );
 
-        $rowObjectM =  new RowObjectMock( new KeyMock( [ "uidPrimarniKlicZnaky"=>false ] ) );
+        $rowObjectM =  new RowObjectMock( new KeyMock( [ "uidTestovaciTable"=>false ] ) );
         $keyRowObjectHydrator->hydrate( $rowObjectM->key , new RowData( [
-                                        "uid_primarni_klic_znaky" => "KEYklic"  ] ) );
+                                        "uid_testovaci_table" => "KEYklic"  ] ) );
 
-        $this->assertObjectHasAttribute( "uidPrimarniKlicZnaky", $rowObjectM->key,  "***CHYBA***"  );
+        $this->assertObjectHasAttribute( "uidTestovaciTable", $rowObjectM->key,  "***CHYBA***"  );
 
-        $this->assertEquals( $rowObjectM->key->uidPrimarniKlicZnaky, "KEYklic" , "***CHYBA***"   );
+        $this->assertEquals( $rowObjectM->key->uidTestovaciTable, "KEYklic" , "***CHYBA***"   );
     }
 
 
@@ -224,7 +224,7 @@ class KeyRowObjectHydratorTest extends TestCase {
 
     public function testExtract(): void {
 
-        $poleJmenKey = [ "uidPrimarniKlicZnaky" , "klic"] ;
+        $poleJmenKey = [ "uidTestovaciTable" , "klic"] ;
 
         /* @var $metaDataProvider MetadataProviderMysql */
         $metaDataProvider = self::$container->get( MetadataProviderMysql::class );
@@ -235,17 +235,17 @@ class KeyRowObjectHydratorTest extends TestCase {
 
         //$rowDataM = new RowDataMock ();
         $rowDataM = new RowData ();
-        $rowObjectM = new RowObjectMock( new KeyMock( ["uidPrimarniKlicZnaky"=>false ] ));
+        $rowObjectM = new RowObjectMock( new KeyMock( ["uidTestovaciTable"=>false ] ));
 
-        $rowObjectM->key->uidPrimarniKlicZnaky = "KEYklic";
+        $rowObjectM->key->uidTestovaciTable = "KEYklic";
         $rowObjectM->key->klic = "";
 
         $keyRowObjectHydrator->extract( $rowObjectM->key, $rowDataM);
         $changed = $rowDataM->fetchChanged();
-        $this->assertArrayHasKey( "uid_primarni_klic_znaky", $changed, "***CHYBA***"  );
+        $this->assertArrayHasKey( "uid_testovaci_table", $changed, "***CHYBA***"  );
         $this->assertArrayHasKey( "klic", $changed, "***CHYBA***"  );
 
-        $this->assertEquals( $changed["uid_primarni_klic_znaky"], "KEYklic" , "***CHYBA***"   );
+        $this->assertEquals( $changed["uid_testovaci_table"], "KEYklic" , "***CHYBA***"   );
         $this->assertEquals( $changed["klic"], "" , "***CHYBA***"   );
     }
 

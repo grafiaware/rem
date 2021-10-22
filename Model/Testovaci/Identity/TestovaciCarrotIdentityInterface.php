@@ -6,12 +6,12 @@ namespace Model\Testovaci\Identity;
  *
  * @author vlse2610
  */
-interface TestovaciReferenceIdentityInterface extends IdentityInterface {
+interface TestovaciCarrotIdentityInterface extends IdentityInterface {
     
     
     public function getId(): string ;
    
-    public function setId(string $id): TestovaciReferenceIdentityInterface ;
+    public function setId(string $id): TestovaciCarrotIdentityInterface ;
        
     
        

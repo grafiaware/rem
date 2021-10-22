@@ -12,9 +12,9 @@ interface RowObjectInterface extends AttributeInterface {
        
     public function getKey(): KeyInterface ; 
     
-    public function getForeignKey(): KeyInterface ;
-    public function setForeignKey( KeyInterface $key): KeyInterface ;
-    
+//    public function getForeignKey(): KeyInterface ;
+//    public function setForeignKey( KeyInterface $key): KeyInterface ;
+//    
     
     public function setPersisted(): void;
     

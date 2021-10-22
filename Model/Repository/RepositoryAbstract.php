@@ -209,8 +209,8 @@ abstract class RepositoryAbstract implements RepositoryInterface {
     
     protected function recreateAssociations( $rowObject /*&$row*/): void {
         foreach ($this->associations as $interfaceName => $association) {
-            $rowObject->$interfaceName/*$row[$interfaceName]*/ = $association->getAssociated( $rowObject  /*$row*/);
-        }
+            $rowObject->$interfaceName/*$row[$interfaceName]*/ = $association->getAssociated( $rowObject(kralika)  /*$row*/);  //getAssociatedEntity(rodicovsky
+        }     //mrkovaentita =   podle hodnoty idKralik_fk
     }
 
     protected function getKey($row) {

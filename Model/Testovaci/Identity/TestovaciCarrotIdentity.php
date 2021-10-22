@@ -3,11 +3,11 @@
 namespace Model\Testovaci\Identity;
 
 use Model\Entity\Identity\IdentityAbstract;
-use Model\Testovaci\Identity\TestovaciReferenceIdentityInterface;
+use Model\Testovaci\Identity\TestovaciCarrotIdentityInterface;
 
 
 
-class TestovaciReferenceIdentity  extends IdentityAbstract implements TestovaciReferenceIdentityInterface {
+class TestovaciCarrotIdentity  extends IdentityAbstract implements TestovaciCarrotIdentityInterface {
     /**
      *
      * @var string
@@ -22,7 +22,7 @@ class TestovaciReferenceIdentity  extends IdentityAbstract implements TestovaciR
         return $this->id;
     }
    
-    public function setId(string $id): TestovaciReferenceIdentityInterface {
+    public function setId(string $id): TestovaciCarrotIdentityInterface {
         $this->id = $id;
         return $this;
     }

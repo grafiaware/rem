@@ -4,7 +4,6 @@ namespace Model\Testovaci\Repository;
 
 use Model\Testovaci\Entity\TestovaciEntityInterface;
 use Model\Testovaci\Identity\TestovaciIdentityInterface;
-use Model\Testovaci\Identity\TestovaciReferenceIdentityInterface;
 
 use Model\Repository\RepositoryInterface;
 
@@ -30,12 +29,7 @@ interface TestovaciRepositoryInterface extends RepositoryInterface {
      * @return TestovaciEntityInterface|null
      */
     public function get ( TestovaciIdentityInterface $identity ) : ?TestovaciEntityInterface ;
-    
-    
-    
-    public function getByReference (TestovaciReferenceIdentityInterface $identityReference ) : ?TestovaciEntityInterface ;
-    
-    
+               
     
     /**
      * Odstraní TestovaciEntity z TestovaciRepository.
