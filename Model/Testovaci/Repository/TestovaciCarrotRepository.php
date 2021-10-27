@@ -3,6 +3,8 @@
 namespace Model\Testovaci\Repository;
 
 use Model\Testovaci\Repository\TestovaciCarrotRepositoryInterface;
+use Model\Testovaci\Entity\TestovaciAssociatedCarrotEntityInterface;
+
 use Model\Repository\RepositoryAbstract;
 
 

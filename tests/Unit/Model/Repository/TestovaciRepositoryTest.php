@@ -12,6 +12,7 @@ use Model\Testovaci\Identity\TestovaciIdentity;
 use Model\Testovaci\RowObjectManager\TestovaciRowObjectManager;
 use Model\Testovaci\Repository\TestovaciRepositoryReadOnly;
 use Model\Testovaci\Repository\TestovaciRepository;
+use Model\Testovaci\Repository\TestovaciCarrotRepository;
 
 use Model\Repository\Exception\OperationWithLockedEntityException;
 use Model\Repository\Exception\UnpersistedEntityInCollectionException;
@@ -31,14 +32,22 @@ class TestovaciRepositoryTest  extends TestCase {
     
    private $testovaciRepository;
    private $testovaciRepositoryReadOnly;
-   
+         
    private $identity1;
    private $entity1 ;
-    
-    
+       
+   private $testovaciCarrotRepository;
+   private static $rowObjectCarrotManager ;
+   
+   
     
     public static function setUpBeforeClass(): void {
         self::$rowObjectManager = new TestovaciRowObjectManager();
+        self::$rowObjectCarrotManager = new TestovaciRowObjectManager();
+        
+        
+        
+        
         
     }
     
@@ -47,7 +56,7 @@ class TestovaciRepositoryTest  extends TestCase {
         $methodNameHydratorEntity = new AccessorMethodNameHydrator();
         $methodNameHydratorIdentity = new AccessorMethodNameHydrator();
         $poleJmenIdentity =   [ 
-            "id1", "id2",];
+            "id1", "id2"];
         $poleJmenEntity =  [             
             "prvekVarchar", "prvekDatetime", "celeJmeno"];
 //            "prvekChar" , "prvekVarchar", "prvekInteger" ,"prvekText", "prvekBoolean",  
@@ -59,7 +68,13 @@ class TestovaciRepositoryTest  extends TestCase {
         $accessorHydratorEntity = new OneToOneAccessorHydrator($methodNameHydratorEntity, $filterEntity) ;
         $accessorHydratorIdentity = new OneToOneAccessorHydrator($methodNameHydratorIdentity, $filterIdentity) ;
 
-        $this->testovaciRepository = new TestovaciRepository( $accessorHydratorEntity, $accessorHydratorIdentity,  self::$rowObjectManager );           
+        
+        $this->testovaciCarrotRepository = new TestovaciCarrotRepository( $accessorHydratorEntity, $accessorHydratorIdentity, 
+                                                              self::$rowObjectCarrotManager );                 
+        $this->testovaciRepository = new TestovaciRepository( $accessorHydratorEntity, $accessorHydratorIdentity, 
+                                                              self::$rowObjectManager,
+                                                              $this->testovaciCarrotRepository );     
+            
         
         $this->identity1 = new TestovaciIdentity(); 
             $this->identity1->setId1('66');         

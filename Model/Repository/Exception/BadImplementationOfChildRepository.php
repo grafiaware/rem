@@ -10,6 +10,6 @@ use Model\Repository\Exception\RepositoryExceptionInterface;
  *
  * @author pes2704
  */
-class BadImplemntastionOfChildRepository extends \LogicException implements RepositoryExceptionInterface {
+class BadImplementationOfChildRepository extends \LogicException implements RepositoryExceptionInterface {
     //put your code here
 }

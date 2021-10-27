@@ -17,7 +17,7 @@ use Model\Testovaci\Key\TestovaciKey;
  *
  * @author vlse2610
  */
-class TestovaciRowObjectManager extends RowObjectManagerAbstract implements RowObjectManagerInterface {  
+class TestovaciRowObjectManager extends RowObjectManagerAbstract /*TAM NIC NENI*/ implements RowObjectManagerInterface {  
     /**
     *
     * @var array
@@ -31,9 +31,9 @@ class TestovaciRowObjectManager extends RowObjectManagerAbstract implements RowO
         
     }
   
-    public function get( KeyInterface $key  )  :  ?RowObjectInterface {
+    public function get(   $identityHash /*KeyInterface $key */ )  :  ?RowObjectInterface {
 
-        return $this->poleRowObjectu[$key->getIndexFromKey()] ?? NULL; 
+        return $this->poleRowObjectu[ $key->getIndexFromKey() ] ?? NULL; 
     }
    
    
@@ -57,17 +57,32 @@ class TestovaciRowObjectManager extends RowObjectManagerAbstract implements RowO
     
     
     
+     public function getIndexFromIdentityHash( array $identityHash ): string  {
+        //$a = \get_object_vars($this); 
+        $b = ksort ($identityHash);
+        
+        $index="";
+        foreach (  $b   as $nameAttr=>$value ) {            
+           $index .= $value;                        
+        }
+        return $index;   
+             
+    } 
     
     
-    public function createRowObject (  ) : RowObjectInterface {
-            $key = new TestovaciKey();
-        return new TestovaciRowObject( $key );
-    }
     
     
-    public function createKey (  ) : KeyInterface {
-        return new TestovaciKey( );
-    }
+    
+    
+//    public function createRowObject (  ) : RowObjectInterface {
+//            $key = new TestovaciKey();
+//        return new TestovaciRowObject( $key );
+//    }
+//    
+//    
+//    public function createKey (  ) : KeyInterface {
+//        return new TestovaciKey( );
+//    }
     
     
    

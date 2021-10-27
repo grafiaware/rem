@@ -5,7 +5,7 @@ namespace Model\Repository\Association;
 
 use Model\Entity\EntityInterface;
 
-use Model\Repository\RepoAssotiatedOneInterface;
+use Model\Repository\RepositoryInterface;
 use Model\Repository\Exception\UnableToCreateAssotiatedChildEntity;
 
 /**
@@ -24,20 +24,24 @@ class AssociationOneToOne extends AssociationAbstract implements AssociationOneT
      * @param array $parentReferenceKeyAttribute Atribut klíče, který je referencí na data rodiče v úložišti dat. V databázi jde o referenční cizí klíč.
      * @param RepoAssotiatedOneInterface $childRepo Repo pro získání, ukládání a mazání asociovaných entit
      */
-    public function __construct($referenceKeyAttribute, RepoAssotiatedOneInterface $childRepo) {
+    public function __construct($referenceKeyAttribute, RepositoryInterface $childRepo) {
         parent::__construct($referenceKeyAttribute);
         $this->childRepo = $childRepo;
     }
 
-    public function getAssociatedEntity(&$row): ?EntityInterface {
-        $childKey = $this->getChildKey($row);
-        $child = $this->childRepo->getByReference($childKey);
+//    public function getAssociatedEntity( $identity /*rodicovsky*/ /*&$row*/): ?EntityInterface {
+//        $childKey = $this->getChildKey($row);
+//      $child = $this->childRepo->getByReference($childKey);
+  
 //        if (is_null($child)) {
 //            $repoCls = get_class($this->childRepo);
 //            throw new UnableToCreateAssotiatedChildEntity("Nelze vytvořit asociovanou entitu. Nebyla načtena entita z repository asociovaných entit $repoCls.");
 //        }
-        return $child;
-    }
+                       
+        
+    //    $childE = $this->childRepo->getByReference( $identity ) ;           
+    //    return $childE;
+//    }
 
     public function addAssociatedEntity(EntityInterface $entity = null) {
         $this->childRepo->add($entity);

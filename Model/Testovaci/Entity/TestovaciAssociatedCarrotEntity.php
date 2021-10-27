@@ -12,7 +12,7 @@ use Model\Testovaci\Identity\TestovaciCarrotIdentityInterface;
  *
  * @author vlse2610
  */
-class TestovaciAssociatedCarrorEntity  extends EntityAbstract implements TestovaciAssociatedCarrotEntityInterface{
+class TestovaciAssociatedCarrotEntity  extends EntityAbstract implements TestovaciAssociatedCarrotEntityInterface{
      
     private $prumer;
     

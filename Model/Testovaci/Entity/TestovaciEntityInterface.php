@@ -11,12 +11,14 @@ use Model\Entity\EntityInterface;
 interface TestovaciEntityInterface extends EntityInterface{
     
     
+        public function getAssociatedCarrotEntity(): TestovaciAssociatedCarrotEntityInterface ;
        
         public function getCeleJmeno(): string; 
         public function getPrvekVarchar(): string; 
         public function getPrvekDatetime(): \DateTime; 
        
                 
+        public function setAssociatedCarrotEntity(TestovaciAssociatedCarrotEntityInterface $associatedCarrotEntity) ;
 
         public function setCeleJmeno(string $celeJmeno):TestovaciEntityInterface ;
         public function setPrvekVarchar(string $prvekVarchar) : TestovaciEntityInterface ;

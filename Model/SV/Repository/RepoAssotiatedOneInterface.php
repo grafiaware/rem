@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Model\Repository;
+//namespace Model\Repository;
 
 use Model\Entity\EntityInterface;
 

@@ -10,6 +10,8 @@ interface RepositoryInterface {
 
     public function flush(): void;
     
+    //protected function getIndexFromIdentityHash( array $identityHash ): string  ;
+    
     
     
     //--------------------------------------------------

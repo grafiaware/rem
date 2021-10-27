@@ -8,6 +8,8 @@ use Model\Testovaci\Identity\TestovaciIdentityInterface;
 use Model\Testovaci\Identity\TestovaciIdentity;
 use Model\Testovaci\Identity\TestovaciCarrotIdentityInterface;
 
+use Model\Testovaci\Entity\TestovaciAssociatedCarrotEntityInterface;
+
 
 use Model\Repository\RepositoryAbstract;
 use Model\Hydrator\AccessorHydratorInterface;
@@ -25,23 +27,21 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
     
     function __construct( AccessorHydratorInterface $accessorHydratorEntity,
                           AccessorHydratorInterface $accessorHydratorIdentity,
-                          RowObjectManagerInterface $rowObjectManager, 
+                          RowObjectManagerInterface $rowObjectManager,
             
-                          AssociationOneToOneInterface $associationOneToOne
-            
-            
-            ) {
+                          TestovaciCarrotRepository $testovaciCarrotRepository = NULL  ) {
         
         $this->registerHydratorEntity( $accessorHydratorEntity ); 
         $this->registerHydratorIdentity( $accessorHydratorIdentity ); 
          
         $this->rowObjectManager = $rowObjectManager;
         
-        $this->registerOneToOneAssociation(
-                \Model\Testovaci\Entity\TestovaciAssociatedCarrorEntity,
-                $parentReferenceKeyAttribute, 
-                $repo)
-        ???
+        if ( $testovaciCarrotRepository) {
+            $this->registerOneToOneAssociation( TestovaciAssociatedCarrotEntityInterface::class,
+                                                /*$parentReferenceKeyAttribute*/ ["id1", "id2" ],
+                                                $testovaciCarrotRepository );
+        }
+        
     }
     
     
@@ -51,8 +51,8 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
     
 
     
-    public function get( TestovaciIdentityInterface $identity):  ?TestovaciEntityInterface {
-        $re = $this->getEntity( $identity );  
+    public function get( $identityHash  /*TestovaciIdentityInterface $identity */ ):  ?TestovaciEntityInterface {
+        $re = $this->getEntity( $identityHash    /*$identity*/ );  
     return   $re;        
     }        
                
@@ -89,6 +89,17 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
         
     }
         
+    
+    protected function getIndexFromIdentityHash( array $identityHash ): string  {
+        //$a = \get_object_vars($this); 
+        $b = ksort ($identityHash);
+        
+        $index="";
+        foreach (  $b   as $nameAttr=>$value ) {            
+           $index .= $value;                        
+        }
+        return $index;    
+    } 
     
   
 

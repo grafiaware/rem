@@ -25,10 +25,10 @@ interface TestovaciRepositoryInterface extends RepositoryInterface {
     /**
      * Vrací  TestovaciEntity z TestovaciRepository  podle TestovaciIdentity, nebo vraci null.
      * 
-     * @param TestovaciIdentityInterface $identity
+     * @param array  $hash 
      * @return TestovaciEntityInterface|null
      */
-    public function get ( TestovaciIdentityInterface $identity ) : ?TestovaciEntityInterface ;
+    public function get ( $identityHash  /*TestovaciIdentityInterface $identity */ ) : ?TestovaciEntityInterface ;
                
     
     /**

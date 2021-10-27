@@ -22,9 +22,16 @@ class TestovaciIdentity extends IdentityAbstract implements  TestovaciIdentityIn
      */
     private $id2;
     
+    
+    //private $hashIdentity;  
+    
+    
+    
     public function __construct( ) {
 
     }  
+    
+    
     
     
     public function getId1(): string {

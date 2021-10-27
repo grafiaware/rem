@@ -4,6 +4,7 @@ namespace Model\Testovaci\Entity;
 
 use Model\Entity\EntityAbstract;
 use Model\Testovaci\Entity\TestovaciEntityInterface;
+use Model\Testovaci\Entity\TestovaciAssociatedCarrotEntityInterface;
 
 use Model\Testovaci\Identity\TestovaciIdentityInterface;
 
@@ -18,34 +19,38 @@ class TestovaciEntity extends EntityAbstract implements TestovaciEntityInterface
         /**
          * @var string
          */   
-        private $celeJmeno;     
-        
-        
+        private $celeJmeno;          
         /**
          *
          * @var string
          */
-        private $prvekVarchar;    
-       
+        private $prvekVarchar;           
         /**
          *
          * @var \DateTime 
          */
         private $prvekDatetime;
         
-      
+        /**
+         * 
+         * @var TestovaciAssociatedCarrotEntityInterface
+         */      
+        private $associatedCarrotEntity;
+        
+        
         
         /**
          * 
          * @param TestovaciIdentityInterface $identity
          */
         public function __construct( TestovaciIdentityInterface $identity ) {
-            parent::__construct($identity);
-         
-            
+            parent::__construct($identity);                     
         }  
         
        
+        public function getAssociatedCarrotEntity(): TestovaciAssociatedCarrotEntityInterface {
+            return $this->associatedCarrotEntity;
+        }       
         public function getCeleJmeno(): string {
             return $this->celeJmeno;
         }
@@ -59,7 +64,10 @@ class TestovaciEntity extends EntityAbstract implements TestovaciEntityInterface
        
         
         
-
+        public function setAssociatedCarrotEntity(TestovaciAssociatedCarrotEntityInterface $associatedCarrotEntity) {
+            $this->associatedCarrotEntity = $associatedCarrotEntity;
+            return $this;
+        }
         public function setCeleJmeno(string $celeJmeno) :TestovaciEntityInterface {
             $this->celeJmeno = $celeJmeno;
             return $this;
