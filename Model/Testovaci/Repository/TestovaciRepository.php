@@ -8,7 +8,11 @@ use Model\Testovaci\Identity\TestovaciIdentityInterface;
 use Model\Testovaci\Identity\TestovaciIdentity;
 use Model\Testovaci\Identity\TestovaciCarrotIdentityInterface;
 
+use  Model\Testovaci\Repository\TestovaciHoleRepositoryInterface;
+use Model\Testovaci\Repository\TestovaciCarrotRepositoryInterface;
+
 use Model\Testovaci\Entity\TestovaciAssociatedCarrotEntityInterface;
+use Model\Testovaci\Entity\TestovaciAssociatedHoleEntityInterface;
 
 
 use Model\Repository\RepositoryAbstract;
@@ -27,9 +31,10 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
     
     function __construct( AccessorHydratorInterface $accessorHydratorEntity,
                           AccessorHydratorInterface $accessorHydratorIdentity,
-                          RowObjectManagerInterface $rowObjectManager,
+                          RowObjectManagerInterface $rowObjectManager,                          
             
-                          TestovaciCarrotRepository $testovaciCarrotRepository = NULL  ) {
+                          TestovaciCarrotRepositoryInterface $testovaciCarrotRepository = NULL,
+                          TestovaciHoleRepositoryInterface $testovaciHoleRepository = NULL ) {
         
         $this->registerHydratorEntity( $accessorHydratorEntity ); 
         $this->registerHydratorIdentity( $accessorHydratorIdentity ); 
@@ -37,10 +42,17 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
         $this->rowObjectManager = $rowObjectManager;
         
         if ( $testovaciCarrotRepository) {
-            $this->registerOneToOneAssociation( TestovaciAssociatedCarrotEntityInterface::class,
-                                                /*$parentReferenceKeyAttribute*/ ["id1", "id2" ],
+            $this->registerOneToManyAssociation( TestovaciAssociatedCarrotEntityInterface::class,
+                                               // /*$parentReferenceKeyAttribute*/ ["id1", "id2" ],
                                                 $testovaciCarrotRepository );
         }
+        
+         if ( $testovaciHoleRepository) {
+            $this->registerOneToOneAssociation( TestovaciAssociatedHoleEntityInterface::class,
+                                               // /*$parentReferenceKeyAttribute*/ ["id1", "id2" ],
+                                                $testovaciHoleRepository );
+        }
+        
         
     }
     
@@ -95,7 +107,7 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
         $b = ksort ($identityHash);
         
         $index="";
-        foreach (  $b   as $nameAttr=>$value ) {            
+        foreach (  $identityHash   as $nameAttr=>$value ) {            
            $index .= $value;                        
         }
         return $index;    

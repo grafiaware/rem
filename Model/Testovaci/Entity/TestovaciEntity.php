@@ -5,6 +5,7 @@ namespace Model\Testovaci\Entity;
 use Model\Entity\EntityAbstract;
 use Model\Testovaci\Entity\TestovaciEntityInterface;
 use Model\Testovaci\Entity\TestovaciAssociatedCarrotEntityInterface;
+use Model\Testovaci\Entity\TestovaciAssociatedHoleEntityInterface;
 
 use Model\Testovaci\Identity\TestovaciIdentityInterface;
 
@@ -37,6 +38,12 @@ class TestovaciEntity extends EntityAbstract implements TestovaciEntityInterface
          */      
         private $associatedCarrotEntity;
         
+        /**
+         *
+         * @var TestovaciAssociatedHoleEntityInterface 
+         */
+        private $associatedHoleEntity;
+        
         
         
         /**
@@ -51,6 +58,20 @@ class TestovaciEntity extends EntityAbstract implements TestovaciEntityInterface
         public function getAssociatedCarrotEntity(): TestovaciAssociatedCarrotEntityInterface {
             return $this->associatedCarrotEntity;
         }       
+        public function setAssociatedCarrotEntity(TestovaciAssociatedCarrotEntityInterface $associatedCarrotEntity) :TestovaciEntityInterface {
+            $this->associatedCarrotEntity = $associatedCarrotEntity;
+            return $this;
+        }
+        public function getAssociatedHoleEntity(): TestovaciAssociatedHoleEntityInterface {
+            return $this->associatedHoleEntity;
+        }
+        public function setAssociatedHoleEntity(TestovaciAssociatedHoleEntityInterface $associatedHoleEntity) :TestovaciEntityInterface {
+            $this->associatedHoleEntity = $associatedHoleEntity;
+            return $this;
+        }
+
+        
+        
         public function getCeleJmeno(): string {
             return $this->celeJmeno;
         }
@@ -64,10 +85,7 @@ class TestovaciEntity extends EntityAbstract implements TestovaciEntityInterface
        
         
         
-        public function setAssociatedCarrotEntity(TestovaciAssociatedCarrotEntityInterface $associatedCarrotEntity) {
-            $this->associatedCarrotEntity = $associatedCarrotEntity;
-            return $this;
-        }
+        
         public function setCeleJmeno(string $celeJmeno) :TestovaciEntityInterface {
             $this->celeJmeno = $celeJmeno;
             return $this;

@@ -8,19 +8,20 @@ use Model\RowObject\RowObjectInterface;
 /**
  * Description of AssotiationAbstract
  *
- * @author pes2704
+ * 
  */
 class AssociationAbstract {
 
-    protected $parentReferenceKeyAttribute;
+    //protected $parentReferenceKeyAttribute;
     protected $childRepo;
 
     /**
      *
      * @param array $referenceKeyAttribute Atribut klíče, který je referencí na data rodiče v úložišti dat. V databázi jde o referenční cizí klíč.
+     * HEPOTREBUJEME
      */
-    public function __construct($referenceKeyAttribute) {
-        $this->parentReferenceKeyAttribute = $referenceKeyAttribute;
+    public function __construct( /*$referenceKeyAttribute*/ ) {
+        //$this->parentReferenceKeyAttribute = $referenceKeyAttribute;
     }
 
     public function flushChildRepo(): void {

@@ -13,7 +13,10 @@ use Model\Testovaci\Identity\TestovaciCarrotIdentityInterface;
  * @author vlse2610
  */
 class TestovaciAssociatedCarrotEntity  extends EntityAbstract implements TestovaciAssociatedCarrotEntityInterface{
-     
+    /**
+     *
+     * @var integer
+     */ 
     private $prumer;
     
     /**
@@ -24,5 +27,16 @@ class TestovaciAssociatedCarrotEntity  extends EntityAbstract implements Testova
         parent::__construct($identity);
     }  
          
+    
+    public function getPrumer() : integer {
+        return $this->prumer;
+    }
+
+    public function setPrumer($prumer): TestovaciAssociatedCarrotEntityInterface  {
+        $this->prumer = $prumer;
+        return $this;
+    }
+
+
      
 }

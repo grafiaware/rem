@@ -16,21 +16,21 @@ interface RowObjectManagerInterface {
 
           
     /**
-     * Vrací RowObject  vyhledany podle klice Key. Nebo vrati null.
+     * Vrací RowObject  vyhledany podle klice Key. Nebo vrati null.     
      * 
-     * @param array $identityHash
+     * @param KeyInterface $key
      * @return RowObjectInterface|null
-     */       
-    public function get(  $identityHash /*KeyInterface $key*/  )  :  ?RowObjectInterface ;    
+     */
+    public function get(  KeyInterface $key  )  :  ?RowObjectInterface ;    
     
     
     /**
      * Vrací RowObject  vyhledany podle klice ForeignKey.  ?Nebo vrati null.?
      *     
-     * @param KeyInterface $key
+     * @param KeyInterface $foreignKey
      * @return RowObjectInterface|null
      */
-    public function getByForeignKey ( KeyInterface $key  )  :  ?RowObjectInterface ;
+    public function getByForeignKey (  KeyInterface $foreignKey  )  : iterable /*?*/;
     
     
     /**
@@ -49,25 +49,25 @@ interface RowObjectManagerInterface {
     public function add(  RowObjectInterface $rowObject): void ;
 
 
-    public function getIndexFromIdentityHash( array $identityHash ): string ;
+    //public function getIndexFromIdentityHash( array $identityHash ): string ;
  
     
     
     
     
-//    /**
-//     * Vytvoří nový RowObject.
-//     * 
-//     * @return RowObjectInterface
-//     */
-//    public function createRowObject (  ) : RowObjectInterface ;
-//        
-//     /**
-//     * Vytvoří nový Key.
-//     * 
-//     * @return Key
-//     */
-//    public function createKey (  ) : KeyInterface ;
+    /**
+     * Vytvoří nový RowObject.
+     * 
+     * @return RowObjectInterface
+     */
+    public function createRowObject (  ) : RowObjectInterface ;
+        
+     /**
+     * Vytvoří nový Key.
+     * 
+     * @return Key
+     */
+    public function createKey (  ) : KeyInterface ;
     
        
     

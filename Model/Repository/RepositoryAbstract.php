@@ -81,8 +81,9 @@ abstract class RepositoryAbstract implements RepositoryInterface {
      * @param array $parentReferenceKeyAttribute Atribut klíče, který je referencí na data rodiče v úložišti dat. V databázi jde o referenční cizí klíč.
      * @param TestovaciCarrotRepositoryInterface $repo
      */
-    protected function registerOneToOneAssociation($entityInterfaceName, $parentReferenceKeyAttribute, TestovaciCarrotRepositoryInterface $repo) {
-        $this->associations[$entityInterfaceName] = new AssociationOneToOne($parentReferenceKeyAttribute, $repo);
+    protected function registerOneToOneAssociation($entityInterfaceName,/* $parentReferenceKeyAttribute, */
+                                                   TestovaciCarrotRepositoryInterface $repo) {
+        $this->associations[$entityInterfaceName] = new AssociationOneToOne( /*$parentReferenceKeyAttribute,*/ $repo);
     }
 
     /**
@@ -91,8 +92,11 @@ abstract class RepositoryAbstract implements RepositoryInterface {
      * @param array $parentReferenceKeyAttribute Atribut klíče, který je referencí na data rodiče v úložišti dat. V databázi jde o referenční cizí klíč.
      * @param \Model\Repository\RepoAssotiatedOneInterface $repo
      */
-    protected function registerOneToManyAssociation($entityInterfaceName, $parentReferenceKeyAttribute, RepoAssotiatedManyInterface $repo) {
-        $this->associations[$entityInterfaceName] = new AssociationOneToMany($parentReferenceKeyAttribute, $repo);
+    protected function registerOneToManyAssociation( string $entityInterfaceName, /*$parentReferenceKeyAttribute,*/
+                                                    RepoAssotiatedManyInterface $repo) {        
+        $this->associations[$entityInterfaceName] = new AssociationOneToMany( $repo ) ;
+                
+              // ...identita... = $parentReferenceKeyAttribute, $repo);
     }
 
     
@@ -174,17 +178,21 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             $this->hydrateEntity($entity, $rowObject);
             $this->hydrateIdentity($entity->getIdentity(), $rowObject->getKey());
             
+            $index = $entity->getIdentity()->getIndexFromIdentity();  
             
             try {
                 $childEntities= $this->recreateAssociations( $entity->getIdentity()   /*parent*/ /*$row */);
             } catch (UnableToCreateAssotiatedChildEntity $unex) {
+                // ???????????? 
                 throw new UnableRecreateEntityException("Nelze obnovit agregovanou (vnořenou) entitu v repository ". get_called_class()." s indexem $index.", 0, $unex);
             }
+            
+            //TADy do rodicovske entity priradit associovanou potomkovskou childEntitu.
                   
             
             
             
-            $index = $entity->getIdentity()->getIndexFromIdentity();          
+            //$index = $entity->getIdentity()->getIndexFromIdentity();          
             $this->collection[$index] = $entity;
             $entity->setPersisted();   
             
@@ -215,13 +223,18 @@ abstract class RepositoryAbstract implements RepositoryInterface {
      * @param type $identity rodicovska
      * @return void
      */
-    protected function recreateAssociations( $identity    /*&$row*/  ): void {
+    protected function recreateAssociations( $parentIdentity    /*&$row*/  ): void {
         foreach ($this->associations as $interfaceName => $association) {           
           
-            //$e = $association->getAssociatedEntity( $identity  /*(kralika) */ /*$row*/);  
-            $childE = $this->childRepo->getByReference( $identity ) ;  //child Repo ma  getByReference
-            //vraci jednu ( pro AssociationOneToOne) nebo vice ( pro AssociationOneToMany ) entitu
-            //mrkovouentitu =   podle hodnoty idKralik_fk          
+           $childE[$interfaceName] = $association->childRepo->getByReference( $parentIdentity);
+           $childE[$interfaceName]  =  $association->childRepo->findByReference( $parentIdentity);
+                    
+                    
+                    
+//            //$e = $association->getAssociatedEntity( $identity  /*(kralika) */ /*$row*/);  
+//            $childE = $this->childRepo->getByReference( $identity ) ;  //child Repo ma  getByReference
+//            //vraci jednu ( pro AssociationOneToOne) nebo vice ( pro AssociationOneToMany ) entitu
+//            //mrkovouentitu =   podle hodnoty idKralik_fk          
             
         }    
         
@@ -323,19 +336,41 @@ abstract class RepositoryAbstract implements RepositoryInterface {
                 
    
     
+//    /**
+//     *
+//     * @param type $entity Agregátní entita.
+//     */        
+//    protected function addAssociated($row, EntityInterface $entity) {
+//        foreach ($this->associations as $interfaceName => $association) {
+//            foreach ($row[$interfaceName] as $assocEntity) {  // asociovaná entita nemusí existovat - agregát je i tak validní
+//                if (!$assocEntity->isPersisted()) {
+//                    $association->addAssociatedEntity($assocEntity);
+//                }
+//            }
+//        }
+//    }
     
     /**
-     *
-     * @param type $entity Agregátní entita.
+     * 
+     * @param RowObjectInterface $rowObject
+     * @param EntityInterface $assocEntity
      */
-    protected function addAssociated( $rowObject/*$row*/, /*?????*/ EntityInterface $entity /*??????*/) {
-        foreach ($this->associations as $interfaceName => $association) {
-            foreach ( /*$row[$interfaceName]*/ $rowObject->$interfaceName as $assocEntity) {  // asociovaná entita nemusí existovat - agregát je i tak validní
-                if (!$assocEntity->isPersisted()) {
-                    $association->addAssociated($assocEntity, /*, ?????*/);
-                }
-            }
-        }
+    protected function addAssociated( RowObjectInterface $rowObject/*$row*/, /*?????*/ EntityInterface $assocEntity /*??????*/) {
+        
+        $this->rowObjectManager->getByForeignKey($identityHash);
+        
+        
+//         foreach ($this->associations as $interfaceName => $association) {
+//             
+//         }
+        
+//        foreach ($this->associations as $interfaceName => $association) {
+//            foreach ( /*$row[$interfaceName]*/ $rowObject->$interfaceName as $assocEntity) {  // asociovaná entita nemusí existovat - agregát je i tak validní
+//                if (!$assocEntity->isPersisted()) {
+//                    $association->addAssociated($assocEntity, /*, ?????*/);
+//                }
+//            }
+//        }
     }
 
     

@@ -15,5 +15,5 @@ interface TestovaciCarrotIdentityInterface extends IdentityInterface {
        
     
        
-    public function getIndexFromIdentity() ;
+    public function getIndexFromIdentity() : string;
 }

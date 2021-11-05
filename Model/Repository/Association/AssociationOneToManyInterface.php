@@ -6,11 +6,13 @@ use Model\Entity\EntityInterface;
 use Model\Repository\Association\AssociationInterface;
 
 /**
+ *
  * 
  */
-interface AssociationOneToOneInterface extends AssociationInterface {
+interface AssociationOneToManyInterface extends AssociationInterface {
     
-    public function getAssociatedEntity( /*&$row*/ ): ?EntityInterface;
+    public function getAllAssociatedEntities(/*&$row*/): iterable;
     public function addAssociatedEntity(EntityInterface $entity = null);
     public function removeAssociatedEntity(EntityInterface $entity = null);
+
 }
