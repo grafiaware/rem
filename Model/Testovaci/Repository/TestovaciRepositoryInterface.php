@@ -28,7 +28,7 @@ interface TestovaciRepositoryInterface extends RepositoryInterface {
      * @param array  $hash 
      * @return TestovaciEntityInterface|null
      */
-    public function get ( $identityHash  /*TestovaciIdentityInterface $identity */ ) : ?TestovaciEntityInterface ;
+    public function get ( /* $identityHash*/  TestovaciIdentityInterface $identity  ) : ?TestovaciEntityInterface ;
                
     
     /**

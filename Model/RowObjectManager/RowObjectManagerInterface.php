@@ -21,7 +21,7 @@ interface RowObjectManagerInterface {
      * @param KeyInterface $key
      * @return RowObjectInterface|null
      */
-    public function get(  KeyInterface $key  )  :  ?RowObjectInterface ;    
+    public function get(  $hash /*KeyInterface $key */ )  :  ?RowObjectInterface ;    
     
     
     /**

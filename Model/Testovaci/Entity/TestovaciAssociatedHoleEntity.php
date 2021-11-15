@@ -5,6 +5,7 @@ namespace Model\Testovaci\Entity;
 use Model\Testovaci\Entity\TestovaciAssociatedHoleEntityInterface;
 use Model\Testovaci\Identity\TestovaciHoleIdentityInterface;
 use Model\Entity\EntityAbstract;
+use Model\Testovaci\Entity\TestovaciEntityInterface;
 
 /**
  * Description of TestovaciAssociatedHoleEntity
@@ -23,12 +24,24 @@ class TestovaciAssociatedHoleEntity extends EntityAbstract implements TestovaciA
      */
     private $adresa;
     
+    
+    
+    /**
+     *
+     * @var TestovaciEntityInterface
+     */
+    private $identityKralikaFk;
+    
+    
     /**
      * 
      * @param  $identity
      */
-    public function __construct( TestovaciHoleIdentityInterface $identity ) {
+    public function __construct( TestovaciHoleIdentityInterface $identity, TestovaciEntityInterface $identityKralika ) {
         parent::__construct($identity);
+        
+        $this->identityKralikaFk = $identityKralika;
+   
     }  
          
     

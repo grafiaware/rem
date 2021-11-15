@@ -20,6 +20,10 @@ abstract class EntityAbstract implements EntityInterface {
     private $identity;
     
     
+    
+    private $identities;
+    
+    
     private $persisted=false;    
     private $locked=false;   
     

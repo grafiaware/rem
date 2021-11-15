@@ -17,6 +17,27 @@ use Model\Repository\RepositoryAbstract;
  * @author vlse2610
  */
 class TestovaciCarrotRepository extends RepositoryAbstract implements TestovaciCarrotRepositoryInterface {
+    
+    
+    function __construct( AccessorHydratorInterface $accessorHydratorEntity,
+                          AccessorHydratorInterface $accessorHydratorIdentity,
+                          RowObjectManagerInterface $rowObjectManager
+            
+            //IdentityMap .. je misto collection[]
+            //tovarna na  entity
+            
+            
+              ) {
+            
+            $this->registerHydratorEntity( $accessorHydratorEntity ); 
+            $this->registerHydratorIdentity( $accessorHydratorIdentity ); 
+
+            $this->rowObjectManager = $rowObjectManager;            
+    }                        
+    
+    
+    
+    
 
     public function add ( TestovaciAssociatedCarrotEntityInterface $entity ) : void {
     

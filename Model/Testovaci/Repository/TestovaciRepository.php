@@ -20,6 +20,8 @@ use Model\Hydrator\AccessorHydratorInterface;
 use Model\RowObjectManager\RowObjectManagerInterface;
 use Model\Repository\Exception\UnableRecreateEntityException;
 
+use Model\IdentityMap\IdentityMap;
+
 
 /**
  * Description of TestovaciRepository
@@ -33,21 +35,27 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
                           AccessorHydratorInterface $accessorHydratorIdentity,
                           RowObjectManagerInterface $rowObjectManager,                          
             
+                          IdentityMap $identityMap,   //IdentityMap .. je misto collection[],                        
                           TestovaciCarrotRepositoryInterface $testovaciCarrotRepository = NULL,
-                          TestovaciHoleRepositoryInterface $testovaciHoleRepository = NULL ) {
+                          TestovaciHoleRepositoryInterface $testovaciHoleRepository = NULL                                                  
+            
+            //tovarna na  entity
+            ) {
         
         $this->registerHydratorEntity( $accessorHydratorEntity ); 
         $this->registerHydratorIdentity( $accessorHydratorIdentity ); 
          
         $this->rowObjectManager = $rowObjectManager;
+        $this->identityMap = $identityMap;
+        
         
         if ( $testovaciCarrotRepository) {
             $this->registerOneToManyAssociation( TestovaciAssociatedCarrotEntityInterface::class,
-                                               // /*$parentReferenceKeyAttribute*/ ["id1", "id2" ],
+                                               // /*$parentReferenceKeyAttribute*/ ["id1", "id2" ], //kralici
                                                 $testovaciCarrotRepository );
         }
         
-         if ( $testovaciHoleRepository) {
+        if ( $testovaciHoleRepository) {
             $this->registerOneToOneAssociation( TestovaciAssociatedHoleEntityInterface::class,
                                                // /*$parentReferenceKeyAttribute*/ ["id1", "id2" ],
                                                 $testovaciHoleRepository );
@@ -63,8 +71,8 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
     
 
     
-    public function get( $identityHash  /*TestovaciIdentityInterface $identity */ ):  ?TestovaciEntityInterface {
-        $re = $this->getEntity( $identityHash    /*$identity*/ );  
+    public function get( /*identityHash*/  TestovaciIdentityInterface $identity  ):  ?TestovaciEntityInterface {
+        $re = $this->getEntity( /*$identityHash */   $identity );  
     return   $re;        
     }        
                

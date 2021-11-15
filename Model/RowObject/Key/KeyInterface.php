@@ -47,5 +47,7 @@ interface KeyInterface  extends AttributeInterface{
     
    
     public function getIndexFromKey (): string;
+    
+    public function getIndexFromHash() : string;
      
 }

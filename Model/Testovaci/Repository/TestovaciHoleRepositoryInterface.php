@@ -1,6 +1,7 @@
 <?php
 namespace Model\Testovaci\Repository;
 
+use Model\Repository\RepositoryInterface;
 use \Model\Testovaci\Entity\TestovaciAssociatedHoleEntityInterface;
 
 
@@ -15,7 +16,7 @@ interface TestovaciHoleRepositoryInterface  extends RepositoryInterface {
   
     public function get ( array $childIdentityHash  ) : ?TestovaciAssociatedHoleEntityInterface ;       
     
-    public function getByReference ( array $parentIdentity  ) : ?TestovaciAssociatedHoleEntityInterface ;    
+    public function getByReference (  $parentIdentity  ) : ?TestovaciAssociatedHoleEntityInterface ;    
         
     public function remove ( TestovaciAssociatedHoleEntityInterface $entity ) : void  ;
     

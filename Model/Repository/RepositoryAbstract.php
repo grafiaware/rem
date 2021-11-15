@@ -21,8 +21,13 @@ use Model\RowObjectManager\RowObjectManagerInterface;
 //use Model\RowObjectManager\RowObjectManagerSaveImmedientlyInterface;
 //use Model\RowObjectManager\Exception\RowObjectManagerSaveImmedientlyFailedException;
 
-use Model\Repository\Association\AssociationOneToOne;
+use Model\Repository\Association\AssociationInterface;        
 use Model\Repository\Association\AssociationOneToMany;
+use Model\Repository\Association\AssociationOneToManyInterface;
+use Model\Repository\Association\AssociationOneToOne;
+use Model\Repository\Association\AssociationOneToOneInterface;
+
+
 use Model\Repository\RepoAssotiatedOneInterface;
 use Model\Repository\RepoAssotiatedManyInterface;
 
@@ -36,6 +41,9 @@ use Model\Repository\Exception\UnableWriteToReadOnlyRepoException;
 use Model\Repository\RepositoryInterface;
 use Model\Repository\RepositoryReadOnlyInterface;
 use Model\Testovaci\Repository\TestovaciCarrotRepositoryInterface;
+
+use Model\IdentityMap\IdentityMap;
+use Model\IdentityMap\IndexMaker\IndexMaker;
 
 
 /**
@@ -64,16 +72,32 @@ abstract class RepositoryAbstract implements RepositoryInterface {
     private $hydratorsEntity = [];
     private $hydratorsIdentity = [];
    
-    
-    
+        
     /**
      *
      * @var RowObjectManagerInterface
      * 
      */
     protected $rowObjectManager; 
+    
+    /**
+     *
+     * @var IdentityMap
+     */
+    protected $identityMap;
    
     
+//    
+//    /**
+//     *
+//     * @var IndexMakerInterface
+//     */
+//    private $indexMaker;
+   
+    
+   
+
+        
 
     /**
      *
@@ -152,57 +176,68 @@ abstract class RepositoryAbstract implements RepositoryInterface {
     
     
     /**
-     * Přidá dosud nepridanou  entitu do repository->collection. Jedna se o jiz persistovane a pouzite entity.
-     *      
-     * @param type $identity
-     * @return string|null  vlastne index
+     * Přidá dosud nepridanou  entitu do repository->collection.
+     * Jedna se o jiz persistovane a pouzite entity.    
+     * 
+     * @param type $identityHash
+     * @param type $index
+     * @return void
      * @throws UnableRecreateEntityException
      */
-    protected function recreateEntity( $identityHash /*IdentityInterface $identity*/  ):  ?string {        
-        //$rowData = new RowData(); 
-        //$rowData = $this->dao->get( $identity->getKeyHash() ); // vraci konstantni pole - hodnoty z úložistě, $keyHash  zatim neni v metode get pouzito      
-   
-        //$key = $this->rowObjectManager->createKey();
-        //$this->extractIdentity( $identity, $key );
-      
-        $rowObject = $this->rowObjectManager->get( $identityHash /*$key*/  );
+    protected function recreateEntity( /*$identityHash*/ IdentityInterface $identity,  $index  ):  void {        
+        $key = $this->rowObjectManager->createKey();
+        $this->extractIdentity( $identity, $key );
+        
         //vyzvednout rowObject z managera
-        if ($rowObject) {          
-            
-            //vyrobit prazdnou entity
-            /** @var EntityInterface $entity */
-            $entity = $this->createEntity();  // !!!!definována v konkrétní třídě!!!!! - adept na entity managera
-          
-                                    
+        $rowObject = $this->rowObjectManager->get( /*$identityHash*/ $key  );
+        if ($rowObject) {                                  
+            /** @var EntityInterface $entity */   //vyrobit prazdnou entity
+            $entity = $this->createEntity();  // !!!!definována v konkrétní třídě!!!!! - adept na entity managera                                              
             //---------------------------------------------
-            $this->hydrateEntity($entity, $rowObject);
             $this->hydrateIdentity($entity->getIdentity(), $rowObject->getKey());
-            
-            $index = $entity->getIdentity()->getIndexFromIdentity();  
-            
+                        
             try {
-                $childEntities= $this->recreateAssociations( $entity->getIdentity()   /*parent*/ /*$row */);
-            } catch (UnableToCreateAssotiatedChildEntity $unex) {
-                // ???????????? 
+                 $this->recreateAssociations( $entity->getIdentity() ,  $rowObject /*parent*/ );  // assoc.entity da do rowObjectu
+            } catch (UnableToCreateAssotiatedChildEntity $unex) {              
                 throw new UnableRecreateEntityException("Nelze obnovit agregovanou (vnořenou) entitu v repository ". get_called_class()." s indexem $index.", 0, $unex);
             }
             
-            //TADy do rodicovske entity priradit associovanou potomkovskou childEntitu.
-                  
+            $this->hydrateEntity($entity, $rowObject);                        
+                        
+            //$this->collection[$index] = $entity;
+            $this->identityMap->add($index, $entity);
             
-            
-            
-            //$index = $entity->getIdentity()->getIndexFromIdentity();          
-            $this->collection[$index] = $entity;
             $entity->setPersisted();   
             
             $this->flushed = false;
-        }
-        return $index ?? null;
+        }       
     }
 
     
-    
+     
+    /**
+     * 
+     * @param IdentityInterface $parentIdentity
+     * @param RowObjectInterface $rowObject
+     * @return void
+     * @throws \LogicException
+     */
+    protected function recreateAssociations(  IdentityInterface $parentIdentity, RowObjectInterface $rowObject  ): void {
+        /** @var   AssociationInterface   $association */         
+        foreach ($this->associations as $interfaceName => $association) {           
+          
+            if (  $association instanceof AssociationOneToOneInterface ) {
+                $rowObject->$interfaceName = $association->childRepo->getByReference( $parentIdentity); }                        
+            else if (  $association instanceof AssociationOneToManyInterface ) {                
+                $rowObject->$interfaceName =  $association->childRepo->findByReference( $parentIdentity); }                                                                                  
+            else  {
+                throw new \LogicException("Neznámý typ asociace pro $interfaceName") ;
+            }        
+                                                         
+            //            ->childRepo->getByReference( $identity ) ->findByReference()
+            //            //vraci jednu ( pro AssociationOneToOne) nebo vice ( pro AssociationOneToMany ) entitu-mrkovouentitu =   podle rodicovske identity                      
+        }           
+    }
     
     
     private function reread($index, $row, $entity) {
@@ -217,30 +252,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
         $this->flushed = false;
     }
 
-    
-    /**
-     * 
-     * @param type $identity rodicovska
-     * @return void
-     */
-    protected function recreateAssociations( $parentIdentity    /*&$row*/  ): void {
-        foreach ($this->associations as $interfaceName => $association) {           
-          
-           $childE[$interfaceName] = $association->childRepo->getByReference( $parentIdentity);
-           $childE[$interfaceName]  =  $association->childRepo->findByReference( $parentIdentity);
-                    
-                    
-                    
-//            //$e = $association->getAssociatedEntity( $identity  /*(kralika) */ /*$row*/);  
-//            $childE = $this->childRepo->getByReference( $identity ) ;  //child Repo ma  getByReference
-//            //vraci jednu ( pro AssociationOneToOne) nebo vice ( pro AssociationOneToMany ) entitu
-//            //mrkovouentitu =   podle hodnoty idKralik_fk          
-            
-        }    
-        
-    }
 
-    
     
     
     protected function getKey($row) {
@@ -285,7 +297,15 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             throw new UnableWriteToReadOnlyRepoException("Repo je typu ".RepositoryReadOnlyInterface::class.", Nelze přidávat entity.");
         }
         if ($entity->isPersisted()) {
+            
+            
+            
+            
             $this->collection[ $entity->getIdentity()->getIndexFromIdentity() ] = $entity;            
+            
+            
+            
+            
             
         } else {                        
             $this->new[] = $entity;                
@@ -355,37 +375,41 @@ abstract class RepositoryAbstract implements RepositoryInterface {
      * @param RowObjectInterface $rowObject
      * @param EntityInterface $assocEntity
      */
-    protected function addAssociated( RowObjectInterface $rowObject/*$row*/, /*?????*/ EntityInterface $assocEntity /*??????*/) {
+    protected function addAssociated( RowObjectInterface $rowObject/*$row*/ /* ?????EntityInterface $assocEntity ?? */ ) {
+         
         
-        $this->rowObjectManager->getByForeignKey($identityHash);
-        
-        
-//         foreach ($this->associations as $interfaceName => $association) {
-//             
-//         }
-        
-//        foreach ($this->associations as $interfaceName => $association) {
-//            foreach ( /*$row[$interfaceName]*/ $rowObject->$interfaceName as $assocEntity) {  // asociovaná entita nemusí existovat - agregát je i tak validní
-//                if (!$assocEntity->isPersisted()) {
-//                    $association->addAssociated($assocEntity, /*, ?????*/);
-//                }
-//            }
-//        }
+        foreach ($this->associations as $interfaceName => $association) {
+            foreach ( /*$row[$interfaceName]*/ $rowObject->$interfaceName as $assocEntity) {  // asociovaná entita nemusí existovat - agregát je i tak validní
+                if (!$assocEntity->isPersisted()) {
+                    $association->addAssociated($assocEntity, /*, ?????*/);
+                }
+            }
+        }
     }
 
     
-    protected function getEntity( $identityHash  /*IdentityInterface $identity*/ ) :?EntityInterface {
-        $index =  $this->getIndexFromIdentityHash($identityHash) ;       //$identity->getIndexFromIdentity();
-                             
-        if  ( !isset($this->collection[$index] )   )       /*and ( !($identity->isLocked()) ) */  //and (!isset($this->new[$index] ))                             
-        {            
-            /*$entity*/
-            $index = $this->recreateEntity( /*$identity*/ $identityHash ); // v abstractu,  
-            // ZARADI DO COLLECTION z uloziste( db, soubor , atd.... ), pod indexem  $index   
-            // pozn. kdyz neni v ulozisti - ...asi... neni ani $rowObject                        
+    protected function getEntity( IdentityInterface $identity   /*$identityHash*/ ) :?EntityInterface {
+        $index = IndexMaker::IndexFromIdentity($identity);
+                
+        if  ( !isset($this->identityMap->get($index)) ) {
+            $this->recreateEntity( $identity, $index );
         }
         
-        return $this->collection[$index] ?? NULL;            
+        return $this->identityMap->get($index) ?? NULL;   
+        
+        
+        
+        
+        
+        
+//        $index =  $this->getIndexFromIdentityHash($identityHash) ;       //$identity->getIndexFromIdentity();                             
+//        if  ( !isset($this->collection[$index] )   )       /*and ( !($identity->isLocked()) ) */  //and (!isset($this->new[$index] ))                             
+//        {                        
+//            $this->recreateEntity( /*$identity*/ $identityHash, $index ); // v abstractu,  
+//            // ZARADI DO COLLECTION z uloziste( db, soubor , atd.... ), pod indexem  $index   
+//            // pozn. kdyz neni v ulozisti - ...asi... neni ani $rowObject                        
+//        }        
+//        return $this->collection[$index] ?? NULL;            
     }
     
     
@@ -451,11 +475,10 @@ abstract class RepositoryAbstract implements RepositoryInterface {
 
             $this->rowObjectManager->add($rowObject);                              
 
-            $this->addAssociated( $rowObject, $entity);     // pridavam mrkev        //pridavam asociovanou entitu do potomk.repository
+            $this->addAssociated( $rowObject/*, $entity*/ );     // pridavam mrkev        //pridavam asociovanou entitu do potomk.repository
             $this->flushChildRepos();  //pokud je vnořená agregovaná entita - musí se provést její insert
 
             $entity->setPersisted();       
-
             $entity->unLock();
         }
 
@@ -470,7 +493,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             $rowObject = $this->rowObjectManager->get($key);
             $this->extractEntity($entity, $rowObject);       //obcerstveny rowObject
 
-            $this->addAssociated($rowObject, $entity);
+            $this->addAssociated($rowObject  /*, $entity*/ );
             $this->flushChildRepos();  //pokud je vnořená agregovaná entita přidána později - musí se provést její insert teď
 
             if ($entity->isPersisted()) {
@@ -492,7 +515,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             $rowObject = $this->rowObjectManager->get($key);
             //$this->extractEntity($entity, $rowObject);       //obcerstveny rowObject --- ma se delat???                                                
 
-            $this->removeAssociated($rowObject, $entity);                                                     
+            $this->removeAssociated($rowObject /*, $entity*/ );
             $this->flushChildRepos();
 
             $this->rowObjectManager->remove($rowObject);   //$this->dao->delete($row);                

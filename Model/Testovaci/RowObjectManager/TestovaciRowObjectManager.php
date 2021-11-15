@@ -31,7 +31,7 @@ class TestovaciRowObjectManager extends RowObjectManagerAbstract /*TAM NIC NENI*
         
     }
   
-    public function get(   KeyInterface $key  )  :  ?RowObjectInterface {
+    public function get(  $hash  /* KeyInterface $key*/  )  :  ?RowObjectInterface {
 
         return $this->poleRowObjectu[ $key->getIndexFromKey() ] ?? NULL; 
     }

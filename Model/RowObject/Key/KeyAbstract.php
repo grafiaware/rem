@@ -153,4 +153,28 @@ abstract class KeyAbstract  implements KeyInterface {
     }
     
     
+    public function   getIndexFromHash() : string{
+        //get_object_vars - vybere ty "viditelne" a nestaticke
+         
+     
+//        $index='';
+//        foreach ( \get_object_vars($this) as $nameAttr=>$value) {            
+//           $index =+ $value;                        
+//        }
+//        return $index;
+        
+        $a = ($this->getHash()); 
+        $b = ksort ($a);
+        
+        $index="";
+        foreach ( $a  as $nameAttr=>$value ) {            
+           $index .= $value;                        
+        }
+        return $index;    
+    
+    }
+    
+    
+    
+    
 }
