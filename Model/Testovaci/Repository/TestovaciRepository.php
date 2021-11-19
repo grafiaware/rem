@@ -20,7 +20,7 @@ use Model\Hydrator\AccessorHydratorInterface;
 use Model\RowObjectManager\RowObjectManagerInterface;
 use Model\Repository\Exception\UnableRecreateEntityException;
 
-use Model\IdentityMap\IdentityMap;
+use Model\IdentityMap\IdentityMapInterface;
 
 
 /**
@@ -35,7 +35,7 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
                           AccessorHydratorInterface $accessorHydratorIdentity,
                           RowObjectManagerInterface $rowObjectManager,                          
             
-                          IdentityMap $identityMap,   //IdentityMap .. je misto collection[],                        
+                          IdentityMapInterface $identityMap,   //IdentityMap .. je misto collection[],                        
                           TestovaciCarrotRepositoryInterface $testovaciCarrotRepository = NULL,
                           TestovaciHoleRepositoryInterface $testovaciHoleRepository = NULL                                                  
             
@@ -51,7 +51,7 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
         
         if ( $testovaciCarrotRepository) {
             $this->registerOneToManyAssociation( TestovaciAssociatedCarrotEntityInterface::class,
-                                               // /*$parentReferenceKeyAttribute*/ ["id1", "id2" ], //kralici
+                                               // /*$parentReferenceKeyAttribute*/ ["id1", "id2" ], //kraličí
                                                 $testovaciCarrotRepository );
         }
         

@@ -43,24 +43,20 @@ class TestovaciRepositoryReadOnly extends RepositoryAbstract implements  Reposit
 
     
     public function get( TestovaciIdentityInterface $identity):  ?TestovaciEntityInterface {
-        $index = $identity->getIndexFromIdentity();
-                        
-     
-        if  ( !isset($this->collection[$index] )   
-                /*and ( !($identity->isLocked()) ) */  ) //and (!isset($this->new[$index] )) 
-                {
-                                                
-            /*$entity*/
-            $index = $this->recreateEntity( $identity  ); // v abstractu,  
-            // ZARADI DO COLLECTION z uloziste( db, soubor , atd.... ), pod indexem  $index   
-            // pozn. kdyz neni v ulozisti - ...asi... neni ani $rowObject
-            
-            
+        //$index = $identity->getIndexFromIdentity();
+        $index = IndexMaker::IndexFromIdentity($identity);                        
+             
+                // and ( !($identity->isLocked()) )  ) //and (!isset($this->new[$index] ))   
+        
+        if  ( $this->identityMap->has($index)   )  {
+            $this->recreateEntity( $identity, $index );
         }
         
-        return $this->collection[$index] ?? NULL;    
-        
+        return $this->identityMap->get($index) ?? NULL;           
     }
+    
+    
+    
 
     public function remove( TestovaciEntityInterface $entity): void {
         

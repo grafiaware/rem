@@ -12,7 +12,17 @@ use Model\Entity\Identity\IdentityInterface;
  */
 interface EntityInterface extends  AccessorInterface {
     
-    public function getIdentity(): IdentityInterface ;           
+    /**
+     * Vrací primární identitu.
+     * @return IdentityInterface 
+     */
+    public function getIdentity(): IdentityInterface ; 
+    
+    /**
+     * Vrací všechny identity.
+     * @return \Traversable
+     */
+    public function getIdentities(): \Traversable ;
     
     
     public function setPersisted(): void;

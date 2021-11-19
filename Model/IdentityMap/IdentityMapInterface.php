@@ -10,17 +10,24 @@ use Model\Entity\Identity\IdentityInterface;
  */
 interface IdentityMapInterface {
     
-    //   $identityMapIndex pro primarni klic
-    //   $identityMapIndex pro cizi klic
-    //   ...atd  NEBO JEN JEDEN ?
+    //   $identityMapIndex pro primarni identitu
+    //   $identityMapIndex pro cizi identitu
+    //...
     
     
+    /**
+     * 
+     * @param EntityInterface $entity
+     * @return void
+     */
+    public function add (  EntityInterface $entity  ) : void    ;
     
-    public function add ( /*IdentityInterface $identity ??*/ $index, EntityInterface $entity  ) : void    ;
+    public function get ( IdentityInterface $identity ) : ?EntityInterface ;
     
-    public function get ( /*IdentityInterface $identity ??*/ $index) : ?EntityInterface ;
+    public function remove (  EntityInterface $entity  ) : void ;
     
-    public function remove ( /*IdentityInterface $identity ??*/ $index ) : void ;
+    public function has (  EntityInterface $entity  ) : boolean ;
+    
     
     
     

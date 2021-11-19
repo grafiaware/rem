@@ -18,9 +18,7 @@ abstract class EntityAbstract implements EntityInterface {
      * @var IdentityInterface 
      */
     private $identity;
-    
-    
-    
+           
     private $identities;
     
     
@@ -30,7 +28,8 @@ abstract class EntityAbstract implements EntityInterface {
     
 
     public function __construct( IdentityInterface $identity ) {
-        $this->identity = $identity;        
+        $this->identity = $identity;    
+        
     }    
     
     public function getIdentity(): IdentityInterface {
@@ -39,7 +38,9 @@ abstract class EntityAbstract implements EntityInterface {
 //   NENE public function setIdentity( AccessorInterface $identity): void {
 //        $this->identity = $identity;
 //    }
-      
+    public function getIdentities(): \Traversable {
+        return $this->identities;
+    }
     
     
     public function setPersisted(): void {

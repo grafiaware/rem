@@ -205,7 +205,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             $this->hydrateEntity($entity, $rowObject);                        
                         
             //$this->collection[$index] = $entity;
-            $this->identityMap->add($index, $entity);
+            $this->identityMap->add( $entity );
             
             $entity->setPersisted();   
             
@@ -299,13 +299,8 @@ abstract class RepositoryAbstract implements RepositoryInterface {
         if ($entity->isPersisted()) {
             
             
-            
-            
-            $this->collection[ $entity->getIdentity()->getIndexFromIdentity() ] = $entity;            
-            
-            
-            
-            
+            $this->identityMap->add(IndexMaker::IndexFromIdentity($entity->getIdentity()),  $entity);
+                      
             
         } else {                        
             $this->new[] = $entity;                
@@ -391,14 +386,11 @@ abstract class RepositoryAbstract implements RepositoryInterface {
     protected function getEntity( IdentityInterface $identity   /*$identityHash*/ ) :?EntityInterface {
         $index = IndexMaker::IndexFromIdentity($identity);
                 
-        if  ( !isset($this->identityMap->get($index)) ) {
+        if  ( $this->identityMap->has($index)   )  {
             $this->recreateEntity( $identity, $index );
         }
         
         return $this->identityMap->get($index) ?? NULL;   
-        
-        
-        
         
         
         
@@ -432,10 +424,12 @@ abstract class RepositoryAbstract implements RepositoryInterface {
         if ($entity->isPersisted()) {
             $this->removed[  ] = $entity;
             
-            $index =  $entity->getIdentity()->getIndexFromIdentity();
-            if (isset ($this->collection[$index]) ) {    ////  *** a ma tam byt :????? nekdy????
-                unset($this->collection[$index]);
+            //$index = IndexMaker::IndexFromIdentity($entity->getIdentity()) ;
+            
+            if  ( $this->identityMap->has($entity) ) {
+                    $this->identityMap->remove($entity);
             }
+            
 
             //$entity->setUnpersisted();
             

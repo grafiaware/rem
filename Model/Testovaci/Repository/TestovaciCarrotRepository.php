@@ -4,6 +4,7 @@ namespace Model\Testovaci\Repository;
 
 use Model\Testovaci\Repository\TestovaciCarrotRepositoryInterface;
 use Model\Testovaci\Entity\TestovaciAssociatedCarrotEntityInterface;
+use Model\Testovaci\Identity\TestovaciCarrotIdentityInterface;
 
 use Model\Repository\RepositoryAbstract;
 
@@ -47,7 +48,7 @@ class TestovaciCarrotRepository extends RepositoryAbstract implements TestovaciC
      *  vola se  "lesa"
      * 
      */    
-    public function get ( array $childIdentityHash  /* TestovaciAssociatedCarrotEntityInterface $identity*/ ) : ?TestovaciAssociatedCarrotEntityInterface {
+    public function get ( /*array $childIdentityHash */  TestovaciCarrotIdentityInterface $identity ) : ?TestovaciAssociatedCarrotEntityInterface {
     
     }      
 //    /**
@@ -64,13 +65,13 @@ class TestovaciCarrotRepository extends RepositoryAbstract implements TestovaciC
      * @param array $parentIdentityHash
      * @return iterable
      */
-    public function findByReference(   array $parentIdentity ): iterable {
+    public function findByReferenceKralik(    $parentIdentity ): ?\Traversable {
         
     }
 
     
         
-    public function remove ( TestovaciAssociatedCarrotEntityInterface $entity ) : void  {
+    public function remove ( TestovaciCarrotIdentityInterface $identity  ) : void  {
     
     }
     

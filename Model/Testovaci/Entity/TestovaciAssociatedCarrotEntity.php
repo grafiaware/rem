@@ -28,7 +28,7 @@ class TestovaciAssociatedCarrotEntity  extends EntityAbstract implements Testova
      */
     private $identityKralikaFk;
     
-    
+    //private $namesOfIdentitiesClass;
     
     
     
@@ -39,7 +39,8 @@ class TestovaciAssociatedCarrotEntity  extends EntityAbstract implements Testova
      * @param  $identity
      */
     public function __construct(  //array $identities )
-            TestovaciCarrotIdentityInterface $identity, TestovaciEntityInterface $identityKralika ) 
+            TestovaciCarrotIdentityInterface $identity,
+            TestovaciEntityInterface $identityKralika ) 
             {
         
         parent::__construct($identity);        
@@ -50,14 +51,16 @@ class TestovaciAssociatedCarrotEntity  extends EntityAbstract implements Testova
                         
         
     }  
-         
+                     
     
-    
+      
     public function getIdentityKralikaFk() : IdentityInterface {
         return $this->identityKralikaFk;
     }
     
-    
+    public function getNamesOfIdentities () : array {
+        return array_keys ($this->identities);
+    }
     
     
     public function getPrumer() : integer {
