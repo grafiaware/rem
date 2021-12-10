@@ -5,12 +5,13 @@ use Model\IdentityMap\IdentityMapInterface;
 use Model\IdentityMap\IndexMaker\IndexMakerInterface;
 use Model\Entity\EntityInterface;
 use Model\Entity\Identity\IdentityInterface;
+use Model\IdentityMap\IdentityMapIndex\IdentityMapIndexFactoryInterface;
 
 
 
 
 /**
- * Description of IdentityMap
+ * IdentityMap je pro jednu identitu.
  *
  * @author vlse2610
  */
@@ -18,45 +19,44 @@ class IdentityMap implements IdentityMapInterface {
     
     private $indexMaker;
     
-    //Index seznamy - je jich vic podle poctu identit
-    private $identityMapIndexies; //asi array (podle jmena identity)  objektů seznamu
+   //Index seznam - je jeden.
+    private $identityMapIndex; 
+    
+    private $identityMapIndexFactory;
     
    
-    public function __construct(   $identitiesNames , IndexMakerInterface $indexMaker ) {
+    public function __construct(            /*$identitiesNames_seznamTypuIdentit,*/   /* \IteratorAggregate \Traversable*/            
+            
+                    IdentityMapIndexFactoryInterface  $identityMapIndexFactory,
+                    IndexMakerInterface $indexMaker ) {
        
-                  //foreach - vyrobit pro kazdou identity $identityMapIndex; do pole $identityMapIndexies array[' jmenoIdentity ']
+             //vyrobit pro  identity   $identityMapIndex
     }  
+    
         
-    /**
-     * Přidá  entity do vsech  index seznamu
-     * @param EntityInterface $entity
-     * @return void
-     */
+   
     public function add (  EntityInterface $entity  ) : void   {
         
-        // $identityMapIndexies[  '' ] ->add ($index z $identity, $entity)
+        // $identityMapIndex ->add ( $indexMaker->index z $identity,  )
     }
     
-    /**
-     * Podle identity vyzvedne entitu z prislusneho seznamu
-     * @param \Model\IdentityMap\IdentityInterface $identity
-     * @return EntityInterface|null
-     */
+    
+    
+    
     public function get ( IdentityInterface $identity ) : ?EntityInterface {
-        // instance of
-        // $identityMapIndexies[  '' ] ->get ($index z $identity)
+        
+        // $identityMapIndex->get (index z $identity)
     }
+    
+    
     
     public function remove ( EntityInterface $entity ) : void {
         
     }
     
-    /**
-     * Je  v Mape entita?
-     * @param EntityInterface $entity
-     * @return boolean
-     */
-    public function has ( EntityInterface $entity ) : boolean {
+    
+    
+    public function has (  IdentityInterface $identity ) : boolean {
         
     }
     

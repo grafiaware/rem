@@ -14,7 +14,7 @@ interface IdentityMapIndexInterface {
     
     public function add( $index, EntityInterface $entity ) : void;
    
-    public function get( $index ) :  EntityInterface ;
+    public function get( $index ) :  ?EntityInterface ;
     
     public function remove( $index ) : void;
     

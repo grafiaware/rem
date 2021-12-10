@@ -17,6 +17,10 @@ use Model\Testovaci\Identity\TestovaciIdentityInterface;
 class TestovaciEntity extends EntityAbstract implements TestovaciEntityInterface {
        //V EntityAbstract JE Identity
     
+        // a nebo jsou vsechny identity teto entity tady a v Abstract nejsou
+    
+    
+    
         /**
          * @var string
          */   
@@ -50,7 +54,7 @@ class TestovaciEntity extends EntityAbstract implements TestovaciEntityInterface
          * 
          * @param TestovaciIdentityInterface $identity
          */
-        public function __construct( TestovaciIdentityInterface $identity ) {
+        public function __construct( TestovaciIdentityInterface $identity /* ++ dalsi identity*/) {
             parent::__construct($identity);                     
         }  
         

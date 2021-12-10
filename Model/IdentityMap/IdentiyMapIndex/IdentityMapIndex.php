@@ -17,10 +17,12 @@ class IdentityMapIndex implements IdentityMapIndexInterface {
    
     
     /**
-     * pole assoc pole  index(vznikly z identity)->entity
+     * pole assoc pole  index vznikly z identity
      * @var array 
      */
     private $identityIndex;
+    
+    
     
     
     public function __construct(   ) {
@@ -30,11 +32,11 @@ class IdentityMapIndex implements IdentityMapIndexInterface {
     
     
     public function add( $index, EntityInterface $entity ) : void{
-        $identityIndex[ $index ] = $entity;
+       // $identityIndex[ $index ] = $entity;
     }
    
-    public function get( $index ) :  EntityInterface {
-        return $identityIndex[ $index ] ;
+    public function get( $index ) :  ?EntityInterface {
+       // return $identityIndex[ $index ] ;
     }
     
     

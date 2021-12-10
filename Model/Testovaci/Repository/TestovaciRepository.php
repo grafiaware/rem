@@ -35,7 +35,9 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
                           AccessorHydratorInterface $accessorHydratorIdentity,
                           RowObjectManagerInterface $rowObjectManager,                          
             
-                          IdentityMapInterface $identityMap,   //IdentityMap .. je misto collection[],                        
+                          IdentityMapInterface $identityMap,   //IdentityMap .. je misto collection[],   
+            
+            
                           TestovaciCarrotRepositoryInterface $testovaciCarrotRepository = NULL,
                           TestovaciHoleRepositoryInterface $testovaciHoleRepository = NULL                                                  
             
@@ -73,7 +75,7 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
     
     public function get( /*identityHash*/  TestovaciIdentityInterface $identity  ):  ?TestovaciEntityInterface {
         $re = $this->getEntity( /*$identityHash */   $identity );  
-    return   $re;        
+        return   $re;        
     }        
                
     

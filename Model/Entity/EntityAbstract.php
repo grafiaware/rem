@@ -21,6 +21,9 @@ abstract class EntityAbstract implements EntityInterface {
            
     private $identities;
     
+    //-------------->>>>>   identity budou asi vzdy v konkretni entite a tady ne
+    
+    
     
     private $persisted=false;    
     private $locked=false;   

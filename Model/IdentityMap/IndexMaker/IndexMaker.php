@@ -13,10 +13,15 @@ use Model\RowObject\Key\KeyInterface;
 
 class IndexMaker implements IndexMakerInterface {
     
-    //do konstructoru filtrProhydratIdentity
+    private $filterIdentity;
+    
+    // filtr obsahuje jmena vlastnosti identity ucastnicich se vyroby indexu
+    public function __construct(  $filterProHydratovaniIdentity ) {
+        
+    }  
     
     public  function IndexFromParams( array $params  ) : string {}
     public  function IndexFromKey( KeyInterface  $key  ) : string {}
    
-    public  function IndexFromIdentity( /*nebo filtrProhydratorIdentity,*/ IdentityInterface $identity  ) : string {}
+    public  function IndexFromIdentity(   IdentityInterface $identity  ) : string {}
 }

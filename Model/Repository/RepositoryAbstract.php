@@ -189,7 +189,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
         $this->extractIdentity( $identity, $key );
         
         //vyzvednout rowObject z managera
-        $rowObject = $this->rowObjectManager->get( /*$identityHash*/ $key  );
+        $rowObject = $this->rowObjectManager->get(  $key  );
         if ($rowObject) {                                  
             /** @var EntityInterface $entity */   //vyrobit prazdnou entity
             $entity = $this->createEntity();  // !!!!definována v konkrétní třídě!!!!! - adept na entity managera                                              
@@ -205,7 +205,18 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             $this->hydrateEntity($entity, $rowObject);                        
                         
             //$this->collection[$index] = $entity;
-            $this->identityMap->add( $entity );
+            
+            
+            
+            // pro vsechny tj. kazdou  identity vytvořit identityMap
+            //$this->identityMap->add( $entity );
+            $entity->getIdentities();
+            
+            
+            
+            
+            
+            
             
             $entity->setPersisted();   
             
