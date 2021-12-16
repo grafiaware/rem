@@ -11,7 +11,7 @@ use Model\Hydrator\NameHydrator\AccessorMethodNameHydrator;
 use Model\Hydrator\Filter\OneToOneFilter;
 
 use Model\Testovaci\Entity\TestovaciEntity;
-use Model\Testovaci\Identity\TestovaciIdentity;
+use Model\Testovaci\Identity\RabbitIdentity;
 
         
 
@@ -60,7 +60,7 @@ class TestovaciRepositoryTest_Nespravny  extends TestCase{
         
         $testovaciRepository1 = new TestovaciRepository( $accessorHydratorEntity, $accessorHydratorIdentity, $testovaciRowObjectManager);
               
-        $identity = new TestovaciIdentity(); 
+        $identity = new RabbitIdentity(); 
             $identity->setId1('66');         
             $identity->setId2('33') ;
         $entity1 = new TestovaciEntity( $identity );              
@@ -156,7 +156,7 @@ class TestovaciRepositoryTest_Nespravny  extends TestCase{
         
         $testovaciRepository1 = new TestovaciRepository( $accessorHydratorEntity, $accessorHydratorIdentity, $testovaciRowObjectManager);
               
-        $identity = new TestovaciIdentity(); 
+        $identity = new RabbitIdentity(); 
             $identity->setId1('66');         
             $identity->setId2('33') ;
         $entity1 = new TestovaciEntity( $identity );              
@@ -221,7 +221,7 @@ class TestovaciRepositoryTest_Nespravny  extends TestCase{
         
         $testovaciRepository1 = new TestovaciRepository( $accessorHydratorEntity, $accessorHydratorIdentity, $testovaciRowObjectManager);
               
-        $identity = new TestovaciIdentity(); 
+        $identity = new RabbitIdentity(); 
             $identity->setId1('66');         
             $identity->setId2('33') ;
         $entity1 = new TestovaciEntity( $identity );              
@@ -241,7 +241,7 @@ class TestovaciRepositoryTest_Nespravny  extends TestCase{
         
         //nove = jine repository se stejnym ROManagerem
         $testovaciRepository2 = new TestovaciRepository($accessorHydratorEntity,$accessorHydratorIdentity,$testovaciRowObjectManager );   
-        $identity2 = new TestovaciIdentity();
+        $identity2 = new RabbitIdentity();
             $identity2->setId1('66');         
             $identity2->setId2('33') ;
         $entity2 = $testovaciRepository2->get($identity2);

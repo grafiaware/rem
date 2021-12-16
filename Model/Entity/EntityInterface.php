@@ -3,7 +3,6 @@ namespace Model\Entity;
 
 use Model\Entity\AccessorInterface;
 
-use Model\Entity\Identity\IdentityInterface;
 
 
 /**
@@ -12,11 +11,11 @@ use Model\Entity\Identity\IdentityInterface;
  */
 interface EntityInterface extends  AccessorInterface {
     
-    /**
-     * Vrací primární identitu.
-     * @return IdentityInterface 
-     */
-    public function getIdentity(): IdentityInterface ; 
+//    /**
+//     * Vrací primární identitu.
+//     * @return IdentityInterface 
+//     */
+//    public function getIdentity(): IdentityInterface ; 
     
     /**
      * Vrací všechny identity.

@@ -9,7 +9,13 @@ namespace Model\Repository;
 interface RepositoryReadOnlyInterface {
      public function flush(): void;
     
-    
+     public function __destruct() ;
+     
+     
+     
+     
+     
+     
     
     //--------------------------------------------------
 //    public function getCollectionProTest(): array ;

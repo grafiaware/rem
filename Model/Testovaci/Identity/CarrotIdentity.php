@@ -2,20 +2,20 @@
 
 namespace Model\Testovaci\Identity;
 
-use Model\Testovaci\Identity\TestovaciHoleIdentityInterface;
 use Model\Entity\Identity\IdentityAbstract;
+use Model\Testovaci\Identity\CarrotIdentityInterface;
 
-/**
- * Description of TestovaciHoleIdentity
- *
- * @author vlse2610
- */
-class TestovaciHoleIdentity extends IdentityAbstract implements TestovaciHoleIdentityInterface {
+
+
+class CarrotIdentity  extends IdentityAbstract implements CarrotIdentityInterface {
     /**
      *
      * @var string
      */
     private $id;
+    
+    
+  
     
     public function __construct( ) {
 
@@ -25,9 +25,8 @@ class TestovaciHoleIdentity extends IdentityAbstract implements TestovaciHoleIde
         return $this->id;
     }
    
-    public function setId(string $id): TestovaciHoleIdentityInterface {
-        $this->id = $id;
-        return $this;
+    public function setId(string $id): void {
+        $this->id = $id;        
     }
     
     

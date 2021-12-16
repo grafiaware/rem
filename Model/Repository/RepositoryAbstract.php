@@ -40,7 +40,7 @@ use Model\Repository\Exception\UnableWriteToReadOnlyRepoException;
 
 use Model\Repository\RepositoryInterface;
 use Model\Repository\RepositoryReadOnlyInterface;
-use Model\Testovaci\Repository\TestovaciCarrotRepositoryInterface;
+use Model\Testovaci\Repository\CarrotRepositoryInterface;
 
 use Model\IdentityMap\IdentityMap;
 use Model\IdentityMap\IndexMaker\IndexMaker;
@@ -103,10 +103,10 @@ abstract class RepositoryAbstract implements RepositoryInterface {
      *
      * @param string $entityInterfaceName Jméno interface asociované entity
      * @param array $parentReferenceKeyAttribute Atribut klíče, který je referencí na data rodiče v úložišti dat. V databázi jde o referenční cizí klíč.
-     * @param TestovaciCarrotRepositoryInterface $repo
+     * @param CarrotRepositoryInterface $repo
      */
     protected function registerOneToOneAssociation($entityInterfaceName,/* $parentReferenceKeyAttribute, */
-                                                   TestovaciCarrotRepositoryInterface $repo) {
+                                                   CarrotRepositoryInterface $repo) {
         $this->associations[$entityInterfaceName] = new AssociationOneToOne( /*$parentReferenceKeyAttribute,*/ $repo);
     }
 
@@ -184,7 +184,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
      * @return void
      * @throws UnableRecreateEntityException
      */
-    protected function recreateEntity( /*$identityHash*/ IdentityInterface $identity,  $index  ):  void {        
+    protected function recreateEntity( /*$identityHash*/ IdentityInterface $identity  ):  void {        
         $key = $this->rowObjectManager->createKey();
         $this->extractIdentity( $identity, $key );
         
@@ -209,8 +209,8 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             
             
             // pro vsechny tj. kazdou  identity vytvořit identityMap
-            //$this->identityMap->add( $entity );
-            $entity->getIdentities();
+            $this->identityMap->add( $entity );
+            //$entity->getIdentities();
             
             
             

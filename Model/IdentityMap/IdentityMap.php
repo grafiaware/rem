@@ -30,7 +30,7 @@ class IdentityMap implements IdentityMapInterface {
                     IdentityMapIndexFactoryInterface  $identityMapIndexFactory,
                     IndexMakerInterface $indexMaker ) {
        
-             //vyrobit pro  identity   $identityMapIndex
+             //++ vyrobit pro kazdou identity   $identityMapIndex
     }  
     
         

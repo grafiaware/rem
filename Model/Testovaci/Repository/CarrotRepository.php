@@ -2,9 +2,9 @@
 
 namespace Model\Testovaci\Repository;
 
-use Model\Testovaci\Repository\TestovaciCarrotRepositoryInterface;
-use Model\Testovaci\Entity\TestovaciAssociatedCarrotEntityInterface;
-use Model\Testovaci\Identity\TestovaciCarrotIdentityInterface;
+use Model\Testovaci\Repository\CarrotRepositoryInterface;
+use Model\Testovaci\Entity\CarrotEntityInterface;
+use Model\Testovaci\Identity\CarrotIdentityInterface;
 
 use Model\Repository\RepositoryAbstract;
 
@@ -12,12 +12,12 @@ use Model\Repository\RepositoryAbstract;
 
 
 /**
- * Description of TestovaciCarrotRepository 
+ * Description of CarrotRepository 
  * Je to CHILD REPOSITORY
  *
  * @author vlse2610
  */
-class TestovaciCarrotRepository extends RepositoryAbstract implements TestovaciCarrotRepositoryInterface {
+class CarrotRepository extends RepositoryAbstract implements CarrotRepositoryInterface {
     
     
     function __construct( AccessorHydratorInterface $accessorHydratorEntity,
@@ -40,17 +40,16 @@ class TestovaciCarrotRepository extends RepositoryAbstract implements TestovaciC
     
     
 
-    public function add ( TestovaciAssociatedCarrotEntityInterface $entity ) : void {
+    public function add ( CarrotEntityInterface $entity ) : void {
     
     } 
-  
-    /*
-     *  vola se  "lesa"
-     * 
-     */    
-    public function get ( /*array $childIdentityHash */  TestovaciCarrotIdentityInterface $identity ) : ?TestovaciAssociatedCarrotEntityInterface {
+      
+    public function get ( CarrotIdentityInterface $identity ) : ?CarrotEntityInterface {
     
     }      
+    
+    
+    
 //    /**
 //     * Vrací jednu nebo žádnou entitu
 //     * @param array $parentIdentityHash
@@ -60,20 +59,16 @@ class TestovaciCarrotRepository extends RepositoryAbstract implements TestovaciC
 //    
 //    } 
     
-    /**
-     * VOLA se y repositorz
-     * @param array $parentIdentityHash
-     * @return iterable
-     */
-    public function findByReferenceKralik(    $parentIdentity ): ?\Traversable {
+   
+    public function findByReferenceKralik(  RabbitIdentityInterface  $parentIdentity ): \Traversable {
         
     }
-
+     
+    public function remove ( CarrotIdentityInterface $identity  ) : void  {
     
-        
-    public function remove ( TestovaciCarrotIdentityInterface $identity  ) : void  {
+    }      
     
-    }
+    
     
     
     

@@ -9,12 +9,12 @@ use Model\Entity\Identity\IdentityInterface;
  *
  * @author vlse2610
  */
-interface TestovaciHoleIdentityInterface extends IdentityInterface {
+interface HoleIdentityInterface extends IdentityInterface {
     
     
     public function getId(): string ;
    
-    public function setId(string $id): TestovaciHoleIdentityInterface ;
+    public function setId(string $id): void ;
        
     
        

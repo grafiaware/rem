@@ -7,10 +7,10 @@ use Model\Repository\RepositoryAbstract;
 
 use Model\Hydrator\AccessorHydratorInterface;
 use Model\RowObjectManager\RowObjectManagerInterface;
-use Model\Testovaci\Entity\TestovaciEntityInterface;
-use Model\Testovaci\Entity\TestovaciEntity;
-use Model\Testovaci\Identity\TestovaciIdentityInterface;
-use Model\Testovaci\Identity\TestovaciIdentity;
+use Model\Testovaci\Entity\RabbitEntityInterface;
+use Model\Testovaci\Entity\RabbitEntity;
+use Model\Testovaci\Identity\RabbitIdentityInterface;
+use Model\Testovaci\Identity\RabbitIdentity;
 
 
 /**
@@ -18,7 +18,7 @@ use Model\Testovaci\Identity\TestovaciIdentity;
  *
  * @author vlse2610
  */
-class TestovaciRepositoryReadOnly extends RepositoryAbstract implements  RepositoryReadOnlyInterface {
+class RabbitRepositoryReadOnly extends RepositoryAbstract implements  RepositoryReadOnlyInterface {
 
    
     
@@ -35,14 +35,14 @@ class TestovaciRepositoryReadOnly extends RepositoryAbstract implements  Reposit
     }
     
     
-    public function add( TestovaciEntityInterface $entity): void {
+    public function add( RabbitEntityInterface $entity): void {
                 
         $this->addEntity($entity);      
     }
     
 
     
-    public function get( TestovaciIdentityInterface $identity):  ?TestovaciEntityInterface {
+    public function get( RabbitIdentityInterface $identity):  ?RabbitEntityInterface {
         //$index = $identity->getIndexFromIdentity();
         $index = IndexMaker::IndexFromIdentity($identity);                        
              
@@ -58,7 +58,7 @@ class TestovaciRepositoryReadOnly extends RepositoryAbstract implements  Reposit
     
     
 
-    public function remove( TestovaciEntityInterface $entity): void {
+    public function remove( RabbitEntityInterface $entity): void {
         
         $this->removeEntity($entity);    
     }
@@ -67,11 +67,11 @@ class TestovaciRepositoryReadOnly extends RepositoryAbstract implements  Reposit
     
     /**
      * 
-     * @return TestovaciEntityInterface
+     * @return RabbitEntityInterface
      */
-    protected function createEntity() : TestovaciEntityInterface {        
+    protected function createEntity() : RabbitEntityInterface {        
         //vyrobit prazdnou konkr. entity
-        return new TestovaciEntity ( new TestovaciIdentity() ) ;
+        return new RabbitEntity ( new RabbitIdentity() ) ;
         
     }
         

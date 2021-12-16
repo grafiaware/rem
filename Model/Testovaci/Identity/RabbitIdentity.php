@@ -1,37 +1,42 @@
 <?php
-
 namespace Model\Testovaci\Identity;
 
 use Model\Entity\Identity\IdentityAbstract;
-use Model\Testovaci\Identity\TestovaciCarrotIdentityInterface;
+use Model\Testovaci\Identity\RabbitIdentityInterface;
 
 
-
-class TestovaciCarrotIdentity  extends IdentityAbstract implements TestovaciCarrotIdentityInterface {
+/**
+ * 
+ */
+class RabbitIdentity extends IdentityAbstract implements  RabbitIdentityInterface {
     /**
      *
      * @var string
      */
-    private $id;
+    private $id1;
+           
     
     
-  
     
     public function __construct( ) {
 
-    }
+    }  
+            
     
-    public function getId(): string {
-        return $this->id;
+    public function getId1(): string {
+        return $this->id1;
     }
+    public function setId1(string $id): void {
+        $this->id1 = $id;       
+    }
+
    
-    public function setId(string $id): TestovaciCarrotIdentityInterface {
-        $this->id = $id;
-        return $this;
-    }
     
     
-      public function getIndexFromIdentity() : string {
+    
+    
+    
+    public function getIndexFromIdentity() : string {
         //get_object_vars - vybere ty "viditelne" a nestaticke
 //        $index='';
 //        foreach ( \get_object_vars($this) as $nameAttr=>$value) {            
@@ -50,5 +55,6 @@ class TestovaciCarrotIdentity  extends IdentityAbstract implements TestovaciCarr
         
     }
     
-    
+        
 }
+

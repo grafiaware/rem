@@ -2,18 +2,16 @@
 
 namespace Model\Testovaci\Repository;
 
-use Model\Testovaci\Entity\TestovaciEntityInterface;
-use Model\Testovaci\Entity\TestovaciEntity;
-use Model\Testovaci\Identity\TestovaciIdentityInterface;
-use Model\Testovaci\Identity\TestovaciIdentity;
-use Model\Testovaci\Identity\TestovaciCarrotIdentityInterface;
+use Model\Testovaci\Entity\RabbitEntityInterface;
+use Model\Testovaci\Entity\RabbitEntity;
+use Model\Testovaci\Entity\CarrotEntityInterface;
+use Model\Testovaci\Entity\HoleEntityInterface;
+use Model\Testovaci\Identity\RabbitIdentityInterface;
+use Model\Testovaci\Identity\RabbitIdentity;
+use Model\Testovaci\Identity\CarrotIdentityInterface;
 
-use  Model\Testovaci\Repository\TestovaciHoleRepositoryInterface;
+use Model\Testovaci\Repository\TestovaciHoleRepositoryInterface;
 use Model\Testovaci\Repository\TestovaciCarrotRepositoryInterface;
-
-use Model\Testovaci\Entity\TestovaciAssociatedCarrotEntityInterface;
-use Model\Testovaci\Entity\TestovaciAssociatedHoleEntityInterface;
-
 
 use Model\Repository\RepositoryAbstract;
 use Model\Hydrator\AccessorHydratorInterface;
@@ -24,11 +22,11 @@ use Model\IdentityMap\IdentityMapInterface;
 
 
 /**
- * Description of TestovaciRepository
+ * Description 
  *
  * @author vlse2610
  */
-class TestovaciRepository extends RepositoryAbstract implements TestovaciRepositoryInterface  {
+class RabbitRepository extends RepositoryAbstract implements RabbitRepositoryInterface  {
     
     
     function __construct( AccessorHydratorInterface $accessorHydratorEntity,
@@ -52,13 +50,13 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
         
         
         if ( $testovaciCarrotRepository) {
-            $this->registerOneToManyAssociation( TestovaciAssociatedCarrotEntityInterface::class,
+            $this->registerOneToManyAssociation( CarrotEntityInterface::class,
                                                // /*$parentReferenceKeyAttribute*/ ["id1", "id2" ], //kraličí
                                                 $testovaciCarrotRepository );
         }
         
         if ( $testovaciHoleRepository) {
-            $this->registerOneToOneAssociation( TestovaciAssociatedHoleEntityInterface::class,
+            $this->registerOneToOneAssociation( HoleEntityInterface::class,
                                                // /*$parentReferenceKeyAttribute*/ ["id1", "id2" ],
                                                 $testovaciHoleRepository );
         }
@@ -67,18 +65,25 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
     }
     
     
-    public function add( TestovaciEntityInterface $entity): void {                
+    public function add( RabbitEntityInterface $entity): void {                
         $this->addEntity($entity);      
     }
     
 
     
-    public function get( /*identityHash*/  TestovaciIdentityInterface $identity  ):  ?TestovaciEntityInterface {
-        $re = $this->getEntity( /*$identityHash */   $identity );  
+    public function get(   RabbitIdentityInterface $identity  ):  ?RabbitEntityInterface {
+        $re = $this->getEntity(    $identity );  
         return   $re;        
     }        
                
     
+    public function getByReferenceCarrot( CarrotIdentityInterface $identity ) : ?RabbitEntityInterface {}
+    
+    
+    public function getByReferenceHole( HoleIdentityInterface $identity ) : ?RabbitEntityInterface {}
+    
+    
+   
     
     
     
@@ -95,7 +100,7 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
 //        return $this->collection[$index] ?? NULL;    
 
 
-    public function remove( TestovaciEntityInterface $entity): void {        
+    public function remove( RabbitEntityInterface $entity): void {        
         $this->removeEntity($entity);    
     }
 
@@ -103,11 +108,11 @@ class TestovaciRepository extends RepositoryAbstract implements TestovaciReposit
     
     /**
      * 
-     * @return TestovaciEntityInterface
+     * @return RabbitEntityInterface
      */
-    protected function createEntity() : TestovaciEntityInterface {        
+    protected function createEntity() : RabbitEntityInterface {        
         //vyrobit prazdnou konkr. entity
-        return new TestovaciEntity ( new TestovaciIdentity() ) ;
+        return new RabbitEntity ( new RabbitIdentity() ) ;
         
     }
         

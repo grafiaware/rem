@@ -2,7 +2,7 @@
 namespace Model\Testovaci\Repository;
 
 use Model\Testovaci\Repository\TestovaciHoleRepositoryInterface;
-use Model\Testovaci\Entity\TestovaciAssociatedHoleEntityInterface;
+use Model\Testovaci\Entity\HoleEntityInterface;
 use Model\Testovaci\Identity\TestovaciHoleIdentityInterface;
 
 use Model\Repository\RepositoryAbstract;
@@ -26,11 +26,11 @@ class TestovaciHoleRepository extends RepositoryAbstract implements TestovaciHol
     }          
     
     
-    public function add ( TestovaciAssociatedHoleEntityInterface $entity ) : void {}
+    public function add ( HoleEntityInterface $entity ) : void {}
   
-    public function get ( /*array $childIdentityHash*/ TestovaciHoleIdentityInterface $identity  ) : ?TestovaciAssociatedHoleEntityInterface {}      
+    public function get ( HoleIdentityInterface $identity  ) : ?HoleEntityInterface {}      
     
-    public function getByReferenceKralik (  $parentIdentity  ) : ?\Traversable {}   
+    public function getByReferenceKralik (  $parentIdentity  ) : ?HoleEntityInterface {}   
         
     public function remove (TestovaciHoleIdentityInterface $identity ) : void  {}
     

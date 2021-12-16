@@ -7,12 +7,12 @@ use Model\Hydrator\NameHydrator\AccessorMethodNameHydrator;
 use Model\Hydrator\Filter\OneToOneFilter;
 use Model\Hydrator\OneToOneAccessorHydrator;
 
-use Model\Testovaci\Entity\TestovaciEntity;
-use Model\Testovaci\Identity\TestovaciIdentity;
+use Model\Testovaci\Entity\RabbitEntity;
+use Model\Testovaci\Identity\RabbitIdentity;
 use Model\Testovaci\RowObjectManager\TestovaciRowObjectManager;
-use Model\Testovaci\Repository\TestovaciRepositoryReadOnly;
+use Model\Testovaci\Repository\RabbitRepositoryReadOnly;
 use Model\Testovaci\Repository\TestovaciRepository;
-use Model\Testovaci\Repository\TestovaciCarrotRepository;
+use Model\Testovaci\Repository\CarrotRepository;
 
 use Model\Repository\Exception\OperationWithLockedEntityException;
 use Model\Repository\Exception\UnpersistedEntityInCollectionException;
@@ -69,23 +69,23 @@ class TestovaciRepositoryTest  extends TestCase {
         $accessorHydratorIdentity = new OneToOneAccessorHydrator($methodNameHydratorIdentity, $filterIdentity) ;
 
         
-        $this->testovaciCarrotRepository = new TestovaciCarrotRepository( $accessorHydratorEntity, $accessorHydratorIdentity, 
+        $this->testovaciCarrotRepository = new CarrotRepository( $accessorHydratorEntity, $accessorHydratorIdentity, 
                                                               self::$rowObjectCarrotManager );                 
         $this->testovaciRepository = new TestovaciRepository( $accessorHydratorEntity, $accessorHydratorIdentity, 
                                                               self::$rowObjectManager,
                                                               $this->testovaciCarrotRepository );     
             
         
-        $this->identity1 = new TestovaciIdentity(); 
+        $this->identity1 = new RabbitIdentity(); 
             $this->identity1->setId1('66');         
             $this->identity1->setId2('33') ;
-        $this->entity1 = new TestovaciEntity( $this->identity1 );              
+        $this->entity1 = new RabbitEntity( $this->identity1 );              
             $this->entity1->setCeleJmeno("Jméno Celé"); 
             $this->entity1->setPrvekVarchar('') ;
             $this->entity1->setPrvekDatetime(new \DateTime('2000-01-01')) ;                                
         //--------------------------------------------------
             
-        $this->testovaciRepositoryReadOnly = new TestovaciRepositoryReadOnly(
+        $this->testovaciRepositoryReadOnly = new RabbitRepositoryReadOnly(
                         $accessorHydratorEntity, $accessorHydratorIdentity,  self::$rowObjectManager );           
     
     }
@@ -134,8 +134,8 @@ class TestovaciRepositoryTest  extends TestCase {
     public function testGet() {               
         $entity2 = $this->testovaciRepository->get($this->identity1);
         
-        $this->assertContainsOnlyInstancesOf( TestovaciEntity::class, [$entity2] );              
-        $this->assertInstanceOf(TestovaciEntity::class, $entity2);  
+        $this->assertContainsOnlyInstancesOf( RabbitEntity::class, [$entity2] );              
+        $this->assertInstanceOf(RabbitEntity::class, $entity2);  
         
         $this->assertTrue($entity2->isPersisted() );
         //$this->assertFalse($entity2->isLocked() );   //lock netestovat
@@ -144,13 +144,13 @@ class TestovaciRepositoryTest  extends TestCase {
         $this->assertEquals ( '01-01-2000', $e2Hodnota->format( "d-m-Y" ) );
         $this->assertEquals( "" ,  $entity2->getPrvekVarchar());                            
         
-        /** @var TestovaciIdentity $identity2 */
+        /** @var RabbitIdentity $identity2 */
         $this->assertEquals("66", $entity2->getIdentity()->getId1() );
         $this->assertEquals("33", $entity2->getIdentity()->getId2() );
         //-----------------------------------------------------        
         
         // takova entita v repository neni
-        $identity21 = new TestovaciIdentity(); 
+        $identity21 = new RabbitIdentity(); 
            $identity21->setId1('66');         
            $identity21->setId2('31') ;   
         $entity3 = $this->testovaciRepository->get($identity21);   
@@ -167,8 +167,8 @@ class TestovaciRepositoryTest  extends TestCase {
     
     public function testRemove() {                   
         $entity2 = $this->testovaciRepository->get($this->identity1);
-        $this->assertContainsOnlyInstancesOf( TestovaciEntity::class, [$entity2] );              
-        $this->assertInstanceOf(TestovaciEntity::class, $entity2);  
+        $this->assertContainsOnlyInstancesOf( RabbitEntity::class, [$entity2] );              
+        $this->assertInstanceOf(RabbitEntity::class, $entity2);  
            
         $this->testovaciRepository->remove($entity2);    
         $this->testovaciRepository->flush();        

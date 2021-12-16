@@ -13,34 +13,18 @@ use Model\Entity\Identity\IdentityInterface;
  * @author vlse2610
  */
 abstract class EntityAbstract implements EntityInterface {
-    /**
-     *
-     * @var IdentityInterface 
-     */
-    private $identity;
-           
-    private $identities;
+  
+//-------------->>>>>   identity budou vzdy v konkretni entite a tady ne
     
-    //-------------->>>>>   identity budou asi vzdy v konkretni entite a tady ne
     
+    
+    private $identities;    //????
     
     
     private $persisted=false;    
     private $locked=false;   
     
     
-
-    public function __construct( IdentityInterface $identity ) {
-        $this->identity = $identity;    
-        
-    }    
-    
-    public function getIdentity(): IdentityInterface {
-        return $this->identity;
-    }
-//   NENE public function setIdentity( AccessorInterface $identity): void {
-//        $this->identity = $identity;
-//    }
     public function getIdentities(): \Traversable {
         return $this->identities;
     }

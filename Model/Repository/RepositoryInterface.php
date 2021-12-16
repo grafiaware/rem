@@ -9,6 +9,10 @@ namespace Model\Repository;
 interface RepositoryInterface {
 
     public function flush(): void;
+
+    public function __destruct() ;
+ 
+
     
     
     
