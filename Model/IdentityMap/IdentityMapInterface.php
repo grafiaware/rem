@@ -16,7 +16,7 @@ interface IdentityMapInterface {
      * @param EntityInterface $entity
      * @return void
      */    
-    public function add (  EntityInterface $entity  ) : void    ;
+    public function add (  EntityInterface $entity,  $index, string $identityInterfaceName ) : void    ;
     
     
     
@@ -25,11 +25,11 @@ interface IdentityMapInterface {
      * @param \Model\IdentityMap\IdentityInterface $identity
      * @return EntityInterface|null
      */
-    public function get ( IdentityInterface $identity ) : ?EntityInterface ;
+    public function get ( IdentityInterface $identity, $identityInterfaceName ) : ?EntityInterface ;
     
     
     
-    public function remove (  EntityInterface $entity  ) : void ;
+    public function remove (  EntityInterface $entity , $identityInterfaceName ) : void ;
     
     
     /**
@@ -37,7 +37,7 @@ interface IdentityMapInterface {
      * @param IdentityInterface $identity
      * @return boolean
      */
-    public function has (  IdentityInterface $identity  ) : boolean ;
+    public function has (  IdentityInterface $identity, $identityInterfaceName  ) : boolean ;
     
     
     

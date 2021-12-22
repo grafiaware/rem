@@ -6,7 +6,9 @@ use Model\Testovaci\Repository\CarrotRepositoryInterface;
 use Model\Testovaci\Entity\CarrotEntityInterface;
 use Model\Testovaci\Identity\CarrotIdentityInterface;
 
+use Model\Hydrator\AccessorHydratorInterface;
 use Model\Repository\RepositoryAbstract;
+use Model\RowObjectManager\RowObjectManagerInterface;
 
 
 
@@ -44,7 +46,9 @@ class CarrotRepository extends RepositoryAbstract implements CarrotRepositoryInt
     
     } 
       
-    public function get ( CarrotIdentityInterface $identity ) : ?CarrotEntityInterface {
+    public function getByCarrot ( CarrotIdentityInterface $identity ) : ?CarrotEntityInterface {
+        $re = $this->getEntity(  $identity, CarrotIdentityInterface::class  );  
+        return   $re;
     
     }      
     
@@ -60,7 +64,7 @@ class CarrotRepository extends RepositoryAbstract implements CarrotRepositoryInt
 //    } 
     
    
-    public function findByReferenceKralik(  RabbitIdentityInterface  $parentIdentity ): \Traversable {
+    public function findByReferenceRabbit(  RabbitIdentityInterface  $parentIdentity ): \Traversable {
         
     }
      

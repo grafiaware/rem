@@ -3,13 +3,19 @@
 namespace Model\Testovaci\Entity;
 
 use Model\Entity\EntityInterface;
-
+use Model\Testovaci\Identity\RabbitIdentityInterface;
 /**
  *
  * @author vlse2610
  */
 interface RabbitEntityInterface extends EntityInterface{
     
+        
+//        const IDENTITIES_NAMES = [ 'RabbitIdentityInterface',
+//                                   'KlicIdentityInterface'
+//            ];
+//       
+       
     
         public function getRabbitIdentity():  RabbitIdentityInterface ;
         public function getKlicIdentity():  KlicIdentityInterface ;

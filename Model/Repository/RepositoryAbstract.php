@@ -44,6 +44,8 @@ use Model\Testovaci\Repository\CarrotRepositoryInterface;
 
 use Model\IdentityMap\IdentityMap;
 use Model\IdentityMap\IndexMaker\IndexMaker;
+use Model\Repository\RepoAssotiatedManyInterface;
+
 
 
 /**
@@ -105,8 +107,8 @@ abstract class RepositoryAbstract implements RepositoryInterface {
      * @param array $parentReferenceKeyAttribute Atribut klíče, který je referencí na data rodiče v úložišti dat. V databázi jde o referenční cizí klíč.
      * @param CarrotRepositoryInterface $repo
      */
-    protected function registerOneToOneAssociation($entityInterfaceName,/* $parentReferenceKeyAttribute, */
-                                                   CarrotRepositoryInterface $repo) {
+    protected function registerOneToOneAssociation(  string      $entityInterfaceName,
+                 /* $parentReferenceKeyAttribute */  RepoAssotiatedOneInterface $repo) {
         $this->associations[$entityInterfaceName] = new AssociationOneToOne( /*$parentReferenceKeyAttribute,*/ $repo);
     }
 
@@ -116,8 +118,8 @@ abstract class RepositoryAbstract implements RepositoryInterface {
      * @param array $parentReferenceKeyAttribute Atribut klíče, který je referencí na data rodiče v úložišti dat. V databázi jde o referenční cizí klíč.
      * @param \Model\Repository\RepoAssotiatedOneInterface $repo
      */
-    protected function registerOneToManyAssociation( string $entityInterfaceName, /*$parentReferenceKeyAttribute,*/
-                                                    RepoAssotiatedManyInterface $repo) {        
+    protected function registerOneToManyAssociation( string       $entityInterfaceName, 
+                   /*$parentReferenceKeyAttribute*/  RepoAssotiatedManyInterface $repo) {        
         $this->associations[$entityInterfaceName] = new AssociationOneToMany( $repo ) ;
                 
               // ...identita... = $parentReferenceKeyAttribute, $repo);
@@ -184,7 +186,8 @@ abstract class RepositoryAbstract implements RepositoryInterface {
      * @return void
      * @throws UnableRecreateEntityException
      */
-    protected function recreateEntity( /*$identityHash*/ IdentityInterface $identity  ):  void {        
+    protected function recreateEntity( /*$identityHash*/ IdentityInterface $identity, $index, $identityInterfaceName  ):  void {        
+        
         $key = $this->rowObjectManager->createKey();
         $this->extractIdentity( $identity, $key );
         
@@ -206,10 +209,12 @@ abstract class RepositoryAbstract implements RepositoryInterface {
                         
             //$this->collection[$index] = $entity;
             
-            
-            
+                        
             // pro vsechny tj. kazdou  identity vytvořit identityMap
-            $this->identityMap->add( $entity );
+            $this->identityMap->add( $entity,  $index, $identityInterfaceName );
+            
+            
+            
             //$entity->getIdentities();
             
             
@@ -394,14 +399,15 @@ abstract class RepositoryAbstract implements RepositoryInterface {
     }
 
     
-    protected function getEntity( IdentityInterface $identity   /*$identityHash*/ ) :?EntityInterface {
-        $index = IndexMaker::IndexFromIdentity($identity);
+    protected function getEntity( IdentityInterface $identity , string $identityInterfaceName  ) :?EntityInterface {
+      
+       // $index = IndexMaker::IndexFromIdentity($identity);
                 
-        if  ( $this->identityMap->has($index)   )  {
-            $this->recreateEntity( $identity, $index );
+   22.12.21     if  ( !$this->identityMap->has( .....$identity... $identityInterfaceName )   )  {
+            $this->recreateEntity( $identity, $index, $identityInterfaceName );
         }
         
-        return $this->identityMap->get($index) ?? NULL;   
+        return $this->identityMap->get( $index, $identityInterfaceName) ?? NULL;   
         
         
         

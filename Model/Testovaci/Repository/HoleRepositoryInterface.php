@@ -2,8 +2,11 @@
 namespace Model\Testovaci\Repository;
 
 use Model\Repository\RepositoryInterface;
+
 use \Model\Testovaci\Entity\HoleEntityInterface;
-use Model\Testovaci\Identity\TestovaciHoleIdentityInterface;
+use Model\Testovaci\Identity\HoleIdentityInterface;
+use Model\Testovaci\Identity\RabbitIdentityInterface;
+
 
 
 
@@ -11,15 +14,15 @@ use Model\Testovaci\Identity\TestovaciHoleIdentityInterface;
  *
  * @author vlse2610
  */
-interface TestovaciHoleRepositoryInterface  extends RepositoryInterface {
+interface HoleRepositoryInterface  extends RepositoryInterface {
    
     public function add ( HoleEntityInterface $entity ) : void ;
   
-    public function get ( HoleIdentityInterface  $identity ) : ?HoleEntityInterface ;       
+    public function getByHole ( HoleIdentityInterface  $identity ) : ?HoleEntityInterface ;       
     
-    public function getByReferenceKralik (  $parentIdentity  ) : ?HoleEntityInterface ;    
+    public function getByReferenceRabbit ( RabbitIdentityInterface $parentIdentity  ) : ?HoleEntityInterface ;    
         
-    public function remove ( TestovaciHoleIdentityInterface $identity ) : void  ;
+    public function remove ( HoleIdentityInterface $identity ) : void  ;
     
     
 }

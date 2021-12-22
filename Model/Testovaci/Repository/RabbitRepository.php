@@ -9,9 +9,8 @@ use Model\Testovaci\Entity\HoleEntityInterface;
 use Model\Testovaci\Identity\RabbitIdentityInterface;
 use Model\Testovaci\Identity\RabbitIdentity;
 use Model\Testovaci\Identity\CarrotIdentityInterface;
+use Model\Testovaci\Identity\KlicIdentityInterface;
 
-use Model\Testovaci\Repository\TestovaciHoleRepositoryInterface;
-use Model\Testovaci\Repository\TestovaciCarrotRepositoryInterface;
 
 use Model\Repository\RepositoryAbstract;
 use Model\Hydrator\AccessorHydratorInterface;
@@ -29,15 +28,14 @@ use Model\IdentityMap\IdentityMapInterface;
 class RabbitRepository extends RepositoryAbstract implements RabbitRepositoryInterface  {
     
     
-    function __construct( AccessorHydratorInterface $accessorHydratorEntity,
+    function __construct( AccessorHydratorInterface $accessorHydratorEntity,           
                           AccessorHydratorInterface $accessorHydratorIdentity,
                           RowObjectManagerInterface $rowObjectManager,                          
             
                           IdentityMapInterface $identityMap,   //IdentityMap .. je misto collection[],   
-            
-            
-                          TestovaciCarrotRepositoryInterface $testovaciCarrotRepository = NULL,
-                          TestovaciHoleRepositoryInterface $testovaciHoleRepository = NULL                                                  
+                        
+                          CarrotRepositoryInterface $carrotRepository = NULL,
+                          HoleRepositoryInterface $holeRepository = NULL                                                  
             
             //tovarna na  entity
             ) {
@@ -49,16 +47,16 @@ class RabbitRepository extends RepositoryAbstract implements RabbitRepositoryInt
         $this->identityMap = $identityMap;
         
         
-        if ( $testovaciCarrotRepository) {
+        if ( $carrotRepository) {
             $this->registerOneToManyAssociation( CarrotEntityInterface::class,
                                                // /*$parentReferenceKeyAttribute*/ ["id1", "id2" ], //kraličí
-                                                $testovaciCarrotRepository );
+                                                $carrotRepository );
         }
         
-        if ( $testovaciHoleRepository) {
+        if ( $holeRepository) {
             $this->registerOneToOneAssociation( HoleEntityInterface::class,
                                                // /*$parentReferenceKeyAttribute*/ ["id1", "id2" ],
-                                                $testovaciHoleRepository );
+                                                $holeRepository );
         }
         
         
@@ -71,11 +69,19 @@ class RabbitRepository extends RepositoryAbstract implements RabbitRepositoryInt
     
 
     
-    public function get(   RabbitIdentityInterface $identity  ):  ?RabbitEntityInterface {
-        $re = $this->getEntity(    $identity );  
+    public function getByRabbit( RabbitIdentityInterface $identity  ):  ?RabbitEntityInterface {
+        $re = $this->getEntity(  $identity, RabbitIdentityInterface::class  );  
         return   $re;        
     }        
+    
+    public function getByKlic ( KlicIdentityInterface  $identity  ) : ?RabbitEntityInterface{
+        $re = $this->getEntity(  $identity, KlicIdentityInterface::class  );  
+        return   $re; 
+    }
+          
                
+    
+    
     
     public function getByReferenceCarrot( CarrotIdentityInterface $identity ) : ?RabbitEntityInterface {}
     

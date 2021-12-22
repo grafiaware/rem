@@ -7,6 +7,9 @@ use Model\Entity\EntityInterface;
 use Model\Entity\Identity\IdentityInterface;
 use Model\IdentityMap\IdentityMapIndex\IdentityMapIndexFactoryInterface;
 
+use Model\Hydrator\NameHydrator\AccessorMethodNameHydratorInterface;
+use Model\Hydrator\Filter\OneToOneFilterInterface;
+
 
 
 
@@ -16,28 +19,40 @@ use Model\IdentityMap\IdentityMapIndex\IdentityMapIndexFactoryInterface;
  * @author vlse2610
  */
 class IdentityMap implements IdentityMapInterface {
-    
+    private $identityMapIndexFactory;
     private $indexMaker;
     
-   //Index seznam - je jeden.
-    private $identityMapIndex; 
+   // Index seznam - je jeden.?????
+   // array of $identityMapIndex
+    private $identityMap; 
     
-    private $identityMapIndexFactory;
+    
     
    
     public function __construct(            /*$identitiesNames_seznamTypuIdentit,*/   /* \IteratorAggregate \Traversable*/            
+            
+                    AccessorMethodNameHydratorInterface $methodNameHydrator, 
+                    OneToOneFilterInterface $filter,
+                        
             
                     IdentityMapIndexFactoryInterface  $identityMapIndexFactory,
                     IndexMakerInterface $indexMaker ) {
        
              //++ vyrobit pro kazdou identity   $identityMapIndex
+        
+        $this->identityMapIndexFactory = $identityMapIndexFactory;
     }  
     
         
    
-    public function add (  EntityInterface $entity  ) : void   {
+    public function add (  EntityInterface $entity,  $index, string $identityInterfaceName ) : void   {
         
-        // $identityMapIndex ->add ( $indexMaker->index z $identity,  )
+        if (!array_key_exists( '$identityInterfaceName',  $this->identityMap ) ) {
+            $i = $this->identityMapIndexFactory->create();
+            $this->identityMap[ '$identityInterfaceName' ]= $i;
+        }
+        
+        $this->identityMap[ '$identityInterfaceName'] ->add ( $index, $entity );
     }
     
     

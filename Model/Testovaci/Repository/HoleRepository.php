@@ -1,9 +1,11 @@
 <?php
 namespace Model\Testovaci\Repository;
 
-use Model\Testovaci\Repository\TestovaciHoleRepositoryInterface;
+use Model\Testovaci\Repository\HoleRepositoryInterface;
 use Model\Testovaci\Entity\HoleEntityInterface;
-use Model\Testovaci\Identity\TestovaciHoleIdentityInterface;
+use Model\Testovaci\Identity\HoleIdentityInterface;
+use Model\Testovaci\Identity\RabbitIdentityInterface;
+use Model\Hydrator\AccessorHydratorInterface;
 
 use Model\Repository\RepositoryAbstract;
 
@@ -12,11 +14,11 @@ use Model\Repository\RepositoryAbstract;
  *
  * @author vlse2610
  */
-class TestovaciHoleRepository extends RepositoryAbstract implements TestovaciHoleRepositoryInterface {
+class HoleRepository extends RepositoryAbstract implements HoleRepositoryInterface {
     
     public function __construct( AccessorHydratorInterface $accessorHydratorEntity,
-                          AccessorHydratorInterface $accessorHydratorIdentity,
-                          RowObjectManagerInterface $rowObjectManager
+                                 AccessorHydratorInterface $accessorHydratorIdentity,
+                                 RowObjectManagerInterface $rowObjectManager
               ) {
             
             $this->registerHydratorEntity( $accessorHydratorEntity ); 
@@ -28,10 +30,14 @@ class TestovaciHoleRepository extends RepositoryAbstract implements TestovaciHol
     
     public function add ( HoleEntityInterface $entity ) : void {}
   
-    public function get ( HoleIdentityInterface $identity  ) : ?HoleEntityInterface {}      
+    public function getByHole ( HoleIdentityInterface $identity  ) : ?HoleEntityInterface {
+        $re = $this->getEntity(  $identity, HoleIdentityInterface::class  );  
+        return $re;
+    }      
     
-    public function getByReferenceKralik (  $parentIdentity  ) : ?HoleEntityInterface {}   
+    public function getByReferenceRabbit ( RabbitIdentityInterface $parentIdentity  ) : ?HoleEntityInterface {}   
+    
         
-    public function remove (TestovaciHoleIdentityInterface $identity ) : void  {}
+    public function remove ( HoleIdentityInterface $identity ) : void  {}
     
 }

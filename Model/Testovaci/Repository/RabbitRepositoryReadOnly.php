@@ -43,17 +43,20 @@ class RabbitRepositoryReadOnly extends RepositoryAbstract implements  Repository
 
     
     public function get( RabbitIdentityInterface $identity):  ?RabbitEntityInterface {
-        //$index = $identity->getIndexFromIdentity();
-        $index = IndexMaker::IndexFromIdentity($identity);                        
-             
-                // and ( !($identity->isLocked()) )  ) //and (!isset($this->new[$index] ))   
-        
-        if  ( $this->identityMap->has($index)   )  {
-            $this->recreateEntity( $identity, $index );
-        }
-        
-        return $this->identityMap->get($index) ?? NULL;           
+//        //$index = $identity->getIndexFromIdentity();
+//        $index = IndexMaker::IndexFromIdentity($identity);                        
+//             
+//                // and ( !($identity->isLocked()) )  ) //and (!isset($this->new[$index] ))   
+//        
+//        if  ( $this->identityMap->has($index)   )  {
+//            $this->recreateEntity( $identity, $index );
+//        }
+//        
+//        return $this->identityMap->get($index) ?? NULL;           
     }
+    
+    
+    
     
     
     
