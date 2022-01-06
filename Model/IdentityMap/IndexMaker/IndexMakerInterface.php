@@ -10,21 +10,19 @@ use Model\RowObject\Key\KeyInterface;
  * @author vlse2610
  */
 interface IndexMakerInterface {
-    // filtr obsahuje jmena vlastnosti identity ucastnicich se vyroby indexu
-    //public function __construct(  $filterProHydratovaniIdentity ) {
-        
-  
     
-    public static function IndexFromParams( array $params  ) : string;
-    public static function IndexFromKey( KeyInterface  $key  ) : string;
     
     
     /**
-     * Vyrobi index z vlastnosti identity.
-     * @param IdentityInterface $identity
+     * Vyrobi index z vlastnosti identity podle filtru 
+     * 
+     * @param IdentityInterface $identity aaa
      * @return string
      */
-    public static function IndexFromIdentity( /* typ identity,*/ IdentityInterface $identity  ) : string;
+    public  function IndexFromIdentity(  IdentityInterface $identity  ) : string;
     
     
+    
+//    public  function IndexFromParams( array $params  ) : string;
+//    public  function IndexFromKey( KeyInterface  $key  ) : string;
 }

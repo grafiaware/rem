@@ -180,13 +180,13 @@ abstract class RepositoryAbstract implements RepositoryInterface {
     /**
      * Přidá dosud nepridanou  entitu do repository->collection.
      * Jedna se o jiz persistovane a pouzite entity.    
-     * 
-     * @param type $identityHash
-     * @param type $index
+     *     
+     * @param IdentityInterface $identity
+     * @param string $identityInterfaceName
      * @return void
      * @throws UnableRecreateEntityException
      */
-    protected function recreateEntity( /*$identityHash*/ IdentityInterface $identity, $index, $identityInterfaceName  ):  void {        
+    protected function recreateEntity( IdentityInterface $identity, string $identityInterfaceName  ):  void {        
         
         $key = $this->rowObjectManager->createKey();
         $this->extractIdentity( $identity, $key );
@@ -197,10 +197,10 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             /** @var EntityInterface $entity */   //vyrobit prazdnou entity
             $entity = $this->createEntity();  // !!!!definována v konkrétní třídě!!!!! - adept na entity managera                                              
             //---------------------------------------------
-            $this->hydrateIdentity($entity->getIdentity(), $rowObject->getKey());
+            $this->hydrateIdentity($entity->getIdentity( $identityInterfaceName ), $rowObject->getKey());
                         
             try {
-                 $this->recreateAssociations( $entity->getIdentity() ,  $rowObject /*parent*/ );  // assoc.entity da do rowObjectu
+                 $this->recreateAssociations( $entity->getIdentity( $identityInterfaceName ) ,  $rowObject /*parent*/ );  // assoc.entity da do rowObjectu
             } catch (UnableToCreateAssotiatedChildEntity $unex) {              
                 throw new UnableRecreateEntityException("Nelze obnovit agregovanou (vnořenou) entitu v repository ". get_called_class()." s indexem $index.", 0, $unex);
             }
@@ -209,16 +209,12 @@ abstract class RepositoryAbstract implements RepositoryInterface {
                         
             //$this->collection[$index] = $entity;
             
-                        
-            // pro vsechny tj. kazdou  identity vytvořit identityMap
-            $this->identityMap->add( $entity,  $index, $identityInterfaceName );
+           
+            $this->identityMap->add( $entity,   $identityInterfaceName );
             
             
             
             //$entity->getIdentities();
-            
-            
-            
             
             
             
@@ -403,8 +399,8 @@ abstract class RepositoryAbstract implements RepositoryInterface {
       
        // $index = IndexMaker::IndexFromIdentity($identity);
                 
-   22.12.21     if  ( !$this->identityMap->has( .....$identity... $identityInterfaceName )   )  {
-            $this->recreateEntity( $identity, $index, $identityInterfaceName );
+   if  ( !$this->identityMap->has( $identity, $identityInterfaceName )   )  {
+            $this->recreateEntity( $identity,  $identityInterfaceName );
         }
         
         return $this->identityMap->get( $index, $identityInterfaceName) ?? NULL;   

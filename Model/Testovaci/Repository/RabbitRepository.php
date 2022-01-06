@@ -30,10 +30,13 @@ class RabbitRepository extends RepositoryAbstract implements RabbitRepositoryInt
     
     function __construct( AccessorHydratorInterface $accessorHydratorEntity,           
                           AccessorHydratorInterface $accessorHydratorIdentity,
+                          
                           RowObjectManagerInterface $rowObjectManager,                          
             
                           IdentityMapInterface $identityMap,   //IdentityMap .. je misto collection[],   
-                        
+                        /* v ni vyrobene nebo se postupne vyrobi? IdentityMapIndexy potrebnych identit*/
+                        /* nebose entity ukladaji  do pole */
+            
                           CarrotRepositoryInterface $carrotRepository = NULL,
                           HoleRepositoryInterface $holeRepository = NULL                                                  
             
@@ -63,7 +66,7 @@ class RabbitRepository extends RepositoryAbstract implements RabbitRepositoryInt
     }
     
     
-    public function add( RabbitEntityInterface $entity): void {                
+    public function add( RabbitEntityInterface $entity, IdentityMapInterface $identityMap ): void {                
         $this->addEntity($entity);      
     }
     

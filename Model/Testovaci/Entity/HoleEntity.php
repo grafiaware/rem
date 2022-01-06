@@ -51,8 +51,12 @@ class HoleEntity extends EntityAbstract implements HoleEntityInterface{
         $this->holeIdentity = $holeIdentity;
         $this->rabbitIdentityFk = $rabbitIdentityFk;
         
-        $this->identities[ get_class($holeIdentity)] = $holeIdentity;
-        $this->identities[ get_class($rabbitIdentityFk)] = $rabbitIdentityFk;                                
+//        $this->identities[ get_class($holeIdentity)] = $holeIdentity;
+//        $this->identities[ get_class($rabbitIdentityFk)] = $rabbitIdentityFk;
+        
+        $this->identities[ HoleIdentityInterface::class ] = $holeIdentity;
+        $this->identities[ RabbitIdentityInterface::class ] = $rabbitIdentityFk;   
+        
     }  
          
     

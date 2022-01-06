@@ -11,11 +11,11 @@ use Model\Entity\AccessorInterface;
  */
 interface EntityInterface extends  AccessorInterface {
     
-//    /**
-//     * Vrací primární identitu.
-//     * @return IdentityInterface 
-//     */
-//    public function getIdentity(): IdentityInterface ; 
+    /**
+     * Vrací identitu požadovaného typu.
+     * @return IdentityInterface 
+     */
+    public function getIdentity( string $identityInterfaceName ): IdentityInterface ; 
     
     /**
      * Vrací všechny identity.

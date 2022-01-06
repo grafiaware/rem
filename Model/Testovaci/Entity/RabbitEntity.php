@@ -12,7 +12,6 @@ use Model\Testovaci\Identity\KlicIdentityInterface;
 
 
 
-        //class TestovaciEntity extends EntityAbstract implements TestovaciEntityInterface {    
 class RabbitEntity extends EntityAbstract implements RabbitEntityInterface {         
         // vsechny identity teto entity tady a v Abstract nejsou
     
@@ -70,7 +69,11 @@ class RabbitEntity extends EntityAbstract implements RabbitEntityInterface {
                                      KlicIdentityInterface $klicIdentity                
                                    ) {         
             $this->rabbitIdentity = $rabbitIdentity;
-            $this->klicIdentity   = $klicIdentity;            
+            $this->klicIdentity   = $klicIdentity;      
+            
+            $this->identities[ RabbitIdentityInterface::class ] = $rabbitIdentity;
+            $this->identities[ KlicIdentityInterface::class ] = $klicIdentity;   
+            
         }  
         
         

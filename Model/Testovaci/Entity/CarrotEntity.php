@@ -49,8 +49,12 @@ class CarrotEntity  extends EntityAbstract implements CarrotEntityInterface{
         $this->carrotIdentity = $carrotIdentity;
         $this->rabbitIdentityFk = $rabbitIdentityFk;
         
-        $this->identities[ get_class($carrotIdentity)] = $carrotIdentity;
-        $this->identities[ get_class($rabbitIdentityFk)] = $rabbitIdentityFk;                                
+//        $this->identities[ get_class($carrotIdentity)] = $carrotIdentity;
+//        $this->identities[ get_class($rabbitIdentityFk)] = $rabbitIdentityFk;         
+        
+        $this->identities[ CarrotIdentityInterface::class ] = $carrotIdentity;
+        $this->identities[ RabbitIdentityInterface::class ] = $rabbitIdentityFk; 
+        
     }  
                      
     

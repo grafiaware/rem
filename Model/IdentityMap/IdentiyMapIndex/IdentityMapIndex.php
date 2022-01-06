@@ -17,7 +17,7 @@ class IdentityMapIndex implements IdentityMapIndexInterface {
    
     
     /**
-     * pole assoc pole  index vznikly z identity
+     * pole assoc pole  index pro  jednu identitu
      * @var array 
      */
     private $identityIndex;

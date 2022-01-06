@@ -14,7 +14,7 @@ use Model\Entity\Identity\IdentityInterface;
  */
 abstract class EntityAbstract implements EntityInterface {
   
-//-------------->>>>>   identity budou vzdy v konkretni entite a tady ne
+//-------------->>>>>   identity budou vzdy v konkretni entite 
     
     
     
@@ -24,6 +24,12 @@ abstract class EntityAbstract implements EntityInterface {
     private $persisted=false;    
     private $locked=false;   
     
+    
+    
+    public function getIdentity( string $identityInterfaceName ): IdentityInterface {
+        
+    }
+
     
     public function getIdentities(): \Traversable {
         return $this->identities;

@@ -13,15 +13,25 @@ use Model\RowObject\Key\KeyInterface;
 
 class IndexMaker implements IndexMakerInterface {
     
+    
+    
+    /**
+     * Filtr obsahuje jmena (vlastnosti identity) potřebná pro jména metod identity, která (ta jména)  se účastní výroby indexu.
+     * 
+     * @var array  
+     */    
     private $filterIdentity;
     
-    // filtr obsahuje jmena vlastnosti identity ucastnicich se vyroby indexu
-    public function __construct(  $filterProHydratovaniIdentity ) {
-        
+    public function __construct(  array $filterProHydratovaniIdentity ) {
+        $this->filterIdentity = $filterProHydratovaniIdentity;
     }  
+         
     
-    public  function IndexFromParams( array $params  ) : string {}
-    public  function IndexFromKey( KeyInterface  $key  ) : string {}
    
-    public  function IndexFromIdentity(   IdentityInterface $identity  ) : string {}
+    public  function IndexFromIdentity(   IdentityInterface $identity  ) : string {}    
+    
+    
+    
+//    public  function IndexFromParams( array $params  ) : string {}
+//    public  function IndexFromKey( KeyInterface  $key  ) : string {}
 }
