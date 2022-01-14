@@ -10,6 +10,8 @@ use Model\Testovaci\Entity\HoleEntityInterface;
 use Model\Testovaci\Identity\RabbitIdentityInterface;
 use Model\Testovaci\Identity\KlicIdentityInterface;
 
+use Model\Testovaci\Entity\Enum\RabbitIdentityNamesEnum;
+
 
 
 class RabbitEntity extends EntityAbstract implements RabbitEntityInterface {         
@@ -19,14 +21,14 @@ class RabbitEntity extends EntityAbstract implements RabbitEntityInterface {
          *
          * @var RabbitIdentityInterface 
          */     
-        private $rabbitIdentity;
-               
+        private $rabbitIdentity;               
         /**
          *
          * @var KlicIdentityInterface 
          */             
         private $klicIdentity;
  
+  
     
 //--------------------------------------------    
         /**
@@ -58,18 +60,22 @@ class RabbitEntity extends EntityAbstract implements RabbitEntityInterface {
         private $associatedHoleEntity;
         
         
-               
         
         /**
          * 
          * @param RabbitIdentityInterface $rabbitIdentity
          * @param KlicIdentityInterface $klicIdentity
+         * @param RabbitIdentityNamesEnum $identityNames
          */
         public function __construct( RabbitIdentityInterface $rabbitIdentity, 
-                                     KlicIdentityInterface $klicIdentity                
+                                     KlicIdentityInterface $klicIdentity,
+                                     RabbitIdentityNamesEnum $identityNames            
+                
                                    ) {         
             $this->rabbitIdentity = $rabbitIdentity;
             $this->klicIdentity   = $klicIdentity;      
+
+            $this->identityNames = $identityNames;                 
             
             $this->identities[ RabbitIdentityInterface::class ] = $rabbitIdentity;
             $this->identities[ KlicIdentityInterface::class ] = $klicIdentity;   

@@ -6,6 +6,7 @@ use Model\Testovaci\Entity\HoleEntityInterface;
 use Model\Testovaci\Identity\HoleIdentityInterface;
 use Model\Testovaci\Identity\RabbitIdentityInterface;
 use Model\Hydrator\AccessorHydratorInterface;
+use Model\IdentityMap\IdentityMapInterface;
 
 use Model\Repository\RepositoryAbstract;
 
@@ -18,6 +19,7 @@ class HoleRepository extends RepositoryAbstract implements HoleRepositoryInterfa
     
     public function __construct( AccessorHydratorInterface $accessorHydratorEntity,
                                  AccessorHydratorInterface $accessorHydratorIdentity,
+                                 IdentityMapInterface $identityMap,
                                  RowObjectManagerInterface $rowObjectManager
               ) {
             

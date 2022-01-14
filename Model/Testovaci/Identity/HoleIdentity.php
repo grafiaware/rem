@@ -27,6 +27,12 @@ class HoleIdentity extends IdentityAbstract implements HoleIdentityInterface {
     }
     
     
+    
+    public function getTypIdentity(): string{
+        return HoleIdentityInterface::class;
+    }
+    
+    
       public function getIndexFromIdentity() : string {
         //get_object_vars - vybere ty "viditelne" a nestaticke
 //        $index='';

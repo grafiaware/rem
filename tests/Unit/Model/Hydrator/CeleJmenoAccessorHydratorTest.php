@@ -3,7 +3,7 @@ namespace Test\CeleJmenoEntityHydratorTest;
 
 use PHPUnit\Framework\TestCase;
 
-use Model\Hydrator\Filter\OneToManyFilterInterface;
+use Model\Filter\OneToManyFilterInterface;
 use Model\Hydrator\NameHydrator\AccessorMethodNameHydratorInterface; 
 use Model\Hydrator\NameHydrator\AccessorMethodNameHydrator;
 use Model\Hydrator\NameHydrator\AccessorNameHydratorInterface;

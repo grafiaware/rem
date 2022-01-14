@@ -11,7 +11,7 @@ use Model\RowObject\Key\KeyInterface;
 
 use Model\Hydrator\AttributeHydrator;
 use Model\Hydrator\NameHydrator\AttributeNameHydratorInterface;
-use Model\Hydrator\Filter\ColumnFilterInterface;
+use Model\Filter\ColumnFilterInterface;
 use Model\Hydrator\Exception\DatetimeConversionFailureException;
 use Model\Hydrator\Exception\UndefinedColumnNameException;
 use Model\Hydrator\Exception\UncompleteKeyException;

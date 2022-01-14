@@ -9,6 +9,8 @@ use Model\Entity\AccessorInterface;
  */
 interface IdentityInterface  extends AccessorInterface{
     
+    public function getTypIdentity(): string ;
+    
     public function lock(): void ;    
     public function unlock(): void ;  
     

@@ -23,6 +23,11 @@ class RabbitIdentity extends IdentityAbstract implements  RabbitIdentityInterfac
     }  
             
     
+    public function getTypIdentity(): string{
+        return RabbitIdentityInterface::class;
+    }
+    
+    
     public function getId1(): string {
         return $this->id1;
     }

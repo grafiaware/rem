@@ -8,7 +8,7 @@ use Model\Testovaci\RowObjectManager\TestovaciRowObjectManager;
 
 use Model\Hydrator\OneToOneAccessorHydrator;
 use Model\Hydrator\NameHydrator\AccessorMethodNameHydrator;
-use Model\Hydrator\Filter\OneToOneFilter;
+use Model\Filter\OneToOneFilter;
 
 use Model\Testovaci\Entity\TestovaciEntity;
 use Model\Testovaci\Identity\RabbitIdentity;

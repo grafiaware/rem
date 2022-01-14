@@ -1,0 +1,6 @@
+
+return (array_key_exists($identityInterfaceName, $this->entityMap) AND array_key_exists($index, $this->entityMap[$identityInterfaceName]))
+                 ? $this->entityMap[$identityInterfaceName][$index]
+                 : null;
+return isset($this->entityMap[$identityInterfaceName][$index]) ? $this->entityMap[$identityInterfaceName][$index] : null ; //ternarni operator
+return $this->entityMap[$identityInterfaceName][$index]??null; //null coalescing operator (??)

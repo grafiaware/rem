@@ -3,7 +3,9 @@ namespace Model\IdentityMap\IndexMaker;
 
 use Model\IdentityMap\IndexMaker\IndexMakerInterface;
 use Model\Entity\Identity\IdentityInterface;
-use Model\RowObject\Key\KeyInterface;
+use Model\Filter\FilterInterface;
+
+use Model\Hydrator\NameHydrator\AccessorMethodNameHydratorInterface;
 
 /**
  * Description of IndexMaker
@@ -12,26 +14,32 @@ use Model\RowObject\Key\KeyInterface;
  */
 
 class IndexMaker implements IndexMakerInterface {
-    
-    
-    
+
     /**
-     * Filtr obsahuje jmena (vlastnosti identity) potřebná pro jména metod identity, která (ta jména)  se účastní výroby indexu.
-     * 
-     * @var array  
-     */    
-    private $filterIdentity;
+     * @var AccessorMethodNameHydratorInterface
+     */
+    private $methodNameHydrator;
+       
     
-    public function __construct(  array $filterProHydratovaniIdentity ) {
-        $this->filterIdentity = $filterProHydratovaniIdentity;
+    public function __construct( 
+                            AccessorMethodNameHydratorInterface $methodNameHydrator
+            ) {
+        $this->methodNameHydrator = $methodNameHydrator;
     }  
-         
-    
-   
-    public  function IndexFromIdentity(   IdentityInterface $identity  ) : string {}    
-    
-    
-    
-//    public  function IndexFromParams( array $params  ) : string {}
-//    public  function IndexFromKey( KeyInterface  $key  ) : string {}
+
+    /**
+     * Vyrobi index z identity podle filtru.
+     * 
+     * @param IdentityInterface $identity
+     * @param FilterInterface $filter  Filtr obsahuje jmena (vlastnosti identity) potřebná pro jména metod identity, která (ta jména)  se účastní výroby indexu.
+     * @return string
+     */
+    public function indexFromIdentity(IdentityInterface $identity, FilterInterface $filter): string {
+        $index = '';
+        foreach ($filter as $name) {
+            $methodName = $this->methodNameHydrator->hydrate($name);
+            $index .= $identity->$methodName();
+        };
+        return $index;
+    }
 }

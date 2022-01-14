@@ -21,6 +21,12 @@ class CarrotIdentity  extends IdentityAbstract implements CarrotIdentityInterfac
 
     }
     
+    
+    public function getTypIdentity(): string{
+        return CarrotIdentityInterface::class;
+    }
+    
+    
     public function getId(): string {
         return $this->id;
     }

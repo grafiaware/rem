@@ -3,29 +3,19 @@ namespace Model\IdentityMap;
 
 use Model\IdentityMap\IdentityMapInterface;
 use Model\IdentityMap\IndexMaker\IndexMakerInterface;
-use Model\Entity\EntityInterface;
 use Model\Entity\Identity\IdentityInterface;
-use Model\IdentityMap\IdentityMapIndex\IdentityMapIndexFactoryInterface;
-
-use Model\Hydrator\NameHydrator\AccessorMethodNameHydratorInterface;
-use Model\Hydrator\Filter\OneToOneFilterInterface;
-
+use Model\Entity\EntityInterface;
 
 
 
 /**
- * IdentityMap
- * IdentityMapIndex je pro jednu identitu.
+ * IdentityMap je pro entitu. Entita ma vice identit.
+ * Seznam = jednorozmerne pole pro jednu identitu, klicem je index. 
+ * $entityMap je dvourozmerne pole poli seznamu. prvnim klicem je $identityInterfaceName.
  *
  * @author vlse2610
  */
-class IdentityMap implements IdentityMapInterface {
-    /**
-     *
-     * @var IdentityMapIndexFactoryInterface
-     */
-    private $identityMapIndexFactory;
-    
+class IdentityMap implements IdentityMapInterface {   
     
     /**
      *
@@ -34,85 +24,86 @@ class IdentityMap implements IdentityMapInterface {
     private $indexMaker;
     
    
+    private $identityFilters;
+    
+    
     /**
-     *
+     * Dvou rozmerne pole. Obsahuje 'seznamy' entit. Pro kazdou identitu jeden seznam.
+     * Seznam pro identitu se identifikuje prvnim rozmerem pole.
+     * 
      * @var array
      */
-    private $identityMapArray; 
+    private $entityMap; 
     
     
     
-   
-    public function __construct(            
-                    AccessorMethodNameHydratorInterface $methodNameHydrator           
-                    /*OneToOneFilterInterface $filter,*/            
-                    //IndexMakerInterface $indexMaker                                    
-//                             IdentityMapIndexFactoryInterface  $identityMapIndexFactory,
-                     ) {
-       
-             //++ vyrobit pro ?kazdou identity   $identityMapIndex do pole IdentityMap 
-        
-        //$this->identityMapIndexFactory = $identityMapIndexFactory;
-        //$this->indexMaker = $indexMaker;
+   /**
+    * 
+    * @param IndexMakerInterface $indexMaker
+    * @param array $filters  Filtry pro hydrataci method names v identitach.
+    */
+    public function __construct( IndexMakerInterface $indexMaker,                                    
+                                 array $filters                                                   
+                               ) {               
+        $this->indexMaker = $indexMaker;
+        $this->identityFilters = $filters;
     }  
     
         
     /**
-     * Přidá  $entity do vsech 'index seznamu'. Vsech = pro kazdou identitu.
+     * Přidá  $entity do vsech 'index seznamu'  $entityMapy. Vsech = pro kazdou identitu.
      * @param EntityInterface $entity
      * @return void
      */    
-    public function add (  EntityInterface $entity, IndexMakerInterface $indexMaker /*v něm přichystan filtr */  ) : void   {
-        
-        foreach ($entity->getIdentities() as $identityInterfaceName=>$identity) {
-            $index = $indexMaker->IndexFromIdentity($identity);               
-            $this->identityMapArray[$identityInterfaceName][$index] = $entity;
-        }
-        
-        
-        
-        //        if (!array_key_exists( $identityInterfaceName,  $this->identityMapArray ) ) {
-        //            $i = $this->identityMapIndexFactory->create();
-        //            $this->identityMapArray[ $identityInterfaceName ]= $i;
-        //        }
-        
-        // $index = $this->indexMaker->IndexFromIdentity( $entity->getIdentity( $identityInterfaceName ) );                      
-        //$this->identityMap[ $identityInterfaceName ] ->add ( $index, $entity );
+    public function add ( EntityInterface $entity ) : void   {        
+        foreach ($entity->getIdentityNames() as $identityInterfaceName) {            
+              $index = $this->indexMaker->indexFromIdentity($identity, $this->identityFilters[$identityInterfaceName]);  
+              $this->entityMap[$identityInterfaceName][$index] =  $entity; 
+        }                     
     }
     
     
     
     /**
+     * Podle $identity  vyzvedne entitu.
      * 
      * @param IdentityInterface $identity
      * @param string $identityInterfaceName
      * @return EntityInterface|null
      */
-    public function get (IdentityInterface $identity, string $identityInterfaceName ) : ?EntityInterface {
-        
-        // $identityMapIndex->get (index z $identity)
+    public function get(IdentityInterface $identity, string $identityInterfaceName): ?EntityInterface {        
+         $index = $this->indexMaker->indexFromIdentity($identity, $this->identityFilters[$identityInterfaceName]);                   
+         return $this->entityMap[$identityInterfaceName][$index]??null; //null coalescing operator (??)
     }
     
     
     /**
      * 
      * @param EntityInterface $entity
-     * @param string $identityInterfaceName
      * @return void
      */
-    public function remove (  EntityInterface $entity , string $identityInterfaceName ) : void {
+    public function remove(EntityInterface $entity): void {
+        foreach ($entity->getIdentityNames() as $identityInterfaceName) {            
+            $index = $this->indexMaker->indexFromIdentity($identity, $this->identityFilters[$identityInterfaceName]);  
+            if ( isset($this->entityMap[$identityInterfaceName][$index]) ) {
+                unset ($this->entityMap[$identityInterfaceName][$index] )  ;                 
+            }
+        }        
         
     }
     
     
+    
     /**
+     * Je v Mape entita?
      * 
      * @param IdentityInterface $identity
      * @param string $identityInterfaceName
      * @return boolean
      */
     public function has (  IdentityInterface $identity, string $identityInterfaceName ) : boolean {
-        
+        $index = $this->indexMaker->indexFromIdentity($identity, $this->identityFilters[$identityInterfaceName]);                   
+        return isset( $this->entityMap[$identityInterfaceName][$index] ) ? true : false; 
     }
     
     

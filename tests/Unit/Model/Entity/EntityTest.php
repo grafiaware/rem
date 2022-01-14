@@ -14,7 +14,8 @@ interface IdentityInterfaceMock extends IdentityInterface {
 }
     
 class IdentityMock extends IdentityAbstract implements IdentityInterfaceMock {    
- 
+//    public function getTypIdentity(): string {}
+
 }
 
 

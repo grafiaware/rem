@@ -1,7 +1,7 @@
 <?php
 namespace Model\Filter;
 
-use Model\Hydrator\Filter\OneToOneExcludeFilterInterface;
+use Model\Filter\OneToOneExcludeFilterInterface;
 
 
 class OneToOneExcludeFilter  implements OneToOneExcludeFilterInterface {

@@ -3,7 +3,7 @@ namespace Test\OneToManyFilterTest;
 
 use PHPUnit\Framework\TestCase;
 
-use Model\Hydrator\Filter\OneToManyFilter;
+use Model\Filter\OneToManyFilter;
 
 
 /**

@@ -3,6 +3,7 @@ namespace Model\IdentityMap;
 
 use Model\Entity\EntityInterface;
 use Model\Entity\Identity\IdentityInterface;
+use Model\IdentityMap\IndexMaker\IndexMakerInterface;
 
 /**
  * IdentityMap
@@ -17,13 +18,13 @@ interface IdentityMapInterface {
      * @param EntityInterface $entity
      * @return void
      */    
-    public function add (  EntityInterface $entity   ) : void    ;
+    public function add (  EntityInterface $entity  ) : void    ;
     
     
     
     /**
      * Podle $identity  vyzvedne entitu.
-     *      
+     * 
      * @param IdentityInterface $identity
      * @param string $identityInterfaceName
      * @return EntityInterface|null
@@ -31,19 +32,20 @@ interface IdentityMapInterface {
     public function get ( IdentityInterface $identity, string $identityInterfaceName ) : ?EntityInterface ;
     
     
+    
     /**
      * 
      * @param EntityInterface $entity
-     * @param string $identityInterfaceName
      * @return void
      */
-    public function remove (  EntityInterface $entity , string $identityInterfaceName ) : void ;
+    public function remove (  EntityInterface $entity ) : void ;
     
     
     /**
-     * Je v Mape entita?
+     * Je v Mape entita?    
      * 
      * @param IdentityInterface $identity
+     * @param string $identityInterfaceName
      * @return boolean
      */
     public function has (  IdentityInterface $identity, string $identityInterfaceName  ) : boolean ;

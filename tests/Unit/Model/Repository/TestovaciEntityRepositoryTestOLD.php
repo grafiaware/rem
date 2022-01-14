@@ -21,9 +21,9 @@ use Model\Hydrator\NameHydrator\AccessorNameHydrator;
 use Model\Hydrator\NameHydrator\AccessorMethodNameHydrator;
 use Model\Hydrator\NameHydrator\AttributeNameHydrator;
 
-use Model\Hydrator\Filter\OneToOneFilter;
-use Model\Hydrator\Filter\ColumnFilter;
-use Model\Hydrator\Filter\OneToManyFilter;
+use Model\Filter\OneToOneFilter;
+use Model\Filter\ColumnFilter;
+use Model\Filter\OneToManyFilter;
 
 use Model\Hydrator\AccessorHydratorInterface;
 use Model\Hydrator\OneToOneAccessorHydrator;

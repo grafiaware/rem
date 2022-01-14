@@ -3,6 +3,8 @@
 namespace Model\Testovaci\Identity;
 
 use Model\Testovaci\Identity\KlicIdentityInterface;
+use Model\Entity\Identity\IdentityAbstract;
+
 
 /**
  * Description of KlicIdentity
@@ -20,6 +22,14 @@ class KlicIdentity extends IdentityAbstract implements KlicIdentityInterface  {
     public function __construct( ) {
 
     }
+    
+    
+    
+    
+    public function getTypIdentity(): string{
+        return KlicIdentityInterface::class;
+    }
+    
     
     public function getKlic(): string {
         return $this->klic;

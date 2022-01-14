@@ -4,7 +4,7 @@ namespace Model\Hydrator;
 use Model\Entity\AccessorInterface;
 use Model\RowObject\AttributeInterface;
 
-use Model\Hydrator\Filter\OneToOneFilterInterface;
+use Model\Filter\OneToOneFilterInterface;
 use Model\Hydrator\NameHydrator\AccessorMethodNameHydratorInterface;
 use Model\Hydrator\AccessorHydratorInterface;
 

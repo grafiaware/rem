@@ -2,8 +2,8 @@
 namespace Model\IdentityMap\IndexMaker;
 
 use Model\Entity\Identity\IdentityInterface;
-use Model\RowObject\Key\KeyInterface;
 
+use Model\Filter\FilterInterface;
 
 /**
  *
@@ -11,18 +11,14 @@ use Model\RowObject\Key\KeyInterface;
  */
 interface IndexMakerInterface {
     
-    
-    
     /**
-     * Vyrobi index z vlastnosti identity podle filtru 
+     * Vyrobi index z identity podle filtru.
      * 
-     * @param IdentityInterface $identity aaa
+     * @param IdentityInterface $identity
+     * @param FilterInterface $filter
      * @return string
      */
-    public  function IndexFromIdentity(  IdentityInterface $identity  ) : string;
+    public  function indexFromIdentity(  IdentityInterface $identity , FilterInterface $filter ) : string;
     
-    
-    
-//    public  function IndexFromParams( array $params  ) : string;
-//    public  function IndexFromKey( KeyInterface  $key  ) : string;
+
 }

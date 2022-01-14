@@ -33,9 +33,9 @@ interface RabbitRepositoryInterface extends RepositoryInterface {
     
     
     /**
-     * Vrací  RabbitEntity z RabbitRepository  podle RabbitIdentity, nebo vraci null    
+     * Vrací  RabbitEntity z RabbitRepository  podle RabbitIdentity, nebo vraci null             
      * 
-     * @param RabbitIdentityInterface $identity
+     * @param RabbitIdentityInterface $identityRabbit
      * @return RabbitEntityInterface|null
      */
     public function getByRabbit ( RabbitIdentityInterface $identityRabbit  ) : ?RabbitEntityInterface ;
@@ -46,8 +46,7 @@ interface RabbitRepositoryInterface extends RepositoryInterface {
     
     
     //??????????????????? v rabbit neni sloupecek s cizim klicem
-    public function getByReferenceCarrot( CarrotIdentityInterface $identity ) : ?RabbitEntityInterface ;
-    
+    public function getByReferenceCarrot( CarrotIdentityInterface $identity ) : ?RabbitEntityInterface ;    
     
     public function getByReferenceHole( HoleIdentityInterface $identity ) : ?RabbitEntityInterface ;
     

@@ -5,6 +5,9 @@ namespace Model\Testovaci\Repository;
 use Model\Testovaci\Repository\CarrotRepositoryInterface;
 use Model\Testovaci\Entity\CarrotEntityInterface;
 use Model\Testovaci\Identity\CarrotIdentityInterface;
+use Model\Testovaci\Identity\RabbitIdentityInterface;
+use Model\IdentityMap\IdentityMapInterface;
+
 
 use Model\Hydrator\AccessorHydratorInterface;
 use Model\Repository\RepositoryAbstract;
@@ -24,7 +27,9 @@ class CarrotRepository extends RepositoryAbstract implements CarrotRepositoryInt
     
     function __construct( AccessorHydratorInterface $accessorHydratorEntity,
                           AccessorHydratorInterface $accessorHydratorIdentity,
+                          IdentityMapInterface $identityMap,
                           RowObjectManagerInterface $rowObjectManager
+          
             
             //IdentityMap .. je misto collection[]
             //tovarna na  entity

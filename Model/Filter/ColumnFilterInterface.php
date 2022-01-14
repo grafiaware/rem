@@ -1,11 +1,11 @@
 <?php
-namespace Model\Hydrator\Filter;
+namespace Model\Filter;
 
 /**
  *
  * @author vlse2610
  */
-interface ColumnFilterInterface   extends \IteratorAggregate{
+interface ColumnFilterInterface   extends FilterInterface{
     
     
      /**    

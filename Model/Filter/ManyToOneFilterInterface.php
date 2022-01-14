@@ -1,11 +1,11 @@
 <?php
-namespace Model\Hydrator\Filter;
+namespace Model\Filter;
 
 /**
  *
  * @author vlse2610
  */
-interface OneToOneFilterInterface  extends \IteratorAggregate {
+interface ManyToOneFilterInterface  extends FilterInterface {
   
  //   public function setConfig( array $poleJmen ) : void ;
         
@@ -14,9 +14,10 @@ interface OneToOneFilterInterface  extends \IteratorAggregate {
     //getIterator vrací iterovatelný objekt.    
     
     /**    
-     * Vrací jména, která budou použita k nastavování/extrahování.
+     * Vrací jména, která budou použita k hydratovani/extrahování.
      * @return \Traversable
      */
     public function getIterator() : \Traversable;
     
 }
+

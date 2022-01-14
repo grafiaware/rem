@@ -6,10 +6,13 @@ use Model\Testovaci\Entity\RabbitEntityInterface;
 use Model\Testovaci\Entity\RabbitEntity;
 use Model\Testovaci\Entity\CarrotEntityInterface;
 use Model\Testovaci\Entity\HoleEntityInterface;
+
 use Model\Testovaci\Identity\RabbitIdentityInterface;
 use Model\Testovaci\Identity\RabbitIdentity;
-use Model\Testovaci\Identity\CarrotIdentityInterface;
 use Model\Testovaci\Identity\KlicIdentityInterface;
+use Model\Testovaci\Identity\CarrotIdentityInterface;
+use Model\Testovaci\Identity\HoleIdentityInterface;
+
 
 
 use Model\Repository\RepositoryAbstract;
@@ -28,23 +31,24 @@ use Model\IdentityMap\IdentityMapInterface;
 class RabbitRepository extends RepositoryAbstract implements RabbitRepositoryInterface  {
     
     
-    function __construct( AccessorHydratorInterface $accessorHydratorEntity,           
-                          AccessorHydratorInterface $accessorHydratorIdentity,
+    function __construct( AccessorHydratorInterface $accessorHydratorEntity,                 
+                          array $accessorHydratorRabbitIdentities,
+                          array $accessorHydratorKlicIdentities,  //AccessorHydratorInterface
+                                     
+                          IdentityMapInterface $identityMap,   //IdentityMap .. je misto collection[],  v nem filtry identit
                           
                           RowObjectManagerInterface $rowObjectManager,                          
-            
-                          IdentityMapInterface $identityMap,   //IdentityMap .. je misto collection[],   
-                        /* v ni vyrobene nebo se postupne vyrobi? IdentityMapIndexy potrebnych identit*/
-                        /* nebose entity ukladaji  do pole */
-            
+ 
                           CarrotRepositoryInterface $carrotRepository = NULL,
-                          HoleRepositoryInterface $holeRepository = NULL                                                  
+                          HoleRepositoryInterface $holeRepository = NULL  
             
             //tovarna na  entity
             ) {
         
         $this->registerHydratorEntity( $accessorHydratorEntity ); 
-        $this->registerHydratorIdentity( $accessorHydratorIdentity ); 
+        
+        $this->registerHydratorIdentity( RabbitIdentityInterface::class, $accessorHydratorRabbitIdentities ); 
+        $this->registerHydratorIdentity( KlicIdentityInterface::class, $accessorHydratorKlicIdentities ); 
          
         $this->rowObjectManager = $rowObjectManager;
         $this->identityMap = $identityMap;
@@ -61,12 +65,12 @@ class RabbitRepository extends RepositoryAbstract implements RabbitRepositoryInt
                                                // /*$parentReferenceKeyAttribute*/ ["id1", "id2" ],
                                                 $holeRepository );
         }
-        
+ 
         
     }
     
     
-    public function add( RabbitEntityInterface $entity, IdentityMapInterface $identityMap ): void {                
+    public function add( RabbitEntityInterface $entity ): void {                
         $this->addEntity($entity);      
     }
     

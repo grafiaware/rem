@@ -3,7 +3,7 @@ namespace Model\Hydrator;
 
 use Model\Hydrator\AccessorHydratorInterface;
 
-use Model\Hydrator\Filter\OneToManyFilterInterface;
+use Model\Filter\OneToManyFilterInterface;
 use Model\Hydrator\NameHydrator\AccessorMethodNameHydratorInterface;
 use Model\Hydrator\NameHydrator\AccessorNameHydratorInterface;
 

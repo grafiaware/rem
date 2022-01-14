@@ -17,23 +17,36 @@ abstract class EntityAbstract implements EntityInterface {
 //-------------->>>>>   identity budou vzdy v konkretni entite 
     
     
-    
-    private $identities;    //????
+    /**
+     *
+     * @var array
+     */
+    private $identities;    
+    /**
+     *
+     * @var Enum
+     */
+    private $identityNames;
     
     
     private $persisted=false;    
     private $locked=false;   
     
     
-    
-    public function getIdentity( string $identityInterfaceName ): IdentityInterface {
+    /**
+     * 
+     * @return array
+     */
+    public function getIdentityNames(): array {
         
     }
 
     
-    public function getIdentities(): \Traversable {
-        return $this->identities;
-    }
+    
+    
+//    public function getIdentities(): \Traversable {
+//        return $this->identities;
+//    }
     
     
     public function setPersisted(): void {
@@ -50,11 +63,13 @@ abstract class EntityAbstract implements EntityInterface {
     
     
     public function lock(): void {
-        $this->identity->lock();
+        // kterou identitu ?????
+        //$this->identity->lock();
         $this->locked = true;
     }    
     public function unLock(): void {
-        $this->identity->unlock();
+        // kterou identitu ?????
+        //$this->identity->unlock();
         $this->locked = false;
     }    
     public function isLocked(): bool {

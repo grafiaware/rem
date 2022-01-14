@@ -7,56 +7,6 @@
     "content-hash": "7ef5a9948918f8f366c84283ab13dd04",
     "packages": [
         {
-            "name": "pes/pes",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/box4pes/pes.git",
-                "reference": "3cdf4c5e1d4f14fe979947c3e597ee41b8f8ceb9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/box4pes/pes/zipball/3cdf4c5e1d4f14fe979947c3e597ee41b8f8ceb9",
-                "reference": "3cdf4c5e1d4f14fe979947c3e597ee41b8f8ceb9",
-                "shasum": ""
-            },
-            "require": {
-                "psr/container": "^1.0",
-                "psr/http-factory": "^1.0",
-                "psr/http-message": "^1.0",
-                "psr/http-server-handler": "^1.0",
-                "psr/http-server-middleware": ">=0.5",
-                "psr/log": "^1.1"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.20.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Pes\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Petr Svoboda",
-                    "email": "svoboda@grafia.cz"
-                }
-            ],
-            "description": "Psí framework.",
-            "keywords": [
-                "framework",
-                "pes"
-            ],
-            "time": "2021-06-28T11:46:07+00:00"
-        },
-        {
             "name": "psr/container",
             "version": "1.1.1",
             "source": {

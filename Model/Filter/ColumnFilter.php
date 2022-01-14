@@ -1,7 +1,7 @@
 <?php
-namespace Model\Hydrator\Filter;
+namespace Model\Filter;
 
-use Model\Hydrator\Filter\ColumnFilterInterface;
+use Model\Filter\ColumnFilterInterface;
 
 
  /**

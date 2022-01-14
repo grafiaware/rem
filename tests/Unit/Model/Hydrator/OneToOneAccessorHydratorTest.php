@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 //tyto classy jsou pouzite z modelu
 use Model\Hydrator\OneToOneAccessorHydrator;
 //use Model\Entity\Identity\Key\KeyInterface;
-use Model\Hydrator\Filter\OneToOneFilterInterface;
+use Model\Filter\OneToOneFilterInterface;
 use Model\Hydrator\NameHydrator\AccessorMethodNameHydratorInterface;
 
 use Model\Entity\EntityAbstract;

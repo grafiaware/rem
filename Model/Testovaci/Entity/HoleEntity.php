@@ -8,6 +8,8 @@ use Model\Testovaci\Entity\HoleEntityInterface;
 use Model\Testovaci\Identity\HoleIdentityInterface;
 use Model\Testovaci\Identity\RabbitIdentityInterface;
 
+use Model\Testovaci\Entity\Enum\HoleIdentityNamesEnum;
+
 /**
  * Description 
  *
@@ -26,6 +28,7 @@ class HoleEntity extends EntityAbstract implements HoleEntityInterface{
     private $adresa;
         
     
+    
     /**
      *
      * @var HoleIdentityInterface 
@@ -37,22 +40,22 @@ class HoleEntity extends EntityAbstract implements HoleEntityInterface{
      */
     private $rabbitIdentityFk;
     
-    
         
     /**
      * 
      * @param HoleIdentityInterface $holeIdentity
      * @param RabbitIdentityInterface $rabbitIdentityFk
+     * @param HoleIdentityNamesEnum $identityNames
      */
     public function __construct(  
                         HoleIdentityInterface $holeIdentity,
-                        RabbitIdentityInterface $rabbitIdentityFk) 
-    {              
+                        RabbitIdentityInterface $rabbitIdentityFk,
+                        HoleIdentityNamesEnum $identityNames            
+            ) {              
         $this->holeIdentity = $holeIdentity;
         $this->rabbitIdentityFk = $rabbitIdentityFk;
         
-//        $this->identities[ get_class($holeIdentity)] = $holeIdentity;
-//        $this->identities[ get_class($rabbitIdentityFk)] = $rabbitIdentityFk;
+        $this->identityNames = $identityNames;                 
         
         $this->identities[ HoleIdentityInterface::class ] = $holeIdentity;
         $this->identities[ RabbitIdentityInterface::class ] = $rabbitIdentityFk;   
@@ -61,9 +64,7 @@ class HoleEntity extends EntityAbstract implements HoleEntityInterface{
          
     
     
-    
-    
-   
+     
     
     public function getHoleIdentity() : HoleIdentityInterface  {
         return $this->holeIdentity;

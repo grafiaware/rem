@@ -5,7 +5,7 @@ use Model\RowObject\AttributeInterface;
 
 use Model\Hydrator\NameHydrator\AttributeNameHydratorInterface;
 use Model\Hydrator\AttributeHydratorInterface;
-use Model\Hydrator\Filter\ColumnFilterInterface;
+use Model\Filter\ColumnFilterInterface;
 use Model\Hydrator\Exception\DatetimeConversionFailureException;
 use Model\Hydrator\Exception\UndefinedColumnNameException;
 

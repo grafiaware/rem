@@ -8,6 +8,7 @@ use Model\Testovaci\Entity\CarrotEntityInterface;
 use Model\Testovaci\Identity\CarrotIdentityInterface;
 use Model\Testovaci\Identity\RabbitIdentityInterface;
 
+use Model\Testovaci\Entity\Enum\CarrotIdentityNamesEnum;
 
 
 /**
@@ -23,6 +24,8 @@ class CarrotEntity  extends EntityAbstract implements CarrotEntityInterface{
     private $prumer;
     
     
+   
+    
     /**
      *
      * @var CarrotIdentityInterface 
@@ -35,22 +38,24 @@ class CarrotEntity  extends EntityAbstract implements CarrotEntityInterface{
     private $rabbitIdentityFk;       
     
             
+    
     /**
      * 
      * @param CarrotIdentityInterface $carrotIdentity
      * @param RabbitIdentityInterface $rabbitIdentityFk
+     * @param CarrotIdentityNamesEnum $identityNames
      */
     public function __construct(  
             CarrotIdentityInterface $carrotIdentity,
-            RabbitIdentityInterface $rabbitIdentityFk ) 
-    {        
-       //parent::__construct($identity);     
-        
+            RabbitIdentityInterface $rabbitIdentityFk, 
+            
+            CarrotIdentityNamesEnum $identityNames            
+            ){        
+       
         $this->carrotIdentity = $carrotIdentity;
         $this->rabbitIdentityFk = $rabbitIdentityFk;
         
-//        $this->identities[ get_class($carrotIdentity)] = $carrotIdentity;
-//        $this->identities[ get_class($rabbitIdentityFk)] = $rabbitIdentityFk;         
+        $this->identityNames = $identityNames;                 
         
         $this->identities[ CarrotIdentityInterface::class ] = $carrotIdentity;
         $this->identities[ RabbitIdentityInterface::class ] = $rabbitIdentityFk; 
@@ -64,11 +69,12 @@ class CarrotEntity  extends EntityAbstract implements CarrotEntityInterface{
     public function getRabbitIdentityFk() :  RabbitIdentityInterface {
         return $this->rabbitIdentityFk;
     }
-             
+     
+    
+    
     public function getPrumer() : integer {
         return $this->prumer;
     }
-
     public function setPrumer($prumer): void  {
         $this->prumer = $prumer;
     }
