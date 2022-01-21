@@ -28,7 +28,7 @@ class HoleIdentity extends IdentityAbstract implements HoleIdentityInterface {
     
     
     
-    public function getTypIdentity(): string{
+    public function getTypeIdentity(): string{
         return HoleIdentityInterface::class;
     }
     

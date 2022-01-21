@@ -7,15 +7,19 @@ use Model\Entity\AccessorInterface;
  *
  * @author vlse2610
  */
-interface IdentityInterface  extends AccessorInterface{
+interface   IdentityInterface  extends AccessorInterface{
     
-    public function getTypIdentity(): string ;
+    public function getTypeIdentity(): string ;
     
-    public function lock(): void ;    
-    public function unlock(): void ;  
     
-    public function isLocked(): bool ;
+    
+    
+    
+    
+    
+//    public function lock(): void ;    
+//    public function unlock(): void ;      
+//    public function isLocked(): bool ;
               
-  //  public function getIndexFromIdentity() : string ;
     
 }

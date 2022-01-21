@@ -25,21 +25,24 @@ use Model\RowObjectManager\RowObjectManagerInterface;
 class CarrotRepository extends RepositoryAbstract implements CarrotRepositoryInterface {
     
     
-    function __construct( AccessorHydratorInterface $accessorHydratorEntity,
-                          AccessorHydratorInterface $accessorHydratorIdentity,
-                          IdentityMapInterface $identityMap,
-                          RowObjectManagerInterface $rowObjectManager
-          
+    function __construct(   //AccessorHydratorInterface $accessorHydratorEntity,
+                            //AccessorHydratorInterface $accessorHydratorIdentity,
+                            array $entityHydrators,                                       
+                            array $identitiesHydrators,
             
-            //IdentityMap .. je misto collection[]
-            //tovarna na  entity
+                            IdentityMapInterface $identityMap,
+                            RowObjectManagerInterface $rowObjectManager                                 
             
             
               ) {
             
-            $this->registerHydratorEntity( $accessorHydratorEntity ); 
-            $this->registerHydratorIdentity( $accessorHydratorIdentity ); 
+//            $this->registerHydratorEntity( $accessorHydratorEntity ); 
+//            $this->registerHydratorIdentity( $accessorHydratorIdentity ); 
+            $this->entityHydrators = $entityHydrators;         
+            $this->identitiesHydrators = $identitiesHydrators;
 
+            $this->identityMap = $identityMap;
+            
             $this->rowObjectManager = $rowObjectManager;            
     }                        
     
@@ -69,9 +72,10 @@ class CarrotRepository extends RepositoryAbstract implements CarrotRepositoryInt
 //    } 
     
    
-    public function findByReferenceRabbit(  RabbitIdentityInterface  $parentIdentity ): \Traversable {
-        
-    }
+    public function findByReferenceRabbit(  RabbitIdentityInterface  $parentIdentity ): ?CarrotEntityInterface {
+        $re = $this->getEntity(  $parentIdentity, RabbitIdentityInterface::class );  
+        return   $re;
+    }   
      
     public function remove ( CarrotIdentityInterface $identity  ) : void  {
     

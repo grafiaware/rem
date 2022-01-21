@@ -23,7 +23,7 @@ class RabbitIdentity extends IdentityAbstract implements  RabbitIdentityInterfac
     }  
             
     
-    public function getTypIdentity(): string{
+    public function getTypeIdentity(): string{
         return RabbitIdentityInterface::class;
     }
     
@@ -41,7 +41,7 @@ class RabbitIdentity extends IdentityAbstract implements  RabbitIdentityInterfac
     
     
     
-    public function getIndexFromIdentity() : string {
+   private function getIndexFromIdentity() : string {
         //get_object_vars - vybere ty "viditelne" a nestaticke
 //        $index='';
 //        foreach ( \get_object_vars($this) as $nameAttr=>$value) {            

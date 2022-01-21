@@ -26,7 +26,7 @@ class KlicIdentity extends IdentityAbstract implements KlicIdentityInterface  {
     
     
     
-    public function getTypIdentity(): string{
+    public function getTypeIdentity(): string{
         return KlicIdentityInterface::class;
     }
     

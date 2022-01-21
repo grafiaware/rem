@@ -2,6 +2,7 @@
 
 namespace Model\Testovaci\Identity;
 
+use Model\Entity\Identity\IdentityInterface;
 /**
  *
  * @author vlse2610
@@ -15,5 +16,5 @@ interface CarrotIdentityInterface extends IdentityInterface {
        
     
        
-    public function getIndexFromIdentity() : string;
+    //public function getIndexFromIdentity() : string;
 }

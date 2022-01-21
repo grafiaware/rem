@@ -17,27 +17,40 @@ use Model\Repository\RepositoryAbstract;
  */
 class HoleRepository extends RepositoryAbstract implements HoleRepositoryInterface {
     
-    public function __construct( AccessorHydratorInterface $accessorHydratorEntity,
-                                 AccessorHydratorInterface $accessorHydratorIdentity,
-                                 IdentityMapInterface $identityMap,
-                                 RowObjectManagerInterface $rowObjectManager
+    public function __construct( /*AccessorHydratorInterface $accessorHydratorEntity,
+                                 AccessorHydratorInterface $accessorHydratorIdentity,*/
+            
+                                array $entityHydrators,                                       
+                                array $identitiesHydrators,
+            
+                                IdentityMapInterface $identityMap,
+                                RowObjectManagerInterface $rowObjectManager
               ) {
             
-            $this->registerHydratorEntity( $accessorHydratorEntity ); 
-            $this->registerHydratorIdentity( $accessorHydratorIdentity ); 
-
+//            $this->registerHydratorEntity( $accessorHydratorEntity ); 
+//            $this->registerHydratorIdentity( $accessorHydratorIdentity ); 
+        
+            $this->entityHydrators = $entityHydrators;         
+            $this->identitiesHydrators = $identitiesHydrators;
+            
+            $this->identityMap = $identityMap;
+            
             $this->rowObjectManager = $rowObjectManager;            
     }          
     
     
     public function add ( HoleEntityInterface $entity ) : void {}
   
+ 
     public function getByHole ( HoleIdentityInterface $identity  ) : ?HoleEntityInterface {
         $re = $this->getEntity(  $identity, HoleIdentityInterface::class  );  
         return $re;
     }      
     
-    public function getByReferenceRabbit ( RabbitIdentityInterface $parentIdentity  ) : ?HoleEntityInterface {}   
+    public function getByReferenceRabbit ( RabbitIdentityInterface $parentIdentity  ) : ?HoleEntityInterface {
+        $re = $this->getEntity(  $parentIdentity, RabbitIdentityInterface::class );  
+        return   $re;
+    }   
     
         
     public function remove ( HoleIdentityInterface $identity ) : void  {}

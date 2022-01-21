@@ -65,6 +65,11 @@ interface IdentityInterfaceMock  extends IdentityInterface {
 }    
 
 class IdentityMock extends IdentityAbstract implements IdentityInterfaceMock {
+     public function getTypeIdentity(): string {
+    }
+
+    
+    
 //    public function hasGeneratedKey() : bool {
 //        return false;
 //    }

@@ -14,9 +14,12 @@ use Model\RowObject\RowObjectInterface;
 abstract class RowObjectAbstract implements RowObjectInterface  {    
     /**
      *
-     * @var KeyInterface
+     * @var array
      */
-    public $key ;    
+    public $keys ;    
+       
+    
+    
     
     /**
      *
@@ -29,15 +32,24 @@ abstract class RowObjectAbstract implements RowObjectInterface  {
     private $locked=false;           
     
     
-    public function __construct ( KeyInterface $key ) {
-       $this->key = $key;        
+    public function __construct ( array $keys ) {
+       $this->keys = $keys;        
     }
    
     
     
-    public function getKey(): KeyInterface {
-        return $this->key;
+    
+    public function getKeys (): array{
+         return $this->keys;         
     }
+    
+    
+    
+    public function getKey( string $keyInterfaceName): KeyInterface {       
+    }
+    
+    
+   
       
     
 //    public function getForeignKey(): KeyInterface {

@@ -1,7 +1,6 @@
 <?php
 namespace Model\RowObject\Key;
 
-//use Model\RowObject\AttributeInterface;
 use Model\RowObject\Key\KeyInterface;
 
 /**

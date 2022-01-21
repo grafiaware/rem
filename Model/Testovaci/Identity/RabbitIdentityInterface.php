@@ -8,9 +8,7 @@ use Model\Entity\Identity\IdentityInterface;
  * 
  */
 interface RabbitIdentityInterface extends IdentityInterface{
-    
-    
-//    public function getTypIdentity(): string ;
+        
     
     
     public function getId1(): string ;
@@ -19,6 +17,6 @@ interface RabbitIdentityInterface extends IdentityInterface{
        
     
        
-    public function getIndexFromIdentity() ;
+   /* private function getIndexFromIdentity() ;*/
     
 }

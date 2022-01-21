@@ -9,8 +9,24 @@ use Model\RowObject\Key\KeyInterface;
  * @author vlse2610
  */
 interface RowObjectInterface extends AttributeInterface {
+    
+    
+     /**
+     * 
+     * @return array[]
+     */
+    public function getKeys (): array;
+    
        
-    public function getKey(): KeyInterface ; 
+    public function getKey( string $keyInterfaceName): KeyInterface; 
+    
+    
+    
+   
+    
+    
+    
+    
     
 //    public function getForeignKey(): KeyInterface ;
 //    public function setForeignKey( KeyInterface $key): KeyInterface ;

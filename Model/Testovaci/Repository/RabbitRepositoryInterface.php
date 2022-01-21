@@ -40,13 +40,19 @@ interface RabbitRepositoryInterface extends RepositoryInterface {
      */
     public function getByRabbit ( RabbitIdentityInterface $identityRabbit  ) : ?RabbitEntityInterface ;
     
+    /**
+     * 
+     * @param KlicIdentityInterface $identityKlic
+     * @return RabbitEntityInterface|null
+     */
     public function getByKlic ( KlicIdentityInterface  $identityKlic  ) : ?RabbitEntityInterface ;
           
     
     
     
-    //??????????????????? v rabbit neni sloupecek s cizim klicem
+    //!!!!!!!! v rabbit neni sloupecek s cizim klicem
     public function getByReferenceCarrot( CarrotIdentityInterface $identity ) : ?RabbitEntityInterface ;    
+    
     
     public function getByReferenceHole( HoleIdentityInterface $identity ) : ?RabbitEntityInterface ;
     

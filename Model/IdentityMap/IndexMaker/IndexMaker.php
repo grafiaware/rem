@@ -31,14 +31,17 @@ class IndexMaker implements IndexMakerInterface {
      * Vyrobi index z identity podle filtru.
      * 
      * @param IdentityInterface $identity
-     * @param FilterInterface $filter  Filtr obsahuje jmena (vlastnosti identity) potřebná pro jména metod identity, která (ta jména)  se účastní výroby indexu.
+     * @param FilterInterface $filter  Filtr obsahuje jmena (vlastnosti identity) potřebná pro jména metod identity, které   se účastní výroby indexu.
      * @return string
      */
-    public function indexFromIdentity(IdentityInterface $identity, FilterInterface $filter): string {
+    public function indexFromIdentity(IdentityInterface $identity, array $filters): string {
         $index = '';
-        foreach ($filter as $name) {
-            $methodName = $this->methodNameHydrator->hydrate($name);
-            $index .= $identity->$methodName();
+        /** @var FilterInterface $filter */
+        foreach ($filters as $filter) {
+            foreach ($filter as $name => $value) {
+                $methodName = $this->methodNameHydrator->hydrate($name);
+                $index .= $identity->$methodName();                
+            }
         };
         return $index;
     }

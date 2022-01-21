@@ -2,14 +2,12 @@
 
 namespace Model\Testovaci\Entity\Enum;
 
-use Pes\Type\Enum;
-
 /**
  * Description of RabbitIdentityNamesEnum
  *
  * @author vlse2610
  */
-class RabbitIdentityNamesEnum extends Enum {    
+class RabbitIdentityNamesEnum extends IdentityTypeEnum {    
     const RABBITIDENTITYINTERFACE = 'RabbitIdentityInterface';
     const KLICIDENTITYINTERFACE = 'KlicIdentityInterface';
 }

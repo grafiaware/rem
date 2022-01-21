@@ -31,9 +31,11 @@ use Model\IdentityMap\IdentityMapInterface;
 class RabbitRepository extends RepositoryAbstract implements RabbitRepositoryInterface  {
     
     
-    function __construct( AccessorHydratorInterface $accessorHydratorEntity,                 
-                          array $accessorHydratorRabbitIdentities,
-                          array $accessorHydratorKlicIdentities,  //AccessorHydratorInterface
+    function __construct( 
+                          array $entityHydrators,              
+//                          array $accessorHydratorRabbitIdentities,
+//                          array $accessorHydratorKlicIdentities,  
+                          array $identitiesHydrators,   //vicerozmerne [1.klic-podle typu identity] pole poli hydratoru
                                      
                           IdentityMapInterface $identityMap,   //IdentityMap .. je misto collection[],  v nem filtry identit
                           
@@ -42,17 +44,18 @@ class RabbitRepository extends RepositoryAbstract implements RabbitRepositoryInt
                           CarrotRepositoryInterface $carrotRepository = NULL,
                           HoleRepositoryInterface $holeRepository = NULL  
             
-            //tovarna na  entity
+            //tovarna na  entity ??
             ) {
         
         $this->registerHydratorEntity( $accessorHydratorEntity ); 
         
-        $this->registerHydratorIdentity( RabbitIdentityInterface::class, $accessorHydratorRabbitIdentities ); 
-        $this->registerHydratorIdentity( KlicIdentityInterface::class, $accessorHydratorKlicIdentities ); 
+//        $this->registerHydratorIdentity( RabbitIdentityInterface::class, $accessorHydratorRabbitIdentities ); 
+//        $this->registerHydratorIdentity( KlicIdentityInterface::class, $accessorHydratorKlicIdentities ); 
          
         $this->rowObjectManager = $rowObjectManager;
         $this->identityMap = $identityMap;
-        
+        $this->identitiesHydrators = $identitiesHydrators;
+        $this->entityHydrators = $entityHydrators;
         
         if ( $carrotRepository) {
             $this->registerOneToManyAssociation( CarrotEntityInterface::class,
@@ -90,10 +93,16 @@ class RabbitRepository extends RepositoryAbstract implements RabbitRepositoryInt
     
     
     
-    public function getByReferenceCarrot( CarrotIdentityInterface $identity ) : ?RabbitEntityInterface {}
+    public function getByReferenceCarrot( CarrotIdentityInterface $identity ) : ?RabbitEntityInterface {
+        $re = $this->getEntity(  $identity, CarrotIdentityInterface::class );  
+        return   $re; 
+    }
     
     
-    public function getByReferenceHole( HoleIdentityInterface $identity ) : ?RabbitEntityInterface {}
+    public function getByReferenceHole( HoleIdentityInterface $identity ) : ?RabbitEntityInterface {
+        $re = $this->getEntity(  $identity, HoleIdentityInterface::class );  
+        return   $re; 
+    }
     
     
    

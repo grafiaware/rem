@@ -69,11 +69,11 @@ abstract class RepositoryAbstract implements RepositoryInterface {
      *
      * @var []
      */
-    private $associations = [];
+    protected $associations = [];
 
-    private $hydratorsEntity = [];
+    protected $entityHydrators = [];
     
-    private $hydratorsIdentity = [];
+    protected $identitiesHydrators = [];
    
         
     /**
@@ -127,37 +127,45 @@ abstract class RepositoryAbstract implements RepositoryInterface {
     }
 
     
-    
-    protected function registerHydratorEntity( /*AccessorHydratorInterface*/ array $hydrators) {
-        $this->hydratorsEntity[] = $hydrators;
-    }
-    protected function registerHydratorIdentity( $identityInterfaceName, /*AccessorHydratorInterface*/ array $hydrators) {
-        $this->hydratorsIdentity[ $identityInterfaceName ] = $hydrators;
-    }
+//    REGISTR bude objekt
+//    protected function registerHydratorEntity( /*AccessorHydratorInterface*/ array $hydrators) {
+//        $this->hydratorsEntity[] = $hydrators;
+//    }
+//    protected function registerHydratorIdentity( $identityInterfaceName, /*AccessorHydratorInterface*/ array $hydrators) {
+//        $this->hydratorsIdentity[ $identityInterfaceName ] = $hydrators;
+//    }
 
     protected function hydrateEntity( EntityInterface $entity, RowObjectInterface $rowObject ) {
-        foreach ($this->hydratorsEntity as $hydrator) {
+        foreach ($this->entityHydrators as $hydrator) {
             $hydrator->hydrate( $entity, $rowObject);
         }
     }
-    protected function hydrateIdentity( IdentityInterface $identity, KeyInterface $key ) {
-        foreach ($this->hydratorsIdentity as $hydrator) {
-            $hydrator->hydrate( $identity, $key);
-        }
-        //asi neni dobre - nutno prochayet pole poli
+    protected function hydrateIdentity( IdentityInterface $identity, string $identityInterfaceName, KeyInterface $key ) {
+                //dvourozmerne pole s typem identity v 1.klici
+        foreach ($this->identitiesHydrators as $identityTyp => $hydrators) {
+            if ($identityTyp = $identityInterfaceName){
+                foreach ($hydrators as $hydrator) {
+                    $hydrator->hydrate( $identity, $key);                                    
+                }
+            }                       
+        }      
     }
 
     protected function extractEntity( EntityInterface $entity, RowObjectInterface $rowObject ) {
-        foreach ($this->hydratorsEntity as $hydrator) {
+        foreach ($this->entityHydrators as $hydrator) {
             $hydrator->extract($entity, $rowObject);
         }
     }
-    protected function extractIdentities ( EntityInterface $entity, KeyInterface $key ) {
-        
-            foreach ($this->hydratorsIdentity as $hydrator) {
-                $hydrator->extract($identity, $key);
+    
+    protected function extractIdentity (IdentityInterface $identity, string $identityInterfaceName, KeyInterface $key ) {
+        //dvourozmerne pole s typem identity v 1.klici
+            foreach ($this->identitiesHydrators as $identityTyp => $hydrators) {
+                if ($identityTyp = $identityInterfaceName){
+                    foreach ($hydrators as $hydrator) {
+                        $hydrator->extract($identity, $key);
+                    }
+                }
             }
-         //asi neni dobre - nutno prochayet pole poli
     }
 
     
@@ -193,15 +201,15 @@ abstract class RepositoryAbstract implements RepositoryInterface {
     protected function recreateEntity( IdentityInterface $identity, string $identityInterfaceName  ):  void {        
         
         $key = $this->rowObjectManager->createKey();
-        $this->extractIdentities( $identity, $key );
+        $this->extractIdentity( $identity, $identityInterfaceName, $key );  
         
         //vyzvednout rowObject z managera
-        $rowObject = $this->rowObjectManager->get(  $key  );
+        $rowObject = $this->rowObjectManager->get( $key );
         if ($rowObject) {                                  
             /** @var EntityInterface $entity */   //vyrobit prazdnou entity
             $entity = $this->createEntity();  // !!!!definována v konkrétní třídě!!!!! - adept na entity managera                                              
             //---------------------------------------------
-            $this->hydrateIdentity($entity->getIdentity( $identityInterfaceName ), $rowObject->getKey());
+            $this->hydrateIdentity($entity->getIdentity( $identityInterfaceName ), $identityInterfaceName, $rowObject->getKey()); //pro vic klicu
                         
             try {
                  $this->recreateAssociations( $entity->getIdentity( $identityInterfaceName ) ,  $rowObject /*parent*/ );  // assoc.entity da do rowObjectu
@@ -210,17 +218,9 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             }
             
             $this->hydrateEntity($entity, $rowObject);                        
-                        
-            //$this->collection[$index] = $entity;
-            
-           
-            $this->identityMap->add( $entity,   $identityInterfaceName );
-            
-            
-            
-            //$entity->getIdentities();
-            
-            
+                                                          
+            $this->identityMap->add( $entity ); //zaradi do vsech
+                                    
             
             
             $entity->setPersisted();   
@@ -400,31 +400,13 @@ abstract class RepositoryAbstract implements RepositoryInterface {
 
     
     protected function getEntity( IdentityInterface $identity , string $identityInterfaceName  ) :?EntityInterface {
-      
-       // $index = IndexMaker::IndexFromIdentity($identity);
-                
-   if  ( !$this->identityMap->has( $identity, $identityInterfaceName )   )  {
+        if  ( !$this->identityMap->has( $identity, $identityInterfaceName )   )  {
             $this->recreateEntity( $identity, $identityInterfaceName );
         }
-        
         return $this->identityMap->get( $identity, $identityInterfaceName) ?? NULL;   
-        
-        
-        
-//        $index =  $this->getIndexFromIdentityHash($identityHash) ;       //$identity->getIndexFromIdentity();                             
-//        if  ( !isset($this->collection[$index] )   )       /*and ( !($identity->isLocked()) ) */  //and (!isset($this->new[$index] ))                             
-//        {                        
-//            $this->recreateEntity( /*$identity*/ $identityHash, $index ); // v abstractu,  
-//            // ZARADI DO COLLECTION z uloziste( db, soubor , atd.... ), pod indexem  $index   
-//            // pozn. kdyz neni v ulozisti - ...asi... neni ani $rowObject                        
-//        }        
-//        return $this->collection[$index] ?? NULL;            
     }
     
-    
-    
-    
-    
+        
     /**
      * 
      * @param EntityInterface $entity
@@ -483,7 +465,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             $rowObject = $this->rowObjectManager->createRowObject();
             $this->extractEntity( $entity, $rowObject);   
             //vadi ze nevim jaka je to identita, vsechny asi ??????
-              $this->extractIdentities( $entity->getIdentity(), $rowObject->getKey() ); 
+              $this->extractIdentity( $entity->getIdentity(), $rowObject->getKey() ); 
 
             $this->rowObjectManager->add($rowObject);                              
 

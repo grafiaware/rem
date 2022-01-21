@@ -1,11 +1,13 @@
 <?php
 namespace Model\Entity;
 
-use Model\Entity\AccessorInterface;
 use Model\Entity\EntityInterface;
 
-use Model\Entity\Identity;
 use Model\Entity\Identity\IdentityInterface;
+use Model\Testovaci\Entity\Enum\IdentityTypeEnum;
+use Model\Testovaci\Entity\Exception\IdentityTypeNotExistsInEntity;
+
+use Pes\Type\Exception\ValueNotInEnumException;
 
 /**
  * Description of TableEntityAbstract
@@ -13,46 +15,88 @@ use Model\Entity\Identity\IdentityInterface;
  * @author vlse2610
  */
 abstract class EntityAbstract implements EntityInterface {
-  
-//-------------->>>>>   identity budou vzdy v konkretni entite 
-    
-    
     /**
      *
-     * @var array
+     * @var \Traversable
      */
-    private $identities;    
+    protected $identities;    
     /**
      *
-     * @var Enum
+     * @var IdentityTypeEnum
      */
-    private $identityNames;
-    
+    protected $enumIdentitiesNames;
     
     private $persisted=false;    
     private $locked=false;   
     
     
+    
     /**
      * 
-     * @return array
+     * @param \Traversable $identities
+     * @param IdentityTypeEnum $enumIdentitiesNames
      */
-    public function getIdentityNames(): array {
+    public function __construct( \Traversable $identities, IdentityTypeEnum $enumIdentitiesNames ) {              
+        $this->identities =  $identities;   
+        $this->enumIdentitiesNames = $enumIdentitiesNames;
+        $identityTypes = $enumIdentitiesNames->getConstList();
         
+        $identitiesArray = iterator_to_array($identities);
+        if ($identityTypes!=$identitiesArray) {
+            throw new MismatchedIdentities('Typy identit neodpovidaji.');
+        }
+        
+        
+        
+        
+//        // varianta a (s foreach)
+//        foreach ($identityTypes as $key => $value) {
+//            if (!array_key_exists($key, $identities)) {                
+//            }
+//        }
+//        foreach ($identities as $key => $value) {
+//            try {
+//                $enumIdentitiesNames($key);
+//            } catch (ValueNotInEnumException $exc) {
+//                throw new IdentityTypeNotExistsInEntity("Fuj!!!");
+//            }
+//        }                
+    }  
+         
+    
+     /**
+     * Vrací pole identit entity.
+     * 
+     * @return IdentityInterface[]
+     */
+    public function getIdentities(): \Traversable {
+        return $this->identities;
     }
-
+      
+ 
+    /**
+     * Vrátí identitu příslušného jména interface (typu identity).
+     * 
+     * @param string $identityInterfaceName
+     * @return IdentityInterface
+     * @throws IdentityTypeNotExistsInEntity
+     */
+    public function getIdentity(string $identityInterfaceName): IdentityInterface {
+        try {
+            $identityType = $this->enumIdentitiesNames($identityInterfaceName);
+        } catch (ValueNotInEnumException $exc) {
+            throw new IdentityTypeNotExistsInEntity("Typ identity $identityInterfaceName není v entitě.");
+        } 
+        return $this->identities [ $identityType];            
+    }
     
     
-    
-//    public function getIdentities(): \Traversable {
-//        return $this->identities;
-//    }
+   
     
     
     public function setPersisted(): void {
         $this->persisted = true;
-    }
-    
+    }    
     public function setUnpersisted(): void {
         $this->persisted = false;
     }
@@ -62,14 +106,10 @@ abstract class EntityAbstract implements EntityInterface {
         
     
     
-    public function lock(): void {
-        // kterou identitu ?????
-        //$this->identity->lock();
+    public function lock(): void {        
         $this->locked = true;
     }    
-    public function unLock(): void {
-        // kterou identitu ?????
-        //$this->identity->unlock();
+    public function unLock(): void {        
         $this->locked = false;
     }    
     public function isLocked(): bool {

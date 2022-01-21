@@ -56,9 +56,9 @@ class IdentityMap implements IdentityMapInterface {
      * @return void
      */    
     public function add ( EntityInterface $entity ) : void   {        
-        foreach ($entity->getIdentityNames() as $identityInterfaceName) {            
-              $index = $this->indexMaker->indexFromIdentity($identity, $this->identityFilters[$identityInterfaceName]);  
-              $this->entityMap[$identityInterfaceName][$index] =  $entity; 
+        foreach ($entity->getIdentities() as $identityInterfaceName=>$identity) {      
+            $index = $this->index($identity, $identityInterfaceName);                     
+            $this->entityMap[$identityInterfaceName][$index] =  $entity; 
         }                     
     }
     
@@ -72,8 +72,8 @@ class IdentityMap implements IdentityMapInterface {
      * @return EntityInterface|null
      */
     public function get(IdentityInterface $identity, string $identityInterfaceName): ?EntityInterface {        
-         $index = $this->indexMaker->indexFromIdentity($identity, $this->identityFilters[$identityInterfaceName]);                   
-         return $this->entityMap[$identityInterfaceName][$index]??null; //null coalescing operator (??)
+        $index = $this->index($identity, $identityInterfaceName);               
+        return $this->entityMap[$identityInterfaceName][$index]??null; // ?? - tzn. null coalescing operator 
     }
     
     
@@ -83,8 +83,8 @@ class IdentityMap implements IdentityMapInterface {
      * @return void
      */
     public function remove(EntityInterface $entity): void {
-        foreach ($entity->getIdentityNames() as $identityInterfaceName) {            
-            $index = $this->indexMaker->indexFromIdentity($identity, $this->identityFilters[$identityInterfaceName]);  
+        foreach ($entity->getIdentities() as $identityInterfaceName=>$identity) {      
+            $index = $this->index($identity, $identityInterfaceName);               
             if ( isset($this->entityMap[$identityInterfaceName][$index]) ) {
                 unset ($this->entityMap[$identityInterfaceName][$index] )  ;                 
             }
@@ -96,16 +96,18 @@ class IdentityMap implements IdentityMapInterface {
     
     /**
      * Je v Mape entita?
-     * 
+     * +
      * @param IdentityInterface $identity
      * @param string $identityInterfaceName
      * @return boolean
      */
     public function has (  IdentityInterface $identity, string $identityInterfaceName ) : boolean {
-        $index = $this->indexMaker->indexFromIdentity($identity, $this->identityFilters[$identityInterfaceName]);                   
+        $index = $this->index($identity, $identityInterfaceName);               
         return isset( $this->entityMap[$identityInterfaceName][$index] ) ? true : false; 
     }
     
-    
+    private function index($identity, $identityInterfaceName) {
+        return $this->indexMaker->indexFromIdentity($identity, $this->identityFilters[$identityInterfaceName]);  
+    }
     
 }

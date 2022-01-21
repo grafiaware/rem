@@ -56,6 +56,10 @@ class IdentityMock extends IdentityAbstract implements  IdentityInterfaceMock {
 
     private  $uidPrimarniKlicZnaky;
     
+    public function getTypeIdentity(): string {
+    }
+
+    
     public function setUidPrimarniKlicZnaky( string $uidPrimarniKlicZnaky): IdentityMock {
         $this->uidPrimarniKlicZnaky = $uidPrimarniKlicZnaky;
         return $this;

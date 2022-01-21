@@ -4,14 +4,14 @@ namespace Model\Testovaci\RowObject;
 use Model\RowObject\RowObjectInterface;
 use Model\RowObject\RowObjectAbstract;
 
-use Model\Testovaci\Key\TestovaciKey;
+//use Model\Testovaci\Key\TestovaciKey;
 
 /**
  * Description of TestovaciRowObject
  *
  * @author vlse2610
  */
-class TestovaciRowObject extends RowObjectAbstract implements RowObjectInterface {
+class RabbitRowObject extends RowObjectAbstract implements RowObjectInterface {
         /**
          * @var string
          */   
@@ -30,13 +30,13 @@ class TestovaciRowObject extends RowObjectAbstract implements RowObjectInterface
          */
         public $prvekDatetime; 
     
-        
-        /**
-         * 
-         * @param TestovaciKey $key
-         */
-        public function __construct( TestovaciKey $key ) {
-            parent::__construct( $key );
-        } 
+//        
+//        /**
+//         * 
+//         * @param TestovaciKey $key
+//         */
+//        public function __construct( TestovaciKey $key ) {
+//            parent::__construct( $key );
+//        } 
             
     }  

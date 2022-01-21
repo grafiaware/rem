@@ -18,7 +18,7 @@ interface CarrotRepositoryInterface   extends RepositoryInterface {
   
     public function getByCarrot (  CarrotIdentityInterface $identity ) : ?CarrotEntityInterface ;       
     
-    public function findByReferenceRabbit( RabbitIdentityInterface $parentIdentity ): \Traversable;
+    public function findByReferenceRabbit( RabbitIdentityInterface $parentIdentity ): ?CarrotEntityInterface;
         
     public function remove ( CarrotIdentityInterface $identity ) : void  ;
     

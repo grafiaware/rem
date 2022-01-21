@@ -17,6 +17,7 @@ class ComposerStaticInitbe893c430287b970fae2734d4d7b8349
             'Psr\\Http\\Server\\' => 16,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
+            'Pes\\' => 4,
         ),
         'M' => 
         array (
@@ -46,6 +47,10 @@ class ComposerStaticInitbe893c430287b970fae2734d4d7b8349
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'Pes\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pes/pes/src',
         ),
         'Model\\' => 
         array (

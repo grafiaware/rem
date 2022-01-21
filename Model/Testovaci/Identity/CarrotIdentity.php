@@ -22,7 +22,7 @@ class CarrotIdentity  extends IdentityAbstract implements CarrotIdentityInterfac
     }
     
     
-    public function getTypIdentity(): string{
+    public function getTypeIdentity(): string{
         return CarrotIdentityInterface::class;
     }
     
@@ -36,24 +36,24 @@ class CarrotIdentity  extends IdentityAbstract implements CarrotIdentityInterfac
     }
     
     
-      public function getIndexFromIdentity() : string {
-        //get_object_vars - vybere ty "viditelne" a nestaticke
-//        $index='';
-//        foreach ( \get_object_vars($this) as $nameAttr=>$value) {            
-//           $index =+ $value;                        
+//    public function getIndexFromIdentity() : string {
+//        //get_object_vars - vybere ty "viditelne" a nestaticke
+////        $index='';
+////        foreach ( \get_object_vars($this) as $nameAttr=>$value) {            
+////           $index =+ $value;                        
+////        }
+////        return $index;
+//        
+//        $a = \get_object_vars($this); 
+//        $b = ksort ($a);
+//        
+//        $index="";
+//        foreach ( $a  as $nameAttr=>$value ) {            
+//           $index .= $value;                        
 //        }
-//        return $index;
-        
-        $a = \get_object_vars($this); 
-        $b = ksort ($a);
-        
-        $index="";
-        foreach ( $a  as $nameAttr=>$value ) {            
-           $index .= $value;                        
-        }
-        return $index;    
-        
-    }
+//        return $index;    
+//        
+//    }
     
     
 }

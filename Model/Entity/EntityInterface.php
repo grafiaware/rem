@@ -15,12 +15,21 @@ interface EntityInterface extends  AccessorInterface {
 
     
     /**
+     * Vrací pole identit entity.
      * 
-     * @return array
+     * @return IdentityInterface[]
      */
-    public function getIdentityNames(): array ;
+    public function getIdentities(): \Traversable ;
     
-  
+    /**
+     * Vrátí identitu příslušného jména interface (typu identity).
+     * 
+     * @param string $identityInterfaceName
+     * @return IdentityInterface
+     */
+    public function getIdentity( string $identityInterfaceName) : IdentityInterface;
+    
+    
     
     
     public function setPersisted(): void;
