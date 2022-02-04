@@ -11,8 +11,8 @@ use Model\Entity\EntityInterface;
  */
 interface RabbitEntityInterface extends EntityInterface {     
     
-        public function getAssociatedCarrotEntities(): \Traversable ;
-        public function setAssociatedCarrotEntities( \Traversable $associatedCarrotEntities ) : void ;
+        public function getAssociatedCarrotEntities(): array ;
+        public function setAssociatedCarrotEntities( array $associatedCarrotEntities ) : void ;
                
         public function getAssociatedHoleEntity(): ?HoleEntityInterface ;
         public function setAssociatedHoleEntity(HoleEntityInterface $associatedHoleEntity) : void ;

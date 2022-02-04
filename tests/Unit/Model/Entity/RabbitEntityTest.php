@@ -7,13 +7,16 @@ use Model\Entity\Identity\IdentityInterface;
 use Model\Entity\Identity\IdentityAbstract;
 use Model\Entity\EntityInterface;
 use Model\Entity\EntityAbstract;
+use Model\Entity\Identities;
 
 use Model\Testovaci\Entity\RabbitEntity;
-use \Model\Testovaci\Entity\Enum\IdentityTypeEnum;
+use Model\Entity\Enum\IdentityTypeEnum;
 
 
 interface KlicIdentityInterfaceMock extends IdentityInterface {    
 }
+
+
 interface RabbitIdentityInterfaceMock extends IdentityInterface {
 }
 class RabbitIdentityNamesEnumMock extends IdentityTypeEnum{    
@@ -25,6 +28,14 @@ class RabbitIdentityMock extends IdentityAbstract implements RabbitIdentityInter
         return RabbitIdentityNamesEnumMock::RABBITIDENTITYINTERFACEMOCK;
     }
 }
+
+class KlicIdentityMock extends IdentityAbstract implements KlicIdentityInterfaceMock {   
+    public function getTypeIdentity(): string {
+        return RabbitIdentityNamesEnumMock::KLICIDENTITYINTERFACEMOCK;
+    }
+}
+
+
 
 
 interface CarrotIdentityInterfaceMock extends IdentityInterface {
@@ -49,13 +60,13 @@ class HoleIdentityMock extends IdentityAbstract implements HoleIdentityInterface
         return HoleIdentityNamesEnumMock::HOLEIDENTITYINTERFACEMOCK;
     }
 }
-//-----------------------------------
-
+//----------  entity  -----------------
 
 interface CarrotEntityInterfaceMock extends EntityInterface {    
 } 
 class CarrotEntityMock extends EntityAbstract implements CarrotEntityInterfaceMock{    
 }
+
 interface HoleEntityInterfaceMock extends EntityInterface {     
 } 
 class HoleEntityMock extends EntityAbstract implements HoleEntityInterfaceMock{    
@@ -64,34 +75,36 @@ class HoleEntityMock extends EntityAbstract implements HoleEntityInterfaceMock{
 
 //----------------------------------------------------------------------------------------------------
 /**
- * Description of TestovaciEntityTest
+ * Description of RabbitEntityTest
  *
  * @author vlse2610
  */
 class RabbitEntityTest extends TestCase {
     /**
      *
-     * @var \ArrayObject
+     * @var Identities
      */
     private $rabbitIdentities;
+           
+    
     /**
      *
-     * @var \ArrayObject
+     * @var Identities
      */
     private $holeIdentities;
     /**
      *
-     * @var \ArrayObject
+     * @var Identities
      */
     private $carrotIdentities;    
-    
+    //--------------
     
     private $holeEntity;
     
-    private $carrotEntity; 
+    private $carrotEntity1;          
     /**
      *
-     * @var \ArrayObject
+     * @var \ArrayObjec
      */
     private $carrotEntities; 
     
@@ -100,65 +113,61 @@ class RabbitEntityTest extends TestCase {
     
     
     public function setUp(): void {  
-//        $rabbitIdentityEnum = new RabbitIdentityNamesEnumMock();
-//        $this->nameRabbitIdentityInterfaceMock = $rabbitIdentityEnum(RabbitIdentityNamesEnumMock::RABBITIDENTITYINTERFACEMOCK);
-//        $this->nameKlicIdentityInterfaceMock = $rabbitIdentityEnum(RabbitIdentityNamesEnumMock::KLICIDENTITYINTERFACEMOCK);
-           
-//        RabbitIdentityNamesEnumMock::RABBITIDENTITYINTERFACEMOCK
-//        RabbitIdentityNamesEnumMock::KLICIDENTITYINTERFACEMOCK        
-        //---------------------------------------------------
         
+//      krasny priklad - takto  lze naplnit taky
+//      $this->rabbitIdentities = new Identities();
+//      $this->rabbitIdentities[RabbitIdentityNamesEnumMock::RABBITIDENTITYINTERFACEMOCK ]  = new RabbitIdentityMock ( );
+       
+
+        //identity do construktoru
+        $rabbitIdentities[RabbitIdentityNamesEnumMock::RABBITIDENTITYINTERFACEMOCK ]  = new RabbitIdentityMock ( );
+        $rabbitIdentities[RabbitIdentityNamesEnumMock::KLICIDENTITYINTERFACEMOCK ]  = new KlicIdentityMock ( );
+        $this->rabbitIdentities = new Identities(new RabbitIdentityNamesEnumMock(), $rabbitIdentities );        
+//        $this->rabbitIdentityEnum = new RabbitIdentityNamesEnumMock();
         
-        $rabIdentity[RabbitIdentityNamesEnumMock::RABBITIDENTITYINTERFACEMOCK ]  = new RabbitIdentityMock ( ); 
-        $this->rabbitIdentities = new \ArrayObject( $rabIdentity );
+        $holeIdentities[HoleIdentityNamesEnumMock::HOLEIDENTITYINTERFACEMOCK ]  = new HoleIdentityMock ( ); 
+        $this->holeIdentities = new Identities(new HoleIdentityNamesEnumMock(), $holeIdentities);
+//         $holeIdentityEnum = new HoleIdentityNamesEnumMock();
+        $this->holeEntity = new HoleEntityMock ($this->holeIdentities);
         
-        $holIdentity[ HoleIdentityNamesEnumMock::HOLEIDENTITYINTERFACEMOCK ]  = new HoleIdentityMock ( ); 
-        $this->holeIdentities = new \ArrayObject( $holIdentity );
+        $carrotIdentities[CarrotIdentityNamesEnumMock::CARROTIDENTITYINTERFACEMOCK ]  = new CarrotIdentityMock ( ); 
+        $this->carrotIdentities = new Identities(new CarrotIdentityNamesEnumMock(), $carrotIdentities );                
+//        $carrotIdentityEnum = new CarrotIdentityNamesEnumMock();
+        $this->carrotEntity1 = new CarrotEntityMock ($this->carrotIdentities);        
+        $carrotEntities[] =  $this->carrotEntity1;        
+        $this->carrotEntities  = $carrotEntities ;
         
-        $carIdentity[CarrotIdentityNamesEnumMock::CARROTIDENTITYINTERFACEMOCK ]  = new CarrotIdentityMock ( ); 
-        $this->carrotIdentities = new \ArrayObject( $carIdentity );
-        
-        
-        $this->carrotEntity = new CarrotEntityMock ( $this->carrotIdentities );
-        $carrotEnt [] =  $this->carrotEntity;
-        
-        $this->carrotEntities  = new \ArrayObject(  $carrotEnt );
-        $this->holeEntity = new HoleEntityMock ( $this->holeIdentities );
-        
+                
         
     }
     
     
     public function testConstruct(  ) : void {           
-        $this->assertInstanceOf( RabbitEntity::class, new RabbitEntity ( $this->rabbitIdentities ));                
+        $this->assertInstanceOf(RabbitEntity::class, new RabbitEntity ($this->rabbitIdentities) );                
     }
     
-    
-    public function testGetIdentity() {
-        $entity = new RabbitEntity ( $this->rabbitIdentities );       
-        $this->assertInstanceOf( RabbitIdentityInterfaceMock::class, $entity->getIdentity( RabbitIdentityNamesEnumMock::RABBITIDENTITYINTERFACEMOCK ));        
-    }
     
     public function testGetIdentities() {
         $entity = new RabbitEntity ( $this->rabbitIdentities );       
-        $identities = $entity->getIdentities();
+        $this->assertInstanceOf(Identities::class, $entity->getIdentities());
         
-        foreach ($this->rabbitIdentities as $name=>$value) {
-            foreach ($identities as $name1=>$value1) {
-                $this->assertEquals( $name, $name1);
-                $this->assertEquals( $value, $value1);
-            }
-        }     
+        
     }
     
     
-    public function testGetersSeters() {
-        $entity = new RabbitEntity ( $this->rabbitIdentities ); 
+    public function testGetersSetersAssoc() {
+        $rabbitEntity = new RabbitEntity ($this->rabbitIdentities ); 
         
-        $entity->setAssociatedCarrotEntities( $this->carrotEntities ) ;
-        $carrotEntities = $entity->getAssociatedCarrotEntities();
-        $this->assertInstanceOf ( \ArrayObject::class,  $carrotEntities );
+        $rabbitEntity->setAssociatedCarrotEntities( $this->carrotEntities );
+        $carrotEntities = $rabbitEntity->getAssociatedCarrotEntities();
+        $this->assertIsArray($carrotEntities);
                 
+        $rabbitEntity->setAssociatedHoleEntity($this->holeEntity);
+        $holeEntities = $rabbitEntity->getAssociatedHoleEntity();
+        $this->assertInstanceOf($holeEntities);
+        
+        
+        
        // $entity->setAssociatedHoleEntity($associatedHoleEntity)
        // $entity->setCeleJmeno($celeJmeno)
         //$entity->setPrvekDatetime($prvekDatetime)

@@ -1,6 +1,5 @@
 <?php
-namespace Model\Testovaci\Entity\Exception;
-
+namespace Model\Entity\Exception;
 
 /**
  * Description of IdentityTypeNotExistsInEntity

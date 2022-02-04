@@ -3,7 +3,7 @@ namespace Model\Entity;
 
 use Model\Entity\AccessorInterface;
 use Model\Entity\Identity\IdentityInterface;
-
+use Model\Entity\IdentitiesInterface;
 
 
 /**
@@ -15,20 +15,10 @@ interface EntityInterface extends  AccessorInterface {
 
     
     /**
-     * Vrací pole identit entity.
      * 
-     * @return IdentityInterface[]
+     * @return IdentitiesInterface
      */
-    public function getIdentities(): \Traversable ;
-    
-    /**
-     * Vrátí identitu příslušného jména interface (typu identity).
-     * 
-     * @param string $identityInterfaceName
-     * @return IdentityInterface
-     */
-    public function getIdentity( string $identityInterfaceName) : IdentityInterface;
-    
+    public function getIdentities(): IdentitiesInterface ;
     
     
     

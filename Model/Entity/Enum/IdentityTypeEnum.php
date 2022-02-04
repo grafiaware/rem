@@ -1,5 +1,5 @@
 <?php
-namespace Model\Testovaci\Entity\Enum;
+namespace Model\Entity\Enum;
 
 use Pes\Type\Enum;
 
@@ -8,6 +8,6 @@ use Pes\Type\Enum;
  *
  * @author vlse2610
  */
-class IdentityTypeEnum extends Enum {
+abstract class IdentityTypeEnum extends Enum {
     //put your code here
 }

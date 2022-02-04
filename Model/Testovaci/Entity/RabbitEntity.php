@@ -29,7 +29,7 @@ class RabbitEntity extends EntityAbstract implements RabbitEntityInterface {
 //---------------------------------------------        
         /**
          * 
-         * @var \Traversable
+         * @var array
          */      
         private $associatedCarrotEntities;
         
@@ -43,10 +43,10 @@ class RabbitEntity extends EntityAbstract implements RabbitEntityInterface {
         
        
         
-        public function getAssociatedCarrotEntities():  \Traversable {
+        public function getAssociatedCarrotEntities(): array /*\Traversable */{
             return $this->associatedCarrotEntities;
         }       
-        public function setAssociatedCarrotEntities( \Traversable $associatedCarrotEntities ) : void {
+        public function setAssociatedCarrotEntities( array  /*\Traversable*/  $associatedCarrotEntities ) : void {
             $this->associatedCarrotEntities = $associatedCarrotEntities;
         }
         

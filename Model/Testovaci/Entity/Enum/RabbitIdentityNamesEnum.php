@@ -1,6 +1,9 @@
 <?php
-
 namespace Model\Testovaci\Entity\Enum;
+
+use Model\Entity\Enum\IdentityTypeEnum;
+use Model\Testovaci\Identity\RabbitIdentityInterface;
+use Model\Testovaci\Identity\KlicIdentityInterface;
 
 /**
  * Description of RabbitIdentityNamesEnum
@@ -8,6 +11,6 @@ namespace Model\Testovaci\Entity\Enum;
  * @author vlse2610
  */
 class RabbitIdentityNamesEnum extends IdentityTypeEnum {    
-    const RABBITIDENTITYINTERFACE = 'RabbitIdentityInterface';
-    const KLICIDENTITYINTERFACE = 'KlicIdentityInterface';
+    const RABBITIDENTITYINTERFACE = RabbitIdentityInterface::class;
+    const KLICIDENTITYINTERFACE = KlicIdentityInterface::class;
 }
