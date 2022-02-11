@@ -10,12 +10,12 @@ use Model\Entity\EntityInterface;
 interface HoleEntityInterface extends EntityInterface {
  
     
-    public function getHloubka(): integer ;
+    public function getHloubka(): int ;
 
-    public function getAdresa(): integer ;
+    public function getAdresa(): int ;
 
-    public function setHloubka(integer $hloubka) : void ;
+    public function setHloubka(int $hloubka) : void ;
 
-    public function setAdresa(integer $adresa) : void ;
+    public function setAdresa(int $adresa) : void ;
 
 }

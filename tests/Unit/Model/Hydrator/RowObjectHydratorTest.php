@@ -9,7 +9,7 @@ use Model\RowObject\RowObjectInterface;
 use Model\RowObject\Key\KeyAbstract;
 use Model\RowObject\Key\KeyInterface;
 
-use Model\Hydrator\AttributeHydrator;
+use Model\Hydrator\AttributeAccessHydrator;
 use Model\Hydrator\NameHydrator\AttributeNameHydratorInterface;
 use Model\Filter\ColumnFilterInterface;
 use Model\Hydrator\Exception\DatetimeConversionFailureException;
@@ -79,10 +79,10 @@ class RowObjectMock  extends RowObjectAbstract implements  RowObjectInterfaceMoc
      */
     public $prvekTimestamp;
 
-    //v Abstract  public $key
-    public function __construct( KeyInterfaceMock $key ) {
-        parent::__construct( $key );
-    }
+//    //v Abstract  public $key
+//    public function __construct( KeyInterfaceMock $key ) {
+//        parent::__construct( $key );
+//    }
 }
 
 
@@ -160,13 +160,13 @@ class RowHydratorTest extends TestCase {
 
         /* @var $metaDataProvider MetadataProviderMysql */
         $metaDataProvider = self::$container->get(MetadataProviderMysql::class);
-        $rowHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),
+        $rowHydrator = new AttributeAccessHydrator( new AttributeNameHydratorROMock(),
                                               $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
                                               new ColumnFilterMock( $poleJmenAttributes )
                                             );
         $this->assertIsObject($rowHydrator, "***CHYBA***" );
 
-        $rowObjectM =  new RowObjectMock(new KeyMock( [], []));
+        $rowObjectM =  new RowObjectMock(   /*new KeyMock( [], [])*/  []  );
         $rowHydrator->hydrate( $rowObjectM , new RowData( [ "prvek_char" => "QWERTZ",
                                                                   "prvek_varchar" => "Qěščřžýáíé",
                                                                   "prvek_integer" => 111,
@@ -206,13 +206,13 @@ class RowHydratorTest extends TestCase {
 
         /* @var $metaDataProvider MetadataProviderMysql */
         $metaDataProvider = self::$container->get(MetadataProviderMysql::class);
-        $rowHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),
+        $rowHydrator = new AttributeAccessHydrator( new AttributeNameHydratorROMock(),
                                         $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
                                         new ColumnFilterMock( $poleJmenAttributes )  //--s neex.sloupcem
                                       );
         $this->assertIsObject($rowHydrator, "***CHYBA***" );
 
-        $rowObjectM =  new RowObjectMock(new KeyMock( [],[] ));
+        $rowObjectM =  new RowObjectMock( /*new KeyMock( [],[] )*/ []);
         $this->expectException( UndefinedColumnNameException::class );
         $rowHydrator->hydrate( $rowObjectM , new RowData( [ "prvek_char" => "QWERTZ",
                                                                   "prvek_varchar" => "Qěščřžýáíé",
@@ -236,13 +236,13 @@ class RowHydratorTest extends TestCase {
 
         /* @var $metaDataProvider MetadataProviderMysql */
         $metaDataProvider = self::$container->get(MetadataProviderMysql::class);
-        $rowtHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),
+        $rowtHydrator = new AttributeAccessHydrator( new AttributeNameHydratorROMock(),
                                               $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
                                               new ColumnFilterMock( $poleJmenAttributes )
                                             );
         $this->assertIsObject($rowtHydrator, "***CHYBA***" );
 
-        $rowObjectM =  new RowObjectMock(new KeyMock([],[]));
+        $rowObjectM =  new RowObjectMock(  /*new KeyMock([],[])*/  []);
         $this->expectException( DatetimeConversionFailureException::class );
         $rowtHydrator->hydrate( $rowObjectM , new RowData( [ "prvek_char" => "QWERTZ",
                                                                   "prvek_varchar" => "Qěščřžýáíé",
@@ -263,13 +263,13 @@ class RowHydratorTest extends TestCase {
 
         /* @var $metaDataProvider MetadataProviderMysql */
         $metaDataProvider = self::$container->get(MetadataProviderMysql::class);
-        $rowHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),
+        $rowHydrator = new AttributeAccessHydrator( new AttributeNameHydratorROMock(),
                                               $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
                                               new ColumnFilterMock( $poleJmenAttributes )
                                             );
         $this->assertIsObject($rowHydrator, "***CHYBA***" );
 
-        $rowObjectM =  new RowObjectMock(new KeyMock( [],[] ));
+        $rowObjectM =  new RowObjectMock(  /*new KeyMock( [],[] )*/  []);
         $this->expectException( DatetimeConversionFailureException::class );
         $rowHydrator->hydrate( $rowObjectM , new RowData( [ "prvek_char" => "QWERTZ",
                                                                   "prvek_varchar" => "Qěščřžýáíé",
@@ -298,7 +298,7 @@ class RowHydratorTest extends TestCase {
 
         /* @var $metaDataProvider MetadataProviderMysql */
         $metaDataProvider = self::$container->get( MetadataProviderMysql::class );
-        $rowHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),
+        $rowHydrator = new AttributeAccessHydrator( new AttributeNameHydratorROMock(),
                                         $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
                                         new ColumnFilterMock( $poleJmenDoFiltruHydratoru )
                                       );
@@ -306,7 +306,7 @@ class RowHydratorTest extends TestCase {
 
         //$rowDataM = new RowDataMock ();
         $rowDataM = new RowData ();
-        $rowObjectM = new RowObjectMock( new KeyMock( [],[] ));
+        $rowObjectM = new RowObjectMock( /*new KeyMock( [],[] )*/  []);
 
         $rowObjectM->prvekChar = "QWERTZ" ;
         $rowObjectM->prvekVarchar = "Qěščřžýáíé";
@@ -349,7 +349,7 @@ class RowHydratorTest extends TestCase {
 
         /* @var $metaDataProvider MetadataProviderMysql */
         $metaDataProvider = self::$container->get( MetadataProviderMysql::class );
-        $rowHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),
+        $rowHydrator = new AttributeAccessHydrator( new AttributeNameHydratorROMock(),
                                         $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
                                         new ColumnFilterMock( $poleJmenDoFiltruHydratoru )
                                       );
@@ -357,7 +357,7 @@ class RowHydratorTest extends TestCase {
 
         //$rowDataM = new RowDataMock ();
         $rowDataM = new RowData();
-        $rowObjectM = new RowObjectMock( new KeyMock( [],[] ));
+        $rowObjectM = new RowObjectMock( /*new KeyMock( [],[] )*/  []);
 
         $rowObjectM->prvekChar = "QWERTZ" ;
         $rowObjectM->prvekVarchar = "Qěščřžýáíé";
@@ -384,7 +384,7 @@ class RowHydratorTest extends TestCase {
 
         /* @var $metaDataProvider MetadataProviderMysql */
         $metaDataProvider = self::$container->get( MetadataProviderMysql::class );
-        $rowHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),
+        $rowHydrator = new AttributeAccessHydrator( new AttributeNameHydratorROMock(),
                                         $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
                                         new ColumnFilterMock( $poleJmenDoFiltruHydratoru )
                                       );
@@ -392,7 +392,7 @@ class RowHydratorTest extends TestCase {
 
         //$rowDataM = new RowDataMock ();
         $rowDataM = new RowData ();
-        $rowObjectM = new RowObjectMock( new KeyMock( [],[] ));
+        $rowObjectM = new RowObjectMock( /*new KeyMock( [],[] )*/ [] );
 
         $rowObjectM->prvekChar = "QWERTZ" ;
         $rowObjectM->prvekVarchar = "Qěščřžýáíé";
@@ -417,7 +417,7 @@ class RowHydratorTest extends TestCase {
 
         /* @var $metaDataProvider MetadataProviderMysql */
         $metaDataProvider = self::$container->get( MetadataProviderMysql::class );
-        $rowHydrator = new AttributeHydrator(  new AttributeNameHydratorROMock(),
+        $rowHydrator = new AttributeAccessHydrator(  new AttributeNameHydratorROMock(),
                                                      $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
                                                      new ColumnFilterMock( $poleJmenDoFiltruHydratoru )
                                                    );
@@ -425,7 +425,7 @@ class RowHydratorTest extends TestCase {
 
         //$rowDataM = new RowDataMock ();
         $rowDataM = new RowData ();
-        $rowObjectM = new RowObjectMock( new KeyMock( [],[] ));
+        $rowObjectM = new RowObjectMock( /*new KeyMock( [],[] )*/  [] );
 
         $rowObjectM->prvekChar = "QWERTZ" ;
         $rowObjectM->prvekVarchar = "Qěščřžýáíé";

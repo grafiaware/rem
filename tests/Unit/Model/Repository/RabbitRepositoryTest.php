@@ -17,8 +17,8 @@ use Model\Testovaci\Identity\RabbitIdentityInterface;
 use Model\Testovaci\Identity\KlicIdentityInterface;
 use Model\Testovaci\Identity\CarrotIdentityInterface;
 
-use Model\Testovaci\Entity\RabbitIdentityNamesEnum;
-use Model\Testovaci\Entity\CarrotIdentityNamesEnum;
+use Model\Testovaci\Entity\Enum\RabbitIdentityNamesEnum;
+use Model\Testovaci\Entity\Enum\CarrotIdentityNamesEnum;
 
 use Model\Testovaci\RowObjectManager\TestovaciRowObjectManager;
 
@@ -31,6 +31,7 @@ use Model\Repository\Exception\UnpersistedEntityInCollectionException;
 use Model\Repository\Exception\UnableWriteToReadOnlyRepoException;
 
 use Model\IdentityMap\IdentityMap;
+use Model\IdentityMap\IndexMaker\IndexMaker;
 
 
 /**
@@ -82,28 +83,28 @@ class RabbitRepositoryTest  extends TestCase {
 //            "prvekDate", "prvekDatetime", "prvekTimestamp" , 'jmenoClovek', 'prijmeniClovek' 
 //            ] ; 
         $filterEntity = new OneToOneFilter( $poleJmenEntityRabbit);
-        $filterIdentity = new OneToOneFilter( $poleJmenIdentityRabbit);
+        $filterIdentity = new OneToOneFilter( $poleJmenIdentityRabbit);        
+        $filtersI [] = $filterIdentity;
         
         $accessorHydratorEntity = new OneToOneAccessorHydrator($methodNameHydratorEntity, $filterEntity) ;
         $accessorHydratorIdentityArray[RabbitIdentityInterface::class] = 
-                [
-                    new OneToOneAccessorHydrator($methodNameHydratorIdentity, $filterIdentity), 
-                ];
+                [  new OneToOneAccessorHydrator($methodNameHydratorIdentity, $filterIdentity)  ];
 
-        $identityNames = new RabbitIdentityNamesEnum();
-        $identityMap = new IdentityMapIdentityMap($methodNameHydratorIdentity, $identityNames );
+        //$identityNames = new RabbitIdentityNamesEnum();
+        $indexMaker = new IndexMaker( $methodNameHydratorEntity );
+        $identityMap = new IdentityMap( $indexMaker, $filtersI );
         
         $rabbitIdentityNames = new RabbitIdentityNamesEnum();
         $carrotIdentityNames = new CarrotIdentityNamesEnum();
         
         $this->carrotRepository = new CarrotRepository( $accessorHydratorEntity, 
-                                                        $accessorHydratorIdentity, 
-                                                              self::$rowObjectCarrotManager );                 
+                                                        $accessorHydratorIdentityArray, 
+                                                        self::$rowObjectCarrotManager,
+                                                        $identityMap);                 
         $this->rabbitRepository = new RabbitRepository( $accessorHydratorEntity, 
-                                                        $accessorHydratorIdentity, 
-                                                              self::$rowObjectRabbittManager,
+                                                        $accessorHydratorIdentityArray, 
+                                                        self::$rowObjectRabbittManager,
                                                         $identityMap
-                                                             /* $this->carrotRepository*/
                                                       );     
             
         
@@ -113,15 +114,15 @@ class RabbitRepositoryTest  extends TestCase {
         $this->klicIdentity = new KlicIdentity();
             $this->klicIdentity->setKlic('klicKralika');
         
-        $this->rabbitEntity1 = new RabbitEntity( $this->rabbitIdentity,  $this->klicIdentity );              
+        $this->rabbitEntity1 = new RabbitEntity( [$this->rabbitIdentity,  $this->klicIdentity] );              
             $this->rabbitEntity1->setCeleJmeno("Jméno Celé"); 
             $this->rabbitEntity1->setPrvekVarchar('') ;
             $this->rabbitEntity1->setPrvekDatetime(new \DateTime('2000-01-01')) ;                                
         //--------------------------------------------------
             
-        $this->rabbitRepositoryReadOnly = new RabbitRepositoryReadOnly (
-                        $accessorHydratorEntity, $accessorHydratorIdentity,   self::$rowObjectRabbittManager, $this->carrotRepository  );               
-        }
+//        $this->rabbitRepositoryReadOnly = new RabbitRepositoryReadOnly (
+//                        $accessorHydratorEntity, $accessorHydratorIdentityArray,   self::$rowObjectRabbittManager, y  );               
+      }
     
     
     

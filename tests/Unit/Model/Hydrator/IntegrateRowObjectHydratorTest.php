@@ -9,7 +9,7 @@ use Model\RowObject\RowObjectInterface;
 use Model\RowObject\Key\KeyAbstract;
 use Model\RowObject\Key\KeyInterface;
 
-use Model\Hydrator\AttributeHydrator;
+use Model\Hydrator\AttributeAccessHydrator;
 use Model\Hydrator\NameHydrator\AttributeNameHydratorInterface;
 use Model\Filter\ColumnFilterInterface;
 use Model\Hydrator\Exception\DatetimeConversionFailureException;
@@ -92,9 +92,9 @@ class RowObjectMock  extends RowObjectAbstract implements RowObjectInterfaceMock
 
     //v Abstract  public $key
 
-    public function __construct( KeyInterfaceMock $key ) {
-        parent::__construct( $key );
-    }
+//    public function __construct( KeyInterfaceMock $key ) {
+//        parent::__construct( $key );
+//    }
 
 }
 
@@ -172,12 +172,12 @@ class IntegrateRowObjectHydratorTest extends TestCase {
 
         /* @var $metaDataProvider MetadataProviderMysql */
         $metaDataProvider = self::$container->get(MetadataProviderMysql::class);
-        $keyRowObjectHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),
+        $keyRowObjectHydrator = new AttributeAccessHydrator( new AttributeNameHydratorROMock(),
                                                  $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
                                                  new KeyColumnFilterMock( $poleJmenKlice )
                                                );
         // $this->assertIsObject($keyRowObjectHydrator, "***CHYBA***" );
-        $rowObjectHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),
+        $rowObjectHydrator = new AttributeAccessHydrator( new AttributeNameHydratorROMock(),
                                               $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
                                               new ColumnFilterMock( $poleJmenDoFiltruHydratoruRO )
                                             );
@@ -194,9 +194,9 @@ class IntegrateRowObjectHydratorTest extends TestCase {
                       "uid_testovaci_table" => "KEYklic"
              ]  );
 
-        $rowObjectM =  new RowObjectMock(new KeyMock( [ "uidTestovaciTable" => false ] ) );
+        $rowObjectM =  new RowObjectMock(/*new KeyMock( */ [ "uidTestovaciTable" => false ] /*)*/ );
         $rowObjectHydrator->hydrate( $rowObjectM , $rowData );
-        $keyRowObjectHydrator->hydrate( $rowObjectM->key , $rowData );
+        //$keyRowObjectHydrator->hydrate( $rowObjectM->key , $rowData );
 
         $this->assertObjectHasAttribute( "prvekChar",     $rowObjectM, "***CHYBA***"  );
         $this->assertObjectHasAttribute( "prvekVarchar",  $rowObjectM, "***CHYBA***"  );
@@ -218,8 +218,8 @@ class IntegrateRowObjectHydratorTest extends TestCase {
 
         //-------------------------------
 
-        $this->assertObjectHasAttribute( "uidTestovaciTable", $rowObjectM->key,  "***CHYBA***"  );
-        $this->assertEquals( $rowObjectM->key->uidTestovaciTable, "KEYklic" , "***CHYBA***"   );
+//        $this->assertObjectHasAttribute( "uidTestovaciTable", $rowObjectM->key,  "***CHYBA***"  );
+//        $this->assertEquals( $rowObjectM->key->uidTestovaciTable, "KEYklic" , "***CHYBA***"   );
 
     }
 
@@ -234,22 +234,22 @@ class IntegrateRowObjectHydratorTest extends TestCase {
 
         /* @var $metaDataProvider MetadataProviderMysql */
         $metaDataProvider = self::$container->get( MetadataProviderMysql::class );
-        $rowObjectHydrator = new AttributeHydrator( new AttributeNameHydratorROMock(),
+        $rowObjectHydrator = new AttributeAccessHydrator( new AttributeNameHydratorROMock(),
                                               $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
                                               new ColumnFilterMock( $poleJmenDoFiltruHydratoru )
                                             );
         $this->assertIsObject($rowObjectHydrator, "***CHYBA***" );
-        $keyRowObjectHydrator = new AttributeHydrator(  new AttributeNameHydratorROMock(),
+        $keyRowObjectHydrator = new AttributeAccessHydrator(  new AttributeNameHydratorROMock(),
                                                      $metaDataProvider->getTableMetadata('testovaci_table_row'), /* pro zjisteni typu*/
                                                      new KeyColumnFilterMock( $poleJmenKey ));
         $this->assertIsObject( $keyRowObjectHydrator, "***CHYBA***" );
 
 
         $rowDataM = new RowData();
-        $rowObjectM = new RowObjectMock( new KeyMock( ["uidTestovaciTable" => false ] ));    //generated
+        $rowObjectM = new RowObjectMock( ["uidTestovaciTable" => false ] );    //generated
 
-        $rowObjectM->key->uidTestovaciTable = "KEYklic";
-        $rowObjectM->key->klic = "";
+//        $rowObjectM->key->uidTestovaciTable = "KEYklic";
+//        $rowObjectM->key->klic = "";
 
         $rowObjectM->prvekChar = "QWERTZ" ;
         $rowObjectM->prvekVarchar = "Qěščřžýáíé";
@@ -261,7 +261,7 @@ class IntegrateRowObjectHydratorTest extends TestCase {
         $rowObjectM->prvekTimestamp = self::$hodnotaDateTime;
 
         $rowObjectHydrator->extract( $rowObjectM, $rowDataM);
-        $keyRowObjectHydrator->extract( $rowObjectM->key, $rowDataM);
+    //    $keyRowObjectHydrator->extract( $rowObjectM->key, $rowDataM);
 
         $changed = $rowDataM->fetchChanged();
 
@@ -285,11 +285,11 @@ class IntegrateRowObjectHydratorTest extends TestCase {
 
         //------------------------------------------------
 
-        $this->assertArrayHasKey( "uid_testovaci_table", $changed, "***CHYBA***"  );
-        $this->assertArrayHasKey( "klic", $changed, "***CHYBA***"  );
+    //    $this->assertArrayHasKey( "uid_testovaci_table", $changed, "***CHYBA***"  );
+    //    $this->assertArrayHasKey( "klic", $changed, "***CHYBA***"  );
 
-        $this->assertEquals( $changed["uid_testovaci_table"], "KEYklic" , "***CHYBA***"   );
-        $this->assertEquals( $changed["klic"], "" , "***CHYBA***"   );
+    //    $this->assertEquals( $changed["uid_testovaci_table"], "KEYklic" , "***CHYBA***"   );
+    //    $this->assertEquals( $changed["klic"], "" , "***CHYBA***"   );
 
     }
 

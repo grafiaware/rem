@@ -23,10 +23,10 @@ class CarrotEntity  extends EntityAbstract implements CarrotEntityInterface{
                      
     
     
-    public function getPrumer() : integer {
+    public function getPrumer() : int {
         return $this->prumer;
     }
-    public function setPrumer($prumer): void  {
+    public function setPrumer( int $prumer): void  {
         $this->prumer = $prumer;
     }
 

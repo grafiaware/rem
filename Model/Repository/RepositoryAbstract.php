@@ -7,7 +7,7 @@ use Model\Dao\DaoKeyDbVerifiedInterface;
 use Model\Dao\Exception\DaoKeyVerificationFailedException;
 
 use Model\Hydrator\HydratorInterface;
-use Model\Hydrator\AttributeHydratorInterface;
+use Model\Hydrator\AttributeAccessHydratorInterface;
 use Model\Hydrator\AccessorHydratorInterface;
 
 use Model\Entity\EntityInterface;

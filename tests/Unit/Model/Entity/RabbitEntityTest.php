@@ -5,12 +5,13 @@ use PHPUnit\Framework\TestCase;
 
 use Model\Entity\Identity\IdentityInterface;
 use Model\Entity\Identity\IdentityAbstract;
-use Model\Entity\EntityInterface;
 use Model\Entity\EntityAbstract;
 use Model\Entity\Identities;
 
 use Model\Testovaci\Entity\RabbitEntity;
 use Model\Entity\Enum\IdentityTypeEnum;
+use Model\Testovaci\Entity\CarrotEntityInterface;
+use Model\Testovaci\Entity\HoleEntityInterface;
 
 
 interface KlicIdentityInterfaceMock extends IdentityInterface {    
@@ -62,14 +63,53 @@ class HoleIdentityMock extends IdentityAbstract implements HoleIdentityInterface
 }
 //----------  entity  -----------------
 
-interface CarrotEntityInterfaceMock extends EntityInterface {    
-} 
-class CarrotEntityMock extends EntityAbstract implements CarrotEntityInterfaceMock{    
+//interface CarrotEntityInterfaceMock extends EntityInterface {    
+//} 
+class CarrotEntityMock extends EntityAbstract implements CarrotEntityInterface{  
+     /**
+     *
+     * @var integer
+     */ 
+    private $prumer;         
+    
+     public function getPrumer() : int {
+        return $this->prumer;
+    }
+    public function setPrumer(int $prumer): void  {
+        $this->prumer = $prumer;
+    }
 }
 
-interface HoleEntityInterfaceMock extends EntityInterface {     
-} 
-class HoleEntityMock extends EntityAbstract implements HoleEntityInterfaceMock{    
+//interface HoleEntityInterfaceMock extends EntityInterface {     
+//} 
+class HoleEntityMock extends EntityAbstract implements HoleEntityInterface{  
+     /**
+     *
+     * @var int
+     */
+    private $hloubka;
+    /**
+     *
+     * @var int
+     */
+    private $adresa;
+     
+    public function getHloubka(): int {
+        return $this->hloubka;
+    }
+
+    public function getAdresa(): int {
+        return $this->adresa;
+    }
+
+    public function setHloubka(int $hloubka) : void {
+        $this->hloubka = $hloubka;
+    }
+
+    public function setAdresa(int $adresa) : void {
+        $this->adresa = $adresa;
+    }
+
 }
 
 
@@ -104,7 +144,7 @@ class RabbitEntityTest extends TestCase {
     private $carrotEntity1;          
     /**
      *
-     * @var \ArrayObjec
+     * @var array
      */
     private $carrotEntities; 
     
@@ -112,8 +152,7 @@ class RabbitEntityTest extends TestCase {
     
     
     
-    public function setUp(): void {  
-        
+    public function setUp(): void {          
 //      krasny priklad - takto  lze naplnit taky
 //      $this->rabbitIdentities = new Identities();
 //      $this->rabbitIdentities[RabbitIdentityNamesEnumMock::RABBITIDENTITYINTERFACEMOCK ]  = new RabbitIdentityMock ( );
@@ -124,6 +163,9 @@ class RabbitEntityTest extends TestCase {
         $rabbitIdentities[RabbitIdentityNamesEnumMock::KLICIDENTITYINTERFACEMOCK ]  = new KlicIdentityMock ( );
         $this->rabbitIdentities = new Identities(new RabbitIdentityNamesEnumMock(), $rabbitIdentities );        
 //        $this->rabbitIdentityEnum = new RabbitIdentityNamesEnumMock();
+        
+        
+        
         
         $holeIdentities[HoleIdentityNamesEnumMock::HOLEIDENTITYINTERFACEMOCK ]  = new HoleIdentityMock ( ); 
         $this->holeIdentities = new Identities(new HoleIdentityNamesEnumMock(), $holeIdentities);
@@ -155,7 +197,7 @@ class RabbitEntityTest extends TestCase {
     }
     
     
-    public function testGetersSetersAssoc() {
+    public function testSetGetAssoc() {
         $rabbitEntity = new RabbitEntity ($this->rabbitIdentities ); 
         
         $rabbitEntity->setAssociatedCarrotEntities( $this->carrotEntities );
@@ -163,36 +205,57 @@ class RabbitEntityTest extends TestCase {
         $this->assertIsArray($carrotEntities);
                 
         $rabbitEntity->setAssociatedHoleEntity($this->holeEntity);
-        $holeEntities = $rabbitEntity->getAssociatedHoleEntity();
-        $this->assertInstanceOf($holeEntities);
-        
-        
-        
-       // $entity->setAssociatedHoleEntity($associatedHoleEntity)
-       // $entity->setCeleJmeno($celeJmeno)
-        //$entity->setPrvekDatetime($prvekDatetime)
-        //$entity->setPrvekVarchar($prvekVarchar)
-        //$entity->setPersisted()
-        //$entity->setUnpersisted();
-        //$entity->lock();
-        //$entity->isLocked()
-        
-        
-        
-
-        
-        
-        
-        
+        $holeEntity = $rabbitEntity->getAssociatedHoleEntity();
+        $this->assertInstanceOf(HoleEntityMock::class, $holeEntity);
+             
     }
     
     
+    public function testSetGetCeleJmeno() {
+         $rabbitEntity = new RabbitEntity ($this->rabbitIdentities );
+         $rabbitEntity->setCeleJmeno("JMENO");
+         $celeJmeno = $rabbitEntity->getCeleJmeno();
+         $this->assertEquals( "JMENO", $celeJmeno);        
+    }
     
     
+    public function testSetGetPrvekDatetime() {
+        $rabbitEntity = new RabbitEntity ($this->rabbitIdentities );
+        $dt =  new \DateTime("now");
+        $rabbitEntity->setPrvekDatetime($dt);
+        $date = $rabbitEntity->getPrvekDatetime();
+        $this->assertEquals( $dt, $date );         
+    }
+    
+    
+    public function testSetGetPrvekVarchar(){        
+        $rabbitEntity = new RabbitEntity ($this->rabbitIdentities );
+        $var = "DATAVARCHAR";
+        $rabbitEntity->setPrvekVarchar($var);
+        $v = $rabbitEntity->getPrvekVarchar();
+        $this->assertEquals( $var, $v );        
+    }
+    
+    public function testSetIsPersisted(){        
+        $rabbitEntity = new RabbitEntity ($this->rabbitIdentities );
+        $rabbitEntity->setPersisted();                
+        $this->assertTrue($rabbitEntity->isPersisted() );
+        
+        $rabbitEntity->setUnpersisted();      
+        $this->assertFalse($rabbitEntity->isPersisted() );  
+    }
+
+    
+    public function testSetIsLocked(){        
+        $rabbitEntity = new RabbitEntity ($this->rabbitIdentities );
+        $rabbitEntity->lock();             
+        $this->assertTrue($rabbitEntity->isLocked() );
+        
+        $rabbitEntity->unLock();      
+        $this->assertFalse($rabbitEntity->isLocked() );  
+    }
+
 }
-
-
-
 //--------------------------------------------------------------------------------
 
 

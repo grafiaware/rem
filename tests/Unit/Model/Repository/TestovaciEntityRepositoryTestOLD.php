@@ -29,7 +29,7 @@ use Model\Hydrator\AccessorHydratorInterface;
 use Model\Hydrator\OneToOneAccessorHydrator;
 use Model\Hydrator\CeleJmenoAccessorHydrator;
 use Model\Hydrator\AttributeHydrator;
-use Model\Hydrator\AttributeHydratorInterface;
+use Model\Hydrator\AttributeAccessHydratorInterface;
 use Model\Hydrator\CeleJmenoGluer;
 
 

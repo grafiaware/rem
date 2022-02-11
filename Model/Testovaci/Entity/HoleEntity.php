@@ -26,19 +26,19 @@ class HoleEntity extends EntityAbstract implements HoleEntityInterface{
   
     
     
-    public function getHloubka(): integer {
+    public function getHloubka(): int {
         return $this->hloubka;
     }
 
-    public function getAdresa(): integer {
+    public function getAdresa(): int {
         return $this->adresa;
     }
 
-    public function setHloubka(integer $hloubka) : void {
+    public function setHloubka(int $hloubka) : void {
         $this->hloubka = $hloubka;
     }
 
-    public function setAdresa(integer $adresa) : void {
+    public function setAdresa(int $adresa) : void {
         $this->adresa = $adresa;
     }
 

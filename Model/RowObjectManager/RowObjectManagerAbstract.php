@@ -3,7 +3,7 @@
 namespace Model\RowObjectManager;
 
 use Model\RowObject\RowObjectInterface;
-use Model\Hydrator\AttributeHydratorInterface;
+use Model\Hydrator\AttributeAccessHydratorInterface;
 
 use Model\RowData\RowDataInterface;
 use Model\RowData\PdoRowData;

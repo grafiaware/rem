@@ -10,7 +10,7 @@ use Model\RowData\RowData;
 
 
 use Model\Hydrator\AccessorHydratorInterface; //#
-use Model\Hydrator\AttributeHydratorInterface;
+use Model\Hydrator\AttributeAccessHydratorInterface;
 //use Model\Entity\EntityInterface; //#
 use Model\Entity\AccessorInterface; //#
 use Model\Entity\EntityAbstract;
@@ -111,7 +111,7 @@ abstract class RepoAbstract_vs {
     
 //############################
     protected function hydratespatnypokus( AccessorInterface $entity, AttributeInterface $rO ,/*AttributeInterface $rowObject*/ $rowData ) {
-        /** @var AttributeHydratorInterface $hydrator */
+        /** @var AttributeAccessHydratorInterface $hydrator */
         foreach ($this->hydratorsObject as $hydrator) {
             
             $hydrator->hydrate( /*$rowObject*/ $rO , $rowData );
@@ -134,7 +134,7 @@ abstract class RepoAbstract_vs {
     
 //############################
     protected function extract( AccessorInterface $entity, AttributeInterface $rowObject, $rowData) {
-        /** @var AttributeHydratorInterface $hydrator */
+        /** @var AttributeAccessHydratorInterface $hydrator */
         foreach ($this->hydratorsObject as $hydrator) {
             $hydrator->hydrate ( $rowObject, $rowData ); //kravina
         }

@@ -20,7 +20,10 @@ class IndexMaker implements IndexMakerInterface {
      */
     private $methodNameHydrator;
        
-    
+    /**
+     * 
+     * @param AccessorMethodNameHydratorInterface $methodNameHydrator
+     */
     public function __construct( 
                             AccessorMethodNameHydratorInterface $methodNameHydrator
             ) {

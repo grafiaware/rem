@@ -9,12 +9,10 @@ use \Model\Entity\EntityInterface;
  * @author vlse2610
  */
 interface CarrotEntityInterface extends EntityInterface {
-    
+   
+    public function getPrumer() : int ;    
 
-    
-    public function getPrumer() : integer ;    
-
-    public function setPrumer($prumer): void  ;
+    public function setPrumer( int $prumer): void  ;
    
     
     

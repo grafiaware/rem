@@ -8,7 +8,7 @@ use Model\RowData\RowDataInterface;
  *
  * @author vlse2610
  */
-interface AttributeHydratorInterface {
+interface AttributeAccessHydratorInterface {
     
     /**
      * Hydratuje $rowObject hodnotami z objektu $rowData. 

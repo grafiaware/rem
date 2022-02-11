@@ -4,7 +4,7 @@ namespace Model\Hydrator;
 use Model\RowObject\AttributeInterface;
 
 use Model\Hydrator\NameHydrator\AttributeNameHydratorInterface;
-use Model\Hydrator\AttributeHydratorInterface;
+use Model\Hydrator\AttributeAccessHydratorInterface;
 use Model\Filter\ColumnFilterInterface;
 use Model\Hydrator\Exception\DatetimeConversionFailureException;
 use Model\Hydrator\Exception\UndefinedColumnNameException;
@@ -20,7 +20,7 @@ use Pes\Database\Metadata\TableMetadataInterface;
  * @author vlse2610
  */
 
-class AttributeHydrator implements AttributeHydratorInterface {
+class AttributeAccessHydrator implements AttributeAccessHydratorInterface {
     /**
      *
      * @var AttributeNameHydratorInterface

@@ -22,6 +22,10 @@ use Model\RowObject\RowObjectAbstract;
 use Model\RowObject\Key\KeyInterface;
 use Model\RowObject\Key\KeyAbstract;
 
+use Model\Entity\Identities;
+
+use Model\Entity\Enum\IdentityTypeEnum;
+
 
 class OneToManyFilterMock implements OneToManyFilterInterface {
      /**
@@ -59,28 +63,29 @@ class AccessorNameHydratorMock implements AccessorNameHydratorInterface {
 
 
 
-interface IdentityInterfaceMock  extends IdentityInterface {
-//    public function setUidPrimarniKlicZnaky( string $uidPrimarniKlicZnaky): IdentityMock ; 
-//    public function getUidPrimarniKlicZnaky() :string ;
-}    
 
-class IdentityMock extends IdentityAbstract implements IdentityInterfaceMock {
-     public function getTypeIdentity(): string {
-    }
-
-    
-    
-//    public function hasGeneratedKey() : bool {
-//        return false;
-//    }
-//    public function getKey(): KeyInterface{ 
-//        return $this->key;
-//    }    
-//    public function setKey( KeyInterface $key): void {
-//        $this->key = $key;
-//    }
- 
+interface KlicIdentityInterfaceMock extends IdentityInterface {    
 }
+interface RabbitIdentityInterfaceMock extends IdentityInterface {
+}
+class RabbitIdentityNamesEnumMock extends IdentityTypeEnum{    
+    const RABBITIDENTITYINTERFACEMOCK = RabbitIdentityInterfaceMock::class;
+    const KLICIDENTITYINTERFACEMOCK = KlicIdentityInterfaceMock::class;
+}
+class RabbitIdentityMock extends IdentityAbstract implements RabbitIdentityInterfaceMock {   
+    public function getTypeIdentity(): string {
+        return RabbitIdentityNamesEnumMock::RABBITIDENTITYINTERFACEMOCK;
+    }
+}
+
+class KlicIdentityMock extends IdentityAbstract implements KlicIdentityInterfaceMock {   
+    public function getTypeIdentity(): string {
+        return RabbitIdentityNamesEnumMock::KLICIDENTITYINTERFACEMOCK;
+    }
+}
+
+
+
 
 interface EntityInterfaceMock extends  EntityInterface{
         public function getCeleJmeno();       
@@ -119,16 +124,13 @@ interface KeyInterfaceMock extends KeyInterface{
     public function getHash(): array ;
     public function getGenerated(): array ;
     public function setGenerated( array  $generated ): void ;
-
-    public function isEqual( KeyInterface $key ) : bool;
-    
+    public function isEqual( KeyInterface $key ) : bool;    
 }
 class KeyMock extends KeyAbstract implements KeyInterfaceMock {
     public function setHash( array $hash): void {}
     public function getHash(): array {}
     public function getGenerated(): array {}
     public function setGenerated( array  $generated ): void {}
-
     public function isEqual( KeyInterface $key ) : bool{}    
 }
 
@@ -208,7 +210,7 @@ class CeleJmenoEntityHydratorTest extends TestCase {
             ];
         // 2 - zdrojovy datovy objekt testovaci
         
-        $testovaciZdrojovyRowObjectNaplneny = new RowObjectMock( new KeyMock( [] ) );                    
+        $testovaciZdrojovyRowObjectNaplneny = new RowObjectMock(  []  );                    
         $testovaciZdrojovyRowObjectNaplneny->jmeno          = "BARNABÁŠ";
         $testovaciZdrojovyRowObjectNaplneny->prijmeni       = "KOSTKA"; 
         $testovaciZdrojovyRowObjectNaplneny->titulPred      = "MUDrC.";
@@ -225,8 +227,12 @@ class CeleJmenoEntityHydratorTest extends TestCase {
                                                                 new CeleJmenoGluerMock ()  ) ;
         
         // 4 -  hydratovani  ############################################
-        $identity = new IdentityMock(  );
-        $novaPlnenaTestovaciEntity  =  new TestovaciEntityMock( $identity );           
+        //$identity = new IdentityMock(  );
+        $rabbitIdentitiesA[RabbitIdentityNamesEnumMock::RABBITIDENTITYINTERFACEMOCK ]  = new RabbitIdentityMock ( );
+        $rabbitIdentitiesA[RabbitIdentityNamesEnumMock::KLICIDENTITYINTERFACEMOCK ]  = new KlicIdentityMock ( );
+        $rabbitIdentities = new Identities(new RabbitIdentityNamesEnumMock(), $rabbitIdentitiesA);   
+        
+        $novaPlnenaTestovaciEntity  =  new TestovaciEntityMock( $rabbitIdentities );           
         $celeJmenoEntityHydrator->hydrate( $novaPlnenaTestovaciEntity, $testovaciZdrojovyRowObjectNaplneny );   
                 
 //  /* */  print_r ("\n" ."BLE****");
@@ -279,7 +285,13 @@ class CeleJmenoEntityHydratorTest extends TestCase {
         
         // 2 - zdrojovy datovy objekt testovaci         
         
-        $testovaciZdrojovaEntityNaplnena = new TestovaciEntityMock ( new IdentityMock(   ) );              
+        
+        //$identity = new IdentityMock(  );
+        $rabbitIdentitiesA[RabbitIdentityNamesEnumMock::RABBITIDENTITYINTERFACEMOCK ]  = new RabbitIdentityMock ( );
+        $rabbitIdentitiesA[RabbitIdentityNamesEnumMock::KLICIDENTITYINTERFACEMOCK ]  = new KlicIdentityMock ( );
+        $rabbitIdentities = new Identities(new RabbitIdentityNamesEnumMock(), $rabbitIdentitiesA );   
+        
+        $testovaciZdrojovaEntityNaplnena = new TestovaciEntityMock (  $rabbitIdentities );              
         //$testovaciZdrojovaEntityNaplnena->setCeleJmeno(      "BARNABÁŠ|" . "KOSTKA" ); 
         //$testovaciZdrojovaEntityNaplnena->setCeleJmenoDruhe(      "BARNABÁŠ2|" . "KOSTKA2" ); 
         
@@ -294,7 +306,7 @@ class CeleJmenoEntityHydratorTest extends TestCase {
                                                                new CeleJmenoGluerMock () ) ;
         
         // 4 -  extrakce  ##########################################
-        $novyPlnenyRowObject  =  new RowObjectMock( new KeyMock( [] ) );          
+        $novyPlnenyRowObject  =  new RowObjectMock( []  );          
         $oneToOneEntityHydrator->extract( $testovaciZdrojovaEntityNaplnena, $novyPlnenyRowObject );          
          
 //  /* */ print_r ($testovaciZdrojovaEntityNaplnena); 
