@@ -8,7 +8,6 @@ use Model\Testovaci\Entity\Enum\IdentityTypeEnum;
 
 use Pes\Type\Exception\ValueNotInEnumException;
 use Model\Entity\IdentitiesInterface;
-use Model\Entity\Exception\IdentityTypeNotExistsInEntity;
 
 
 /**

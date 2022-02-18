@@ -1,6 +1,4 @@
 <?php
-
-
 namespace Model\Repository\Exception;
 
 /**

@@ -3,7 +3,7 @@ namespace Model\IdentityMap\IndexMaker;
 
 use Model\Entity\Identity\IdentityInterface;
 
-use Model\Filter\FilterInterface;
+//use Model\Filter\FilterInterface;
 
 /**
  *
@@ -13,12 +13,12 @@ interface IndexMakerInterface {
     
     /**
      * Vyrobi index z identity podle filtru.
-     * 
+     *      
      * @param IdentityInterface $identity
-     * @param FilterInterface $filter
+     * @param array $filters  Filtr obsahuje jmena (vlastnosti identity) potřebná pro jména metod identity, které   se účastní výroby indexu.
      * @return string
      */
-    public  function indexFromIdentity(  IdentityInterface $identity , FilterInterface $filter ) : string;
+    public  function indexFromIdentity(  IdentityInterface $identity , array $filters ) : string;
     
 
 }

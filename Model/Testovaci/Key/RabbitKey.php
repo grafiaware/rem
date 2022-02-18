@@ -2,7 +2,7 @@
 namespace Model\Testovaci\Key;
 
 use Model\RowObject\Key\KeyAbstract;
-use Model\Testovaci\Key\RabbitKeyInterface;
+use Model\RowObject\Key\KeyInterface;
 
 
 
@@ -11,7 +11,7 @@ use Model\Testovaci\Key\RabbitKeyInterface;
  *
  * @author vlse2610
  */
-class RabbitKey extends KeyAbstract implements RabbitKeyInterface {
+class RabbitKey extends KeyAbstract implements KeyInterface {
     /**
      *
      * @var string

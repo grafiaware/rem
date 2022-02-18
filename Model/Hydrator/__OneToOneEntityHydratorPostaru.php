@@ -1,5 +1,5 @@
 <?php
-namespace Model\Hydrator;
+//namespace Model\Hydrator;
 
 use Model\RowObject\RowObjectInterface;
 use Model\Entity\AccessorInterface;
@@ -7,7 +7,6 @@ use Model\Entity\AccessorInterface;
 use Model\Filter\FilterInterface;
 use Model\Hydrator\NameHydrator\SetMethodNameHydrator;
 use Model\Hydrator\NameHydrator\GetMethodNameHydrator;
-use Model\Hydrator\aEntityHydratorInterface;
 
 /**
  * Bezstavový?? hydrátor

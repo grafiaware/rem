@@ -1,10 +1,10 @@
 <?php
 namespace Model\Hydrator\Exception;
 
-use Model\Hydrator\Exception\RowObjectHydratorExceptionInterface;
+use Model\Hydrator\Exception\AttributeHydratorExceptionInterface;
 
 /**
- * Description of UnexpectedDatetimeColumnValue
+ * Description of DatetimeConversionFailureException extends \UnexpectedValueException
  *
  * @author vlse2610
  */

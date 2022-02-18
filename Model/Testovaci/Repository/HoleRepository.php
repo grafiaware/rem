@@ -33,8 +33,7 @@ class HoleRepository extends RepositoryAbstract implements HoleRepositoryInterfa
             $this->entityHydrators = $entityHydrators;         
             $this->identitiesHydrators = $identitiesHydrators;
             
-            $this->identityMap = $identityMap;
-            
+            $this->identityMap = $identityMap;            
             $this->rowObjectManager = $rowObjectManager;            
     }          
     

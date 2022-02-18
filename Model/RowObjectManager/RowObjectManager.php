@@ -1,14 +1,15 @@
 <?php
-namespace Model\Testovaci\RowObjectManager;
+namespace Model\RowObjectManager;
 
-use Model\RowObjectManager\RowObjectManagerAbstract;
 
 use Model\RowObjectManager\RowObjectManagerInterface;
-use Model\RowObject\Key\KeyInterface;
 use Model\RowObject\RowObjectInterface;
 
-use Model\Testovaci\RowObject\TestovaciRowObject;
-use Model\Testovaci\Key\TestovaciKey;
+use Model\Testovaci\RowObject\RabbitRowObject;
+use Model\Testovaci\Key\RabbitKey;
+use Model\RowObject\Key\KeyInterface;
+//use Model\Testovaci\Key\RabbitKeyInterface;
+
 
 
 
@@ -17,7 +18,7 @@ use Model\Testovaci\Key\TestovaciKey;
  *
  * @author vlse2610
  */
-class TestovaciRowObjectManager extends RowObjectManagerAbstract /*TAM NIC NENI*/ implements RowObjectManagerInterface {  
+class RowObjectManager  implements RowObjectManagerInterface {  
     /**
     *
     * @var array
@@ -37,7 +38,7 @@ class TestovaciRowObjectManager extends RowObjectManagerAbstract /*TAM NIC NENI*
     }
    
    
-    public function getByForeignKey(  KeyInterface $foreignKey  )  :  iterable /*?*/   {
+    public function getByForeignKey( KeyInterface $foreignKey  )  :  iterable /*?*/   {
 
         //return $this->poleRowObjectu[$key->getIndexFromKey()] ?? NULL; 
     }
@@ -45,13 +46,13 @@ class TestovaciRowObjectManager extends RowObjectManagerAbstract /*TAM NIC NENI*
     
     public function remove( RowObjectInterface $rowObject ): void {
         
-        $this->poleRowObjectu[$rowObject->getKey()->getIndexFromKey()]=null;
+        //$this->poleRowObjectu[$rowObject->getKey()->getIndexFromKey()]=null;
     }
     
     
     public function add( RowObjectInterface $rowObject): void {
         
-        $this->poleRowObjectu[$rowObject->getKey()->getIndexFromKey()] = $rowObject;
+        //$this->poleRowObjectu[$rowObject->getKey()->getIndexFromKey()] = $rowObject;
         
     }
     
@@ -73,15 +74,16 @@ class TestovaciRowObjectManager extends RowObjectManagerAbstract /*TAM NIC NENI*
     
     
     
-    
+    // tady to asi nema byt konkretne jen pro rabbitta
     public function createRowObject (  ) : RowObjectInterface {
-            $key = new TestovaciKey();
-        return new TestovaciRowObject( $key );
+            $key = new RabbitKey();
+        return new RabbitRowObject( [$key] );
     }
     
     
+     // tady to asi nema byt konkretne jen pro rabbitta
     public function createKey (  ) : KeyInterface {
-        return new TestovaciKey( );
+        return new RabbitKey( );
     }
     
     

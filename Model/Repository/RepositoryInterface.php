@@ -17,9 +17,7 @@ interface RepositoryInterface {
     
     
     //--------------------------------------------------
-    public function getCollectionProTest(): array ;
-    public function getNewProTest(): array ;
-    public function getRemovedProTest(): array ;
+   
     
     
 }

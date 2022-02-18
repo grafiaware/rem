@@ -1,6 +1,6 @@
 <?php
 
-namespace Model\RowObjectManager;
+//namespace Model\RowObjectManager;
 
 use Model\RowObject\RowObjectInterface;
 use Model\Hydrator\AttributeAccessHydratorInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Model\Testovaci\Key;
+//namespace Model\Testovaci\Key;
 
 /**
  *

@@ -1,7 +1,8 @@
 <?php
 namespace Model\Hydrator\Exception;
 
-use Model\Hydrator\Exception\KeyRowObjectHydratorExceptionInterface;
+use Model\Hydrator\Exception\AttributeHydratorExceptionInterface;
+
 /**
  * Description of UncompleteKeyException
  *

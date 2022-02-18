@@ -465,7 +465,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             $rowObject = $this->rowObjectManager->createRowObject();
             $this->extractEntity( $entity, $rowObject);   
             //vadi ze nevim jaka je to identita, vsechny asi ??????
-              $this->extractIdentity( $entity->getIdentity(), $rowObject->getKey() ); 
+            // $this->extractIdentity( $entity->getIdentity(), $rowObject->getKey() ); 
 
             $this->rowObjectManager->add($rowObject);                              
 
@@ -541,27 +541,6 @@ abstract class RepositoryAbstract implements RepositoryInterface {
    }
    
    
-    
-    
-    
-    
-    
-     //----------------------velmi docasne----------------------------
-    public function getCollectionProTest(): array  {
-        return $this->collection;        
-    }
-    
-    public function getNewProTest(): array  {
-        return $this->new;        
-    }
-    public function getRemovedProTest(): array  {
-        return $this->removed;        
-    }
-    //------------------------------------------------------
-    
-    
-    
-    
-    
+     
     
 }

@@ -24,7 +24,13 @@ use Model\RowObjectManager\RowObjectManagerInterface;
  */
 class CarrotRepository extends RepositoryAbstract implements CarrotRepositoryInterface {
     
-    
+    /**
+     * 
+     * @param array $entityHydrators
+     * @param array $identitiesHydrators
+     * @param IdentityMapInterface $identityMap
+     * @param RowObjectManagerInterface $rowObjectManager
+     */
     function __construct(   //AccessorHydratorInterface $accessorHydratorEntity,
                             //AccessorHydratorInterface $accessorHydratorIdentity,
                             array $entityHydrators,                                       
@@ -32,8 +38,7 @@ class CarrotRepository extends RepositoryAbstract implements CarrotRepositoryInt
             
                             IdentityMapInterface $identityMap,
                             RowObjectManagerInterface $rowObjectManager                                 
-            
-            
+          
               ) {
             
 //            $this->registerHydratorEntity( $accessorHydratorEntity ); 

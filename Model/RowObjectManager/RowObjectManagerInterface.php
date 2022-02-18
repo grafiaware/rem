@@ -2,7 +2,10 @@
 namespace Model\RowObjectManager;
 
 use Model\RowObject\RowObjectInterface;
+use Model\Testovaci\Key\RabbitKey;
+//use Model\Testovaci\Key\RabbitKeyInterface;
 use Model\RowObject\Key\KeyInterface;
+
 
 
 /**
@@ -30,7 +33,12 @@ interface RowObjectManagerInterface {
      * @param KeyInterface $foreignKey
      * @return RowObjectInterface|null
      */
-    public function getByForeignKey (  KeyInterface $foreignKey  )  : iterable /*?*/;
+    /**
+     * 
+     * @param \Model\RowObjectManager\RabbitKey $foreignKey
+     * @return iterable
+     */
+    public function getByForeignKey ( KeyInterface $foreignKey  )  : iterable /*?*/;
     
     
     /**
@@ -63,9 +71,9 @@ interface RowObjectManagerInterface {
     public function createRowObject (  ) : RowObjectInterface ;
         
      /**
-     * Vytvoří nový Key.
+     * Vytvoří nový Key.     
      * 
-     * @return Key
+     * @return \Model\RowObjectManager\RabbitKeyInterface
      */
     public function createKey (  ) : KeyInterface ;
     

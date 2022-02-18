@@ -30,7 +30,15 @@ use Model\IdentityMap\IdentityMapInterface;
  */
 class RabbitRepository extends RepositoryAbstract implements RabbitRepositoryInterface  {
     
-    
+    /**
+     * 
+     * @param array $entityHydrators
+     * @param array $identitiesHydrators
+     * @param IdentityMapInterface $identityMap
+     * @param RowObjectManagerInterface $rowObjectManager
+     * @param \Model\Testovaci\Repository\CarrotRepositoryInterface $carrotRepository
+     * @param \Model\Testovaci\Repository\HoleRepositoryInterface $holeRepository
+     */
     function __construct( 
                           array $entityHydrators,              
 //                          array $accessorHydratorRabbitIdentities,
@@ -47,15 +55,16 @@ class RabbitRepository extends RepositoryAbstract implements RabbitRepositoryInt
             //tovarna na  entity ??
             ) {
         
-        $this->registerHydratorEntity( $accessorHydratorEntity ); 
+        //$this->registerHydratorEntity( $accessorHydratorEntity ); 
         
 //        $this->registerHydratorIdentity( RabbitIdentityInterface::class, $accessorHydratorRabbitIdentities ); 
 //        $this->registerHydratorIdentity( KlicIdentityInterface::class, $accessorHydratorKlicIdentities ); 
-         
+        
+        $this->identitiesHydrators = $identitiesHydrators;
+        $this->entityHydrators = $entityHydrators; 
         $this->rowObjectManager = $rowObjectManager;
         $this->identityMap = $identityMap;
-        $this->identitiesHydrators = $identitiesHydrators;
-        $this->entityHydrators = $entityHydrators;
+        
         
         if ( $carrotRepository) {
             $this->registerOneToManyAssociation( CarrotEntityInterface::class,

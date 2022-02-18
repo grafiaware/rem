@@ -32,9 +32,9 @@ class IndexMaker implements IndexMakerInterface {
 
     /**
      * Vyrobi index z identity podle filtru.
-     * 
+     *      
      * @param IdentityInterface $identity
-     * @param FilterInterface $filter  Filtr obsahuje jmena (vlastnosti identity) potřebná pro jména metod identity, které   se účastní výroby indexu.
+     * @param array $filters  Filtr obsahuje jmena (vlastnosti identity) potřebná pro jména metod identity, které   se účastní výroby indexu.
      * @return string
      */
     public function indexFromIdentity(IdentityInterface $identity, array $filters): string {
