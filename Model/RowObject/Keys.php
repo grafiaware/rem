@@ -3,76 +3,113 @@ namespace Model\RowObject;
 
 //use Model\Entity\Enum\KeyTypeEnum;
 use Model\RowObject\KeysInterface;
+use Model\RowObject\Enum\KeyNameEnum;
 
-use Pes\Type\Exception\ValueNotInEnumException;
+use Model\RowObject\Key\KeyInterface;
+
+//use Model\Entity\Enum\IdentityTypeEnum;
+//use Model\Entity\IdentitiesInterface;
+//use Model\Entity\Identity\IdentityInterface;
+//use Model\Entity\Exception\MismatchedIdentitiesException;
+
+//use Pes\Type\Exception\ValueNotInEnumException;
+
+use ArrayIterator;
+
 
 /**
- * Description of Kees
+ * Description of Keys
  * 
  * @author vlse2610
  */
-class Keys extends \ArrayObject implements KeysInterface{
-    
-   
-    private $keyTypes;
-
+class Keys implements KeysInterface {
+ 
     /**
-     * Konstruktor přijímá výčtový typ obsahující typy identit.
-     *
-     * <b>Doporučené použití:</b>
-     * Objekt vytvořte bez parametru  $input  a jednotlivé hodnoty identit přidávejte -
-     * a) voláním $promennaTypuIdentities['typIdentity'] = $identitaDanehoTypu;
-     * b) volání $promennaTypuIdentities->offsetSet('typIdentity', $identitaDanehoTypu);
+     * @var KeyNameEnum výčtový typ. Obsahuje hodnoty názvú klíčú přípustných klíčů.
+     */
+    private $keyNameEnum;    
+
+    private $keys = [];
+    
+    
+    /**
+     * Konstruktor přijímá výčtový typ obsahující názvy přípustných klíčů.
      * 
-     * @param IdentityTypeEnum $identityTypes přípustné typy
-     * @param array $input  pole identit
-     * @param int $flags
-     * @param string $iterator_class
-     * @throws MismatchedIdentitiesException
+     * Kde se vezmou ?  -- z DB  --- cilene pojmenované  FieldName u Indexu a a foreign klicu   
+     * Ma cenu zde zadavat?? -- nebo jen konrrolovat u append a get Iterator
      */        
-    public function __construct(/*KeyTypeEnum*/ $keyTypes, array $input , int $flags = 0, string $iterator_class = "ArrayIterator") {
-        $this->identityTypes = $keyTypes;                        
-            
-            $a = $this->keyTypes->getConstList();
-                    
-            foreach ( $a  as $idType) {   //pres enum
-                if (!array_key_exists($idType /*key*/, $input)) {          
-                    throw new MismatchedKeysException("V poli keys (input) nejsou všechny přípustné typy." );
-                }
-            }
-            foreach ($input as $key => $val) {
-                try {                    
-                    $enum = $this->keyTypes;
-                    $type = $enum($key);
-                } catch (ValueNotInEnumException $exc) {
-                    throw new MismatchedKeysException( "Typy v poli keys (input) neodpovidaji přípustným keys (jsou navíc)." );
-                }
-   
-        }
-        
-        parent::__construct($input, $flags, $iterator_class);
+    public function __construct( KeyNameEnum $keyNames ) {
+
+        $this->keyNameEnum = $keyNames ;                                      
     }
     
+    
     /**
-     * Kontroluje, je-li zadaný index přípustný. Pokud ano, zapise do objektu Identities na pozici $index dodanou hodnotu $newval.
+     * Přidá idetitu do pole This->keys.
      * 
-     * Indexy odpovídají typu identity. 
-     * Přípustné jsou indexy, které odpovídajídají některému typu identity v dané entitě. 
-     * Seznam typů identit v dané entitě je zadán pomocí parametru konstruktoru typu IdentityTypeEnum.
-     * Pro nepřípustný index metoda vyhazuje výjimku.
+     * Seznam jmen klíčů v  daném rowobjektu je zadán pomocí parametru konstruktoru typu KeyNameEnum.
+     * Pro nepřípustné jméno metoda vyhazuje výjimku.
      * 
-     * @param type $index
-     * @param type $newval
-     * @throws MismatchedIdentitiesException
+     * @param IdentityInterface $identity
+     * @return void
+     * @throws MismatchedIdentitiesException Nepřípustný typ identity
      */
-    public function offsetSet( /*string*/ $index, /*KeyInterface*/ $newval) {          
-        //v predpisu metody v \ArrayObject nejsou uvedeny typy, tudiz neuvadet typy
-        try {    
-            $enum = $this->keyTypesTypes;
-            $type = $enum($index);    // toto otestuje, je-li zadaný index  přípustný.
+    public function append(  KeyInterface $key ): void {          
+        try {   
+            $enum = $this->keyNameEnum;
+            $name = $enum($key->getNameKey() );
+            $this->keys[$name] = $key;
         } catch (ValueNotInEnumException $exc) {
-            throw new MismatchedKeysException("Zadaný typ $index není přípustný." );
+            throw new MismatchedIdentitiesException("Jméno {$key->getNameKey()} není přípustné." );
         }
-        parent::offsetSet($type, $newval);
+    }        
+  
+        
+    
+    public function getIterator() {
+     
+        foreach ( $this->keyNameEnum->getConstList()  as $idName) {   //pres enum
+            // jak vypada pole jmen klicu ? jsou tam 
+            if (!array_key_exists($idName, $this->keys)) {          
+               // throw new MismatchedIdentitiesException("V poli jmen klíčů nejsou všechny přípustná jména." );
+            }
+        }           
+        return new ArrayIterator($this->identities);
     }
 }
+
+   
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+#############################################################################    
+    
+    
+ //   public function offsetSet( /*string $index,*/ /*KeyInterface*/ $newval) {          
+        //v predpisu metody v \ArrayObject nejsou uvedeny typy, tudiz neuvadet typy
+        
+//        try {    
+//            $enum = $this->keyTypesTypes;
+//            $type = $enum($index);    // toto otestuje, je-li zadaný index  přípustný.
+//        } catch (ValueNotInEnumException $exc) {
+//            throw new MismatchedKeysException("Zadaný typ $index není přípustný." );
+//        }
+        
+        
+        
+//        parent::offsetSet($type, $newval);
+//    }
+//}

@@ -10,7 +10,7 @@ use Model\RowObject\Key\KeyInterface;
  */
 abstract class KeyAbstract  implements KeyInterface {
     
-     
+    private $keyName; 
        
     /**
      * Pole, které jako hodnoty má názvy(jména) polí částí klíče v asoc. poli hash.
@@ -34,7 +34,9 @@ abstract class KeyAbstract  implements KeyInterface {
      * V konstruktoru nastaví vlastnosti objektu Key.
      *     
      */    
-    public function __construct (    /*array $hash  , array $generated */  ) {
+    public function __construct ( string $keyName  /*array $hash  , array $generated */  ) {
+        
+        $this->keyName = $keyName;
         
         
 //        //$this->attribute = $attribute;                
@@ -55,7 +57,14 @@ abstract class KeyAbstract  implements KeyInterface {
 //        $this->hash = $hash;
 //        $this->generated = $generated;
     }
-            
+    
+    
+
+    
+    
+    
+    
+    
     
 //    /**
 //     * Nastaví hodnoty klíče (hash). Parametrem je asociativní pole, které musí mít stejné indexy jako attribute.

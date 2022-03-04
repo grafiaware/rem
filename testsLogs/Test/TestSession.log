@@ -1,13 +1,13 @@
-debug | 2022-02-18 16:27:59 | [2022-02-18 16:27:59] Logger start. Log file: C:\APACHEROOT\Rem\testsLogs/Test/TestSession.log. Mode 'w+'.
-debug | 2022-02-18 16:27:59 | Pes\Database\Handler\DsnProvider\DsnProviderMysql Vytvořeno dsn: mysql:host=localhost;dbname=tester_3_test
-debug | 2022-02-18 16:27:59 | Pes\Database\Handler\OptionsProvider\OptionsProviderMysql: Vytvořeny options - Array
+debug | 2022-03-02 14:17:28 | [2022-03-02 14:17:28] Logger start. Log file: C:\APACHEROOT\Rem\testsLogs/Test/TestSession.log. Mode 'w+'.
+debug | 2022-03-02 14:17:28 | Pes\Database\Handler\DsnProvider\DsnProviderMysql Vytvořeno dsn: mysql:host=localhost;dbname=tester_3_test
+debug | 2022-03-02 14:17:28 | Pes\Database\Handler\OptionsProvider\OptionsProviderMysql: Vytvořeny options - Array
     (
         [1005] => 1
         [1002] => SET NAMES utf8 COLLATE utf8_general_ci
     )
     
-debug | 2022-02-18 16:27:59 | Vytvořen database handler Handler tester_3_test (1), name tester_3_test, host localhost.
-info | 2022-02-18 16:27:59 | Pes\Database\Handler\AttributesProvider\AttributesProviderAbstract Nastaveny hodnoty atributů handleru (PDO): Array
+debug | 2022-03-02 14:17:28 | Vytvořen database handler Handler tester_3_test (1), name tester_3_test, host localhost.
+info | 2022-03-02 14:17:28 | Pes\Database\Handler\AttributesProvider\AttributesProviderAbstract Nastaveny hodnoty atributů handleru (PDO): Array
     (
         [3] => 2
         [13] => Array
@@ -23,20 +23,20 @@ info | 2022-02-18 16:27:59 | Pes\Database\Handler\AttributesProvider\AttributesP
         [20] => 
     )
     
-debug | 2022-02-18 16:27:59 | Handler tester_3_test (1) prepare(SHOW COLUMNS FROM testovaci_table_row, ). Vytvořen Statement (1).
-debug | 2022-02-18 16:27:59 | Statement (1) execute().
-debug | 2022-02-18 16:27:59 | Statement (1) setFetchMode(8, Pes\Database\Metadata\ColumnMetadata)
-debug | 2022-02-18 16:27:59 | Statement (1) fetchAll()
-debug | 2022-02-18 16:27:59 | Result má 12 prvků.
-debug | 2022-02-18 16:27:59 | Pes\Database\Handler\DsnProvider\DsnProviderMysql Vytvořeno dsn: mysql:host=localhost;dbname=tester_3_test
-debug | 2022-02-18 16:27:59 | Pes\Database\Handler\OptionsProvider\OptionsProviderMysql: Vytvořeny options - Array
+debug | 2022-03-02 14:17:28 | Handler tester_3_test (1) prepare(SHOW COLUMNS FROM testovaci_table_row, ). Vytvořen Statement (1).
+debug | 2022-03-02 14:17:28 | Statement (1) execute().
+debug | 2022-03-02 14:17:28 | Statement (1) setFetchMode(8, Pes\Database\Metadata\ColumnMetadata)
+debug | 2022-03-02 14:17:28 | Statement (1) fetchAll()
+debug | 2022-03-02 14:17:28 | Result má 12 prvků.
+debug | 2022-03-02 14:17:28 | Pes\Database\Handler\DsnProvider\DsnProviderMysql Vytvořeno dsn: mysql:host=localhost;dbname=tester_3_test
+debug | 2022-03-02 14:17:28 | Pes\Database\Handler\OptionsProvider\OptionsProviderMysql: Vytvořeny options - Array
     (
         [1005] => 1
         [1002] => SET NAMES utf8 COLLATE utf8_general_ci
     )
     
-debug | 2022-02-18 16:27:59 | Vytvořen database handler Handler tester_3_test (2), name tester_3_test, host localhost.
-info | 2022-02-18 16:27:59 | Pes\Database\Handler\AttributesProvider\AttributesProviderAbstract Nastaveny hodnoty atributů handleru (PDO): Array
+debug | 2022-03-02 14:17:28 | Vytvořen database handler Handler tester_3_test (2), name tester_3_test, host localhost.
+info | 2022-03-02 14:17:28 | Pes\Database\Handler\AttributesProvider\AttributesProviderAbstract Nastaveny hodnoty atributů handleru (PDO): Array
     (
         [3] => 2
         [13] => Array
@@ -52,8 +52,8 @@ info | 2022-02-18 16:27:59 | Pes\Database\Handler\AttributesProvider\AttributesP
         [20] => 
     )
     
-debug | 2022-02-18 16:27:59 | Handler tester_3_test (2) prepare(SHOW COLUMNS FROM testovaci_table_row, ). Vytvořen Statement (2).
-debug | 2022-02-18 16:27:59 | Statement (2) execute().
-debug | 2022-02-18 16:27:59 | Statement (2) setFetchMode(8, Pes\Database\Metadata\ColumnMetadata)
-debug | 2022-02-18 16:27:59 | Statement (2) fetchAll()
-debug | 2022-02-18 16:27:59 | Result má 12 prvků.
+debug | 2022-03-02 14:17:28 | Handler tester_3_test (2) prepare(SHOW COLUMNS FROM testovaci_table_row, ). Vytvořen Statement (2).
+debug | 2022-03-02 14:17:28 | Statement (2) execute().
+debug | 2022-03-02 14:17:28 | Statement (2) setFetchMode(8, Pes\Database\Metadata\ColumnMetadata)
+debug | 2022-03-02 14:17:28 | Statement (2) fetchAll()
+debug | 2022-03-02 14:17:28 | Result má 12 prvků.

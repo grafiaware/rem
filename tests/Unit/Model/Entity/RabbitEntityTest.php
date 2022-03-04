@@ -16,8 +16,6 @@ use Model\Testovaci\Entity\HoleEntityInterface;
 
 interface KlicIdentityInterfaceMock extends IdentityInterface {    
 }
-
-
 interface RabbitIdentityInterfaceMock extends IdentityInterface {
 }
 class RabbitIdentityNamesEnumMock extends IdentityTypeEnum{    

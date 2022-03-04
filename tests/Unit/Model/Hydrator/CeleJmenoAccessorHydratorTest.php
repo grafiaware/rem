@@ -120,6 +120,7 @@ class TestovaciEntityMock  extends EntityAbstract implements  EntityInterfaceMoc
  
 
 interface KeyInterfaceMock extends KeyInterface{   
+    public function getNameKey(): string ;
     public function setHash( array $hash): void ;
     public function getHash(): array ;
     public function getGenerated(): array ;
@@ -127,6 +128,7 @@ interface KeyInterfaceMock extends KeyInterface{
     public function isEqual( KeyInterface $key ) : bool;    
 }
 class KeyMock extends KeyAbstract implements KeyInterfaceMock {
+    public function getNameKey(): string {}
     public function setHash( array $hash): void {}
     public function getHash(): array {}
     public function getGenerated(): array {}

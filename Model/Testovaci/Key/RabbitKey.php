@@ -20,11 +20,11 @@ class RabbitKey extends KeyAbstract implements KeyInterface {
    
     
     //-------------------------
-    
-    public function getTypeKey(): string{
-        return RabbitKeyInterface::class;
+   
+         
+    public function getKeyName(): string{
+        return $keyName;
     }
-    
    
   
 }

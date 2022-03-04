@@ -10,7 +10,15 @@ use Model\RowObject\AttributeInterface;
  */
 interface KeyInterface  extends AttributeInterface{
     
-       
+    public function getKeyName(): string ;
+    
+    
+    
+    
+    
+    
+    
+   //******************    
     public function setHash( array $hash): void ;
         
     public function getHash(): array ;
