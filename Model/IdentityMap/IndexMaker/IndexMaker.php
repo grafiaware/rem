@@ -24,12 +24,11 @@ class IndexMaker implements IndexMakerInterface {
      * 
      * @param AccessorMethodNameHydratorInterface $methodNameHydrator
      */
-    public function __construct( 
-                            AccessorMethodNameHydratorInterface $methodNameHydrator
-            ) {
+    public function __construct( accessorMethodNameHydratorInterface $methodNameHydrator ) {
         $this->methodNameHydrator = $methodNameHydrator;
     }  
 
+    
     /**
      * Vyrobi index z identity podle filtru.
      *      
@@ -37,15 +36,17 @@ class IndexMaker implements IndexMakerInterface {
      * @param array $filters  Filtr obsahuje jmena (vlastnosti identity) potřebná pro jména metod identity, které   se účastní výroby indexu.
      * @return string
      */
-    public function indexFromIdentity(IdentityInterface $identity, array $filters): string {
+    public function indexFromIdentity(IdentityInterface $identity, $filter): string {
         $index = '';
-        /** @var FilterInterface $filter */
-        foreach ($filters as $filter) {
-            foreach ($filter as $name => $value) {
-                $methodName = $this->methodNameHydrator->hydrate($name);
+
+            foreach ($filter as $name) {
+                $methodName = $this->methodNameHydrator->extract($name);
+                // dalo by se zkontrolovat ze se nevraci prazdny retezec - jako kontrola uplnosti identity
+                // $identity->$methodName();                
+            
                 $index .= $identity->$methodName();                
             }
-        };
+
         return $index;
     }
 }

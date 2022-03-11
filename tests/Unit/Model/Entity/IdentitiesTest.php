@@ -3,9 +3,9 @@ namespace Test\IdentitiesTest;
 
 use PHPUnit\Framework\TestCase;
 
+use Model\Entity\Enum\IdentityTypeEnum;
 use Model\Entity\Identities;
 use Model\Entity\Identity\IdentityInterface;
-use Model\Entity\Enum\IdentityTypeEnum;
 use Model\Entity\Identity\IdentityAbstract;
 use Model\Entity\Exception\MismatchedIdentitiesException;
 
@@ -64,9 +64,7 @@ class  IdentitiesTest extends TestCase  {
     public function testAppend(  ) : void {    
         $rabbitIdentity =  new RabbitIdentityMock();       
         $klicIdentity =  new KlicIdentityMock();        
-//        $arrayI [ RabbitIdentityNamesEnumMock::RABBITIDENTITYINTERFACEMOCK ] =  $rabbitIdentity;
-//        $arrayI [ RabbitIdentityNamesEnumMock::KLICIDENTITYINTERFACEMOCK ] = $klicIdentity;        
-
+        
         $identities =  new Identities ( new RabbitIdentityNamesEnumMock() );        
         $identities->append($rabbitIdentity);        
         $this->assertInstanceOf( Identities::class, $identities );                      
@@ -76,8 +74,6 @@ class  IdentitiesTest extends TestCase  {
      public function testAppend_MismatchedIdentitiesException_nejsou_vsechny(  ) : void {    
         $rabbitIdentity =  new RabbitIdentityMock();       
         $klicIdentity =  new KlicIdentityMock();        
-//        $arrayI [ RabbitIdentityNamesEnumMock::RABBITIDENTITYINTERFACEMOCK ] =  $rabbitIdentity;
-//        $arrayI [ RabbitIdentityNamesEnumMock::KLICIDENTITYINTERFACEMOCK ] = $klicIdentity;        
 
         $identities =  new Identities ( new RabbitIdentityNamesEnumMock() );        
         $identities->append($rabbitIdentity);        
@@ -85,11 +81,7 @@ class  IdentitiesTest extends TestCase  {
         //chyba - pri pouziti Identities - v Identities nejsou vsechny identity
         $this->expectException( MismatchedIdentitiesException::class)  ; 
         $identities_1 = $identities->getIterator(); 
-      
-       
-//        //pridat hole  ...chyba HoleIdentityMock není ve vyctovem typu, neni pripustna       
-//        $holeIdentity =  new HoleIdentityMock();
-//        $identities->append($holeIdentity);        
+               
     }
     
     
@@ -97,11 +89,9 @@ class  IdentitiesTest extends TestCase  {
     public function testAppend_MismatchedIdentitiesException_neni_pripustna(  ) : void {    
         $rabbitIdentity =  new RabbitIdentityMock();       
         $klicIdentity =  new KlicIdentityMock();        
-//        $arrayI [ RabbitIdentityNamesEnumMock::RABBITIDENTITYINTERFACEMOCK ] =  $rabbitIdentity;
-//        $arrayI [ RabbitIdentityNamesEnumMock::KLICIDENTITYINTERFACEMOCK ] = $klicIdentity;        
 
         $identities =  new Identities ( new RabbitIdentityNamesEnumMock() ); 
-        $this->expectException( MismatchedIdentitiesException::class)  ;
+        $this->expectException( MismatchedIdentitiesException::class );
         $identities->append($rabbitIdentity);             
 
         //pridat hole  ...chyba HoleIdentityMock není ve vyctovem typu, neni pripustna       
@@ -110,9 +100,12 @@ class  IdentitiesTest extends TestCase  {
     }
     
   
+  }  
     
-    
-//   
+  
+  
+  
+   
 //     /**
 //     * V poli identit (druhý parametr constructoru Identities) chybí položky.
 //     * @return void
@@ -185,4 +178,4 @@ class  IdentitiesTest extends TestCase  {
 //    }        
 //    
     
-}
+

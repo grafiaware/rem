@@ -35,7 +35,7 @@ abstract class EntityAbstract implements EntityInterface {
   
     /**
      * 
-     * @param IdentitiesInterface $identities
+     * @param IdentitiesInterface $identities (extenduje Traversable, IteratorAggregate)
      */
     public function __construct( IdentitiesInterface $identities) {              
         $this->identities =  $identities;         

@@ -121,7 +121,7 @@ class RabbitRepositoryTest  extends TestCase {
         $this->rabbitEntity1 = new RabbitEntity( $rabbitIdentities );              
             $this->rabbitEntity1->setCeleJmeno("Jméno Celé"); 
             $this->rabbitEntity1->setPrvekVarchar('') ;
-            $this->rabbitEntity1->setPrvekDatetime(new \DateTime('2000-01-01')) ;                                
+            $this->rabbitEntity1->setPrvekDatetime(new \DateTime('2000-01-01'));                                
         //--------------------------------------------------
             
 //        $this->rabbitRepositoryReadOnly = new RabbitRepositoryReadOnly (

@@ -209,7 +209,7 @@ abstract class RepositoryAbstract implements RepositoryInterface {
             /** @var EntityInterface $entity */   //vyrobit prazdnou entity
             $entity = $this->createEntity();  // !!!!definována v konkrétní třídě!!!!! - adept na entity managera                                              
             //---------------------------------------------
-            $this->hydrateIdentity($entity->getIdentity( $identityInterfaceName ), $identityInterfaceName, $rowObject->getKey()); //pro vic klicu
+            $this->hydrateIdentity($entity->getIdentity( $identityInterfaceName ), $identityInterfaceName, $rowObject->getKey(/*...*/)); //pro vic klicu
                         
             try {
                  $this->recreateAssociations( $entity->getIdentity( $identityInterfaceName ) ,  $rowObject /*parent*/ );  // assoc.entity da do rowObjectu

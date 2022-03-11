@@ -14,6 +14,11 @@ class RabbitIdentity extends IdentityAbstract implements  RabbitIdentityInterfac
      * @var string
      */
     private $id1;
+    /**
+     *
+     * @var string
+     */
+    private $id2;
            
     
     
@@ -35,30 +40,35 @@ class RabbitIdentity extends IdentityAbstract implements  RabbitIdentityInterfac
         $this->id1 = $id;       
     }
 
-   
-    
-    
-    
-    
-    
-   private function getIndexFromIdentity() : string {
-        //get_object_vars - vybere ty "viditelne" a nestaticke
-//        $index='';
-//        foreach ( \get_object_vars($this) as $nameAttr=>$value) {            
-//           $index =+ $value;                        
-//        }
-//        return $index;
-        
-        $a = \get_object_vars($this); 
-        $b = ksort ($a);
-        
-        $index="";
-        foreach ( $a  as $nameAttr=>$value ) {            
-           $index .= $value;                        
-        }
-        return $index;    
-        
+   public function getId2(): string {
+        return $this->id2;
     }
+    public function setId2(string $id): void {
+        $this->id2 = $id;       
+    }
+    
+    
+    
+    
+//    
+//   private function getIndexFromIdentity() : string {
+//        //get_object_vars - vybere ty "viditelne" a nestaticke
+////        $index='';
+////        foreach ( \get_object_vars($this) as $nameAttr=>$value) {            
+////           $index =+ $value;                        
+////        }
+////        return $index;
+//        
+//        $a = \get_object_vars($this); 
+//        $b = ksort ($a);
+//        
+//        $index="";
+//        foreach ( $a  as $nameAttr=>$value ) {            
+//           $index .= $value;                        
+//        }
+//        return $index;    
+//        
+//    }
     
         
 }

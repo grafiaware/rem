@@ -3,7 +3,6 @@ namespace Model\IdentityMap;
 
 use Model\Entity\EntityInterface;
 use Model\Entity\Identity\IdentityInterface;
-use Model\IdentityMap\IndexMaker\IndexMakerInterface;
 
 /**
  * IdentityMap
@@ -48,7 +47,7 @@ interface IdentityMapInterface {
      * @param string $identityInterfaceName
      * @return boolean
      */
-    public function has (  IdentityInterface $identity, string $identityInterfaceName  ) : boolean ;
+    public function has (  IdentityInterface $identity, string $identityInterfaceName  ) : bool ;
     
     
     

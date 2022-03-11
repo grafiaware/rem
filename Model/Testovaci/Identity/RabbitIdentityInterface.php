@@ -15,7 +15,9 @@ interface RabbitIdentityInterface extends IdentityInterface{
 
     public function setId1(string $id): void ;
        
-    
+    public function getId2(): string ;
+
+    public function setId2(string $id): void ;
        
    /* private function getIndexFromIdentity() ;*/
     
